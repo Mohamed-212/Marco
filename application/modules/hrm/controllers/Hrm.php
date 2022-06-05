@@ -67,11 +67,11 @@ class Hrm extends MX_Controller
                 $data['title'] = display('designation_update_form');
                 $data['designation'] = $this->hrm_model->single_designation_data($id);
             }
-            //$data['module']           = "hrm";
-            //$data['page']             = "hrm/designation_form";
-            //echo Modules::run('template/layout', $data);
-            $content = $this->parser->parse('hrm/hrm/designation_form', $data, true);
-            $this->template_lib->full_admin_html_view($content);
+            $data['module']           = "hrm";
+            $data['page']             = "hrm/designation_form";
+            echo Modules::run('template/layout', $data);
+//            $content = $this->parser->parse('hrm/hrm/designation_form', $data, true);
+//            $this->template_lib->full_admin_html_view($content);
         }
     }
 
@@ -164,11 +164,11 @@ class Hrm extends MX_Controller
             }
             $data['country_list'] = $this->country_model->country();
             $data['desig'] = $this->hrm_model->designation_dropdown();
-//            $data['module'] = "hrm";
-//            $data['page'] = "hrm/employee_form";
-//            echo Modules::run('template/layout', $data);
-            $content = $this->parser->parse('hrm/hrm/employee_form', $data, true);
-            $this->template_lib->full_admin_html_view($content);
+            $data['module'] = "hrm";
+            $data['page'] = "hrm/employee_form";
+            echo Modules::run('template/layout', $data);
+//            $content = $this->parser->parse('hrm/hrm/employee_form', $data, true);
+//            $this->template_lib->full_admin_html_view($content);
         }
     }
 
