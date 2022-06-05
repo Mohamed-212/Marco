@@ -52,6 +52,8 @@ INSERT INTO `language` (`phrase`, `english`) VALUES( 'report', 'Report');
 INSERT INTO `language` (`phrase`, `english`) VALUES( 'dashboard', 'Dashboard');
 INSERT INTO `language` (`phrase`, `english`) VALUES( 'online', 'Online');
 INSERT INTO `language` (`phrase`, `english`) VALUES( 'logout', 'Logout');
+INSERT INTO `language` (phrase`, `english`) VALUES('address_line_1', 'Address Line 1');
+INSERT INTO `language` (`phrase`, `english`) VALUES('address_line_2', 'Address Line 2');
 INSERT INTO `language` (`phrase`, `english`) VALUES( 'change_password', 'Change Password');
 INSERT INTO `language` (`phrase`, `english`) VALUES( 'total_purchase', 'Total Purchase');
 INSERT INTO `language` (`phrase`, `english`) VALUES( 'total_amount', 'Total Amount');
