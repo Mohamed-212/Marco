@@ -65,11 +65,11 @@ class Expense extends MX_Controller
                 $data['title'] = display('item_update_form');
                 $data['items'] = $this->expense_model->single_expense_item_data($id);
             }
-//                $data['module']   = "hrm";
-//                $data['page']     = "expense/item_form";
-//                echo Modules::run('template/layout', $data);
-            $content = $this->parser->parse('hrm/expense/item_form', $data, true);
-            $this->template_lib->full_admin_html_view($content);
+            $data['module'] = "hrm";
+            $data['page'] = "expense/item_form";
+            echo Modules::run('template/layout', $data);
+//            $content = $this->parser->parse('hrm/expense/item_form', $data, true);
+//            $this->template_lib->full_admin_html_view($content);
         }
     }
 
