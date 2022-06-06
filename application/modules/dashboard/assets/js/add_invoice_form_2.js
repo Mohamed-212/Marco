@@ -72,7 +72,7 @@ function addInputField(divName) {
                 '" class="form-control variant_id width_100p" required=""><option value=""></option></select></div><div><select name="color_variant[]" id="variant_color_id_' +
                 count +
                 '" class="form-control color_variant width_100p" ><option value=""></option></select></div></td>' +
-                '<td class="text-center"><div><select name="pricing[]" required id="pricing_' +
+                '<td class="text-center"><div><select name="pricing[]" id="pricing_' +
                 count +
                 '" class="form-control pricing width_100p"><option value=""></option></select></div></td>' +
                 '<td class="text-center"><div><select name="batch_no[]" required id="batch_no_' +

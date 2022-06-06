@@ -550,6 +550,26 @@ class Invoices extends CI_Model {
                     'CreateDate' => $createdate,
                     'IsAppove' => 0
                 );
+                 //7th paid_amount Credit
+                if ($this->input->post('paid_amount', TRUE) > 0) {
+                    $paid_amount = $this->input->post('paid_amount', TRUE);
+                    $customer_credit = array(
+                        'fy_id' => $find_active_fiscal_year->id,
+                        'VNo' => 'Inv-' . $invoice_id,
+                        'Vtype' => 'Sales',
+                        'VDate' => $date,
+                        'COAID' => $customer_head->HeadCode,
+                        'Narration' => 'Sales "paid_amount" Credit by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
+                        'Debit' => 0,
+                        'Credit' => $paid_amount,
+                        'IsPosted' => 1,
+                        'CreateBy' => $receive_by,
+                        'CreateDate' => $createdate,
+                        'IsAppove' => 0
+                    );
+
+                    $this->db->insert('acc_transaction', $customer_credit);
+                }
                 $this->db->insert('acc_transaction', $allowed_discount_debit);
                 $this->db->insert('acc_transaction', $showroom_sales_credit);
                 $this->db->insert('acc_transaction', $vat_credit);
@@ -2552,42 +2572,45 @@ class Invoices extends CI_Model {
                 // Reverse invoice transections start
                 $previous_invoices = $this->db->select('*')->from('acc_transaction')->where('VNo', 'Inv-' . $invoice_id)->get()->result_array();
                 if (count($previous_invoices) > 0) {
-                    $transection_reverse = array();
-                    foreach ($previous_invoices as $key => $invoices) {
-                        $ID = $invoices['ID'];
-                        $fy_id = $invoices['fy_id'];
-                        $VNo = $invoices['VNo'];
-                        $Vtype = $invoices['Vtype'];
-                        $VDate = $invoices['VDate'];
-                        $COAID = $invoices['COAID'];
-                        $Narration = $invoices['Narration'];
-                        $Debit = $invoices['Debit'];
-                        $Credit = $invoices['Credit'];
-                        $IsPosted = $invoices['IsPosted'];
-                        $is_opening = $invoices['is_opening'];
-                        $store_id = $invoices['store_id'];
-                        $CreateBy = $this->session->userdata('user_id');
-                        $createdate = date('Y-m-d H:i:s');
-                        $UpdateBy = $this->session->userdata('user_id');
-                        $IsAppove = $invoices['IsAppove'];
-
-                        $transection_reverse[] = array(
-                            'fy_id' => $fy_id,
-                            'VNo' => $VNo,
-                            'Vtype' => $Vtype,
-                            'VDate' => $createdate,
-                            'COAID' => $COAID,
-                            'Narration' => 'Invoice reverse transection ' . $Narration,
-                            'Debit' => $Credit,
-                            'Credit' => $Debit,
-                            'IsPosted' => $IsPosted,
-                            'CreateBy' => $CreateBy,
-                            'CreateDate' => $createdate,
-                            'store_id' => $store_id,
-                            'IsAppove' => 1
-                        );
-                    }
-                    $reverse = $this->db->insert_batch('acc_transaction', $transection_reverse);
+//                    $transection_reverse = array();
+//                    foreach ($previous_invoices as $key => $invoices) {
+//                        $ID = $invoices['ID'];
+//                        $fy_id = $invoices['fy_id'];
+//                        $VNo = $invoices['VNo'];
+//                        $Vtype = $invoices['Vtype'];
+//                        $VDate = $invoices['VDate'];
+//                        $COAID = $invoices['COAID'];
+//                        $Narration = $invoices['Narration'];
+//                        $Debit = $invoices['Debit'];
+//                        $Credit = $invoices['Credit'];
+//                        $IsPosted = $invoices['IsPosted'];
+//                        $is_opening = $invoices['is_opening'];
+//                        $store_id = $invoices['store_id'];
+//                        $CreateBy = $this->session->userdata('user_id');
+//                        $createdate = date('Y-m-d H:i:s');
+//                        $UpdateBy = $this->session->userdata('user_id');
+//                        $IsAppove = $invoices['IsAppove'];
+//
+//                        $transection_reverse[] = array(
+//                            'fy_id' => $fy_id,
+//                            'VNo' => $VNo,
+//                            'Vtype' => $Vtype,
+//                            'VDate' => $createdate,
+//                            'COAID' => $COAID,
+//                            'Narration' => 'Invoice reverse transection ' . $Narration,
+//                            'Debit' => $Credit,
+//                            'Credit' => $Debit,
+//                            'IsPosted' => $IsPosted,
+//                            'CreateBy' => $CreateBy,
+//                            'CreateDate' => $createdate,
+//                            'store_id' => $store_id,
+//                            'IsAppove' => 1
+//                        );
+//                    }
+//                    $reverse = $this->db->insert_batch('acc_transaction', $transection_reverse);
+                    
+                    $this->db->where('VNo', 'Inv-' . $invoice_id);
+                    $this->db->delete('acc_transaction');
                 }
                 // Reverse invoice transections end
                 // SALES/INVOICE TRANSECTIONS ENTRY
@@ -2733,6 +2756,26 @@ class Invoices extends CI_Model {
                     'CreateDate' => $createdate,
                     'IsAppove' => 1
                 );
+                //7th paid_amount Credit
+                if ($this->input->post('paid_amount', TRUE) > 0) {
+                    $paid_amount = $this->input->post('paid_amount', TRUE);
+                    $customer_credit = array(
+                        'fy_id' => $find_active_fiscal_year->id,
+                        'VNo' => 'Inv-' . $invoice_id,
+                        'Vtype' => 'Sales',
+                        'VDate' => $date,
+                        'COAID' => $customer_head->HeadCode,
+                        'Narration' => 'Sales "paid_amount" Credit by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
+                        'Debit' => 0,
+                        'Credit' => $paid_amount,
+                        'IsPosted' => 1,
+                        'CreateBy' => $receive_by,
+                        'CreateDate' => $createdate,
+                        'IsAppove' => 0
+                    );
+
+                    $this->db->insert('acc_transaction', $customer_credit);
+                }
                 $this->db->insert('acc_transaction', $allowed_discount_debit);
                 $this->db->insert('acc_transaction', $showroom_sales_credit);
                 $this->db->insert('acc_transaction', $vat_credit);

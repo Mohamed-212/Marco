@@ -242,7 +242,7 @@
                                         <td class="text-center">
                                             <div>
                                                 <select name="pricing[]" id="pricing_1"
-                                                        class="form-control pricing width_100p" required>
+                                                        class="form-control pricing width_100p" >
                                                     <option value=""></option>
                                                 </select>
                                             </div>

@@ -1650,42 +1650,45 @@ class Purchases extends CI_Model {
                 // Reverse purchase transections start
                 $previous_purchases = $this->db->select('*')->from('acc_transaction')->where('VNo', 'p-' . $purchase_id)->get()->result_array();
                 if (count($previous_purchases) > 0) {
-                    $transection_reverse = array();
-                    foreach ($previous_purchases as $key => $purchases) {
-                        $ID = $purchases['ID'];
-                        $fy_id = $purchases['fy_id'];
-                        $VNo = $purchases['VNo'];
-                        $Vtype = $purchases['Vtype'];
-                        $VDate = $purchases['VDate'];
-                        $COAID = $purchases['COAID'];
-                        $Narration = $purchases['Narration'];
-                        $Debit = $purchases['Debit'];
-                        $Credit = $purchases['Credit'];
-                        $IsPosted = $purchases['IsPosted'];
-                        $is_opening = $purchases['is_opening'];
-                        $store_id = $purchases['store_id'];
-                        $CreateBy = $this->session->userdata('user_id');
-                        $createdate = date('Y-m-d H:i:s');
-                        $UpdateBy = $this->session->userdata('user_id');
-                        $IsAppove = $purchases['IsAppove'];
-
-                        $transection_reverse[] = array(
-                            'fy_id' => $fy_id,
-                            'VNo' => $VNo,
-                            'Vtype' => $Vtype,
-                            'VDate' => $createdate,
-                            'COAID' => $COAID,
-                            'Narration' => 'Purchase reverse transection ' . $Narration,
-                            'Debit' => $Credit,
-                            'Credit' => $Debit,
-                            'IsPosted' => $IsPosted,
-                            'CreateBy' => $CreateBy,
-                            'CreateDate' => $createdate,
-                            'store_id' => $store_id,
-                            'IsAppove' => 1
-                        );
-                    }
-                    $reverse = $this->db->insert_batch('acc_transaction', $transection_reverse);
+//                    $transection_reverse = array();
+//                    foreach ($previous_purchases as $key => $purchases) {
+//                        $ID = $purchases['ID'];
+//                        $fy_id = $purchases['fy_id'];
+//                        $VNo = $purchases['VNo'];
+//                        $Vtype = $purchases['Vtype'];
+//                        $VDate = $purchases['VDate'];
+//                        $COAID = $purchases['COAID'];
+//                        $Narration = $purchases['Narration'];
+//                        $Debit = $purchases['Debit'];
+//                        $Credit = $purchases['Credit'];
+//                        $IsPosted = $purchases['IsPosted'];
+//                        $is_opening = $purchases['is_opening'];
+//                        $store_id = $purchases['store_id'];
+//                        $CreateBy = $this->session->userdata('user_id');
+//                        $createdate = date('Y-m-d H:i:s');
+//                        $UpdateBy = $this->session->userdata('user_id');
+//                        $IsAppove = $purchases['IsAppove'];
+//
+//                        $transection_reverse[] = array(
+//                            'fy_id' => $fy_id,
+//                            'VNo' => $VNo,
+//                            'Vtype' => $Vtype,
+//                            'VDate' => $createdate,
+//                            'COAID' => $COAID,
+//                            'Narration' => 'Purchase reverse transection ' . $Narration,
+//                            'Debit' => $Credit,
+//                            'Credit' => $Debit,
+//                            'IsPosted' => $IsPosted,
+//                            'CreateBy' => $CreateBy,
+//                            'CreateDate' => $createdate,
+//                            'store_id' => $store_id,
+//                            'IsAppove' => 1
+//                        );
+//                    }
+//                    $reverse = $this->db->insert_batch('acc_transaction', $transection_reverse);
+                    
+                     $this->db->where('VNo', 'p-' . $purchase_id);
+                    $this->db->delete('acc_transaction');
                 }
                 // Reverse purchase transections end		
 
@@ -2332,6 +2335,13 @@ class Purchases extends CI_Model {
         //Delete transer info table
         $this->db->where('purchase_id', $purchase_id);
         $this->db->delete('transfer');
+         //Delete acc_transaction data
+        $this->db->where('VNo', 'p-' . $purchase_id);
+        $this->db->delete('acc_transaction');
+        
+        //Delete acc_transaction data
+         $this->db->where('purchase_id', $purchase_id);
+        $this->db->delete('supplier_ledger');
         return true;
     }
 
@@ -2531,6 +2541,7 @@ class Purchases extends CI_Model {
 
         return $price_arr;
     }
+
 //////////////// pricing ///////////////
     public function check_product_price($product_id, $pricing_id) {
         $pinfo = $this->db->select('pricing,price')
@@ -2560,7 +2571,7 @@ class Purchases extends CI_Model {
 
         return $price_arr;
     }
-    
+
     public function get_next_pur_order_id() {
         $this->db->select_max('pur_order_id');
         $this->db->from('purchase_orders');
@@ -2613,34 +2624,37 @@ class Purchases extends CI_Model {
         $t_price = $this->input->post('total_price', TRUE);
 
         $data2 = [];
-        for ($i = 0, $n = count($p_id); $i < $n; $i++) {//
-            $product_quantity = $quantity[$i];
-            $product_rate = $rate[$i];
-            $product_id = $p_id[$i];
-            $total_price = $t_price[$i];
-            $variant = $variant_id[$i];
-            $variant_color = @$color_variant[$i];
-            $expiry_date = $expiry[$i];
-            $product_discount = $discount[$i];
-            $i_vat_rate = $vat_rate[$i];
-            $i_vat = $vat[$i];
+        //  for ($i = 0, $n = count($p_id); $i < $n; $i++) {//
+        foreach ($p_id as $key => $value) {
+            if (!empty($p_id[$key]) && !empty($p_id[$key])) {
+                $product_quantity = $quantity[$i];
+                $product_rate = $rate[$i];
+                $product_id = $p_id[$i];
+                $total_price = $t_price[$i];
+                $variant = $variant_id[$i];
+                $variant_color = @$color_variant[$i];
+                $expiry_date = $expiry[$i];
+                $product_discount = $discount[$i];
+                $i_vat_rate = $vat_rate[$i];
+                $i_vat = $vat[$i];
 
-            if ($product_quantity > 0) {
-                $data2[] = array(
-                    'pur_order_detail_id' => $this->auth->generator(15),
-                    'pur_order_id' => $purchase_id,
-                    'product_id' => $product_id,
-                    'store_id' => $this->input->post('store_id', TRUE),
-                    'quantity' => $product_quantity,
-                    'rate' => $product_rate,
-                    'total_amount' => $total_price,
-                    'variant_id' => $variant,
-                    'variant_color' => (!empty(@$variant_color) ? @$variant_color : NULL),
-                    'discount' => $product_discount,
-                    'vat_rate' => $i_vat_rate,
-                    'vat' => $i_vat,
-                    'expiry_date' => date('Y-m-d', strtotime($expiry_date)),
-                );
+                if ($product_quantity > 0) {
+                    $data2[] = array(
+                        'pur_order_detail_id' => $this->auth->generator(15),
+                        'pur_order_id' => $purchase_id,
+                        'product_id' => $product_id,
+                        'store_id' => $this->input->post('store_id', TRUE),
+                        'quantity' => $product_quantity,
+                        'rate' => $product_rate,
+                        'total_amount' => $total_price,
+                        'variant_id' => $variant,
+                        'variant_color' => (!empty(@$variant_color) ? @$variant_color : NULL),
+                        'discount' => $product_discount,
+                        'vat_rate' => $i_vat_rate,
+                        'vat' => $i_vat,
+                        'expiry_date' => date('Y-m-d', strtotime($expiry_date)),
+                    );
+                }
             }
         }
         $this->db->trans_start();

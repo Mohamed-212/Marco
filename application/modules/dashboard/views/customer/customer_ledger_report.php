@@ -262,7 +262,7 @@
                                         <th class="text-center" colspan="4">Total</th>
                                         <td class="text-center"><?php echo html_escape($total_cus_debit); ?></td>
                                         <td class="text-center"><?php echo html_escape($total_cus_credit); ?></td>
-                                        <td class="text-center"><?php echo html_escape($total_cus_balance); ?></td>
+                                         <td class="text-center"><?php echo html_escape($total_cus_credit - $total_cus_debit); ?></td>
                                         <td colspan="2"></td>
 
                                     </tr>
