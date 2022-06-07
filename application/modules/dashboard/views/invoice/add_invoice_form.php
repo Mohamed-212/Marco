@@ -186,6 +186,15 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label for="date" class="col-sm-4 col-form-label"><?php echo display('employee_name') ?> <i
+                                                class="text-danger">*</i></label>
+                                    <div class="col-sm-8">
+                                        <?php echo form_dropdown('employee_id', $employee, null, 'class="form-control" id="employee_id" required') ?>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="table-responsive mt_10">
                             <table class="table table-bordered table-hover" id="normalinvoice">

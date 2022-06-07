@@ -43,7 +43,8 @@ class Cinvoice extends MX_Controller
                     'customer'        => $customer[0],
                     'shipping_methods' => $shipping_methods,
                     'bank_list'       => $bank_list,
-                    'payment_info'    => $payment_info
+                    'payment_info'    => $payment_info,
+                    'employee'        => $this->empdropdown(),
                 );
                 $data['module'] = "dashboard";
                 $data['page']  = "invoice/add_invoice_form";
@@ -69,14 +70,30 @@ class Cinvoice extends MX_Controller
                 'store_list'      => $store_list,
                 'variant_list'    => $variant_list,
                 'customer'        => $customer[0],
-                'shipping_methods' => $shipping_methods,
-                'bank_list'       => $bank_list
+                'shipping_methods'=> $shipping_methods,
+                'bank_list'       => $bank_list,
             );
             $data['module'] = "dashboard";
             $data['page']  = "invoice/add_invoice_form";
             echo Modules::run('template/layout', $data);
         }
     }
+
+    public function empdropdown(){
+        $this->db->select('*');
+        $this->db->from('employee_history');
+        $query = $this->db->get();
+        $data = $query->result();
+
+        $list = array('' => 'Select One...');
+        if (!empty($data) ) {
+            foreach ($data as $value) {
+                $list[$value->id] = $value->first_name." ".$value->last_name;
+            }
+        }
+        return $list;
+    }
+
     public function manage_invoice()
     {
         $this->permission->check_label('manage_sale')->read()->redirect();
