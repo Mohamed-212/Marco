@@ -1,3 +1,22 @@
+
+--
+-- Table structure for table `attendance`
+--
+
+CREATE TABLE IF NOT EXISTS `invoice_installment` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `invioce_id` varchar(100) NOT NULL,
+    `amount` decimal(18,2) NOT NULL DEFAULT 0.00,
+    `due_date` date NOT NULL,
+    `Payment_Date` date NULL,
+    `status` boolean DEFAULT 0,
+    PRIMARY KEY (`id`),
+    KEY `invioce_id` (`invioce_id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+
 --
 -- Table structure for table `attendance`
 --

@@ -213,12 +213,79 @@ function stockLimitAjax(t) {
     })
 }
 
+//Invoice installment
+function installment() {
+    $('#installment_details').html('');
+    $('#pay_day').val(0);
+    $('#month_no').val(0);
+    $('.installment_setup').toggle();
+}
+
+function add_month(){
+    $('#installment_details').html('');
+    var month_no = Math.ceil($('#month_no').val());
+    var due_amount = $('#dueAmmount').val();
+    var amount_per_month = due_amount/month_no;
+    var date = new Date();
+    var year = date.getFullYear();
+    var month = date.getMonth();
+    var day = Math.ceil($('#pay_day').val());
+    if(month_no > 0 && day > 0 && due_amount > 0) {
+        var content = '';
+        $('#installment_header').show();
+        for (let i = 1; i <= month_no; i++){
+            var d = new Date(year, month + i, day);
+            var m = d.getMonth()+1;
+            if(m < 10){
+                m = '0' + m;
+            }
+            var da = d.getDate();
+            if(da < 10){
+                da = '0' + da;
+            }
+            var y = d.getFullYear();
+            var date = y + '-' + m + '-' + da;
+            console.log(d);
+            console.log(date);
+            content += '<div class="row">' +
+                '<div class="col-sm-4">' +
+                '<div class="form-group">' +
+                '<input class="form-control" type="number" name="amount[]" value="' + amount_per_month + '" readonly>' +
+                '</div>' +
+                '</div>' +
+                '<div class="col-sm-4">' +
+                '<div class="form-group">' +
+                '<input class="form-control" type="date" value="'+ date +'" name="due_date[]" readonly>' +
+                '</div>' +
+                '</div>' +
+                '<div class="col-sm-4">' +
+                '<div class="form-group row">' +
+                '<div class="col-sm-2">' +
+                '<input type="checkbox" name="status[]" value="0" onclick="return false">' +
+                '</div>' +
+                '<div class="col-sm-8">' +
+                '<input class="form-control" type="date" name="payment_date[]" readonly>' +
+                '</div>' +
+                '</div>' +
+                '</div>' +
+                '</div>';
+        }
+        content += '<div class="col-sm-12 text-center">' +
+            '<div class="form-group">' +
+            '<input type="button" id="save_installment" class="btn btn-success" value="save">' +
+            '</div>' +
+            '</div>';
+        $('#installment_details').html(content);
+    }
+}
+
 //Invoice full paid
 function full_paid() {
     var grandTotal = $("#grandTotal").val();
     $("#paidAmount").val(grandTotal);
     calculateSum();
     invoice_paidamount();
+    $('#installment_id').hide();
 }
 
 //Delete a row from invoice table
