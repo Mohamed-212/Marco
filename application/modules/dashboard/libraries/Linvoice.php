@@ -203,13 +203,11 @@ class Linvoice {
 		$subTotal_cartoon =0;
 		$subTotal_discount=0;
         $isTaxed = 0;
-
+        if ($invoice_detail[0]['total_vat'] > 0){
+            $isTaxed = 1;
+        }
 		if(!empty($invoice_detail)){
 			foreach($invoice_detail as $k=>$v){
-                $item_tax = $CI->db->select('*')->from('tax_product_service')->where('product_id', $invoice_detail[$k]['product_id'])->where('tax_id', '52C2SKCKGQY6Q9J')->get()->row();
-                if (!empty($item_tax)){
-                    $isTaxed = 1;
-                }
 				$invoice_detail[$k]['final_date']=$CI->occational->dateConvert($invoice_detail[$k]['date']);
 				$subTotal_quantity=$subTotal_quantity+$invoice_detail[$k]['quantity'];
 			}

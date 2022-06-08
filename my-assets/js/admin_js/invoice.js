@@ -117,7 +117,7 @@ function calculateSum() {
     $(".total_cgst").each(function() {
         isNaN(this.value) || 0 == this.value.length || (cgst += parseFloat(this.value))
     }),
-        cgst += parseFloat($('#total_cgst').val());
+        //cgst += parseFloat($('#total_cgst').val());
         $("#total_cgst").val(cgst.toFixed(2)),
         $(".total_cgst_bill").text(cgst.toFixed(2)),
 
