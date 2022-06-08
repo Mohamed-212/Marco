@@ -365,7 +365,7 @@
                                             </td>
                                             <td class="text-right" colspan="2">
                                                 <input type="number" id="total_cgst" class="form-control text-right"
-                                                       name="total_cgst" placeholder="0.00"  />
+                                                       name="total_cgst" onkeyup="calculateSum();" onchange="calculateSum();" placeholder="0.00"  />
                                             </td>
                                         </tr>
                                         <?php

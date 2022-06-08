@@ -503,7 +503,7 @@
                                             </td>
                                             <td class="text-right" colspan="2">
                                                 <input type="text" id="total_cgst" class="form-control text-right"
-                                                       name="total_cgst" value="<?php echo html_escape($cgst_tax_amount) ?>"/>
+                                                       name="total_cgst" onkeyup="calculateSum();" onchange="calculateSum();" value="<?php echo html_escape($cgst_tax_amount) ?>"/>
                                             </td>
                                         </tr>
                                         <?php
