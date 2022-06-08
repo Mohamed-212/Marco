@@ -275,6 +275,70 @@ $(document).ready(function () {
     });
 
     // --- End product pricing --- //
+//////////////// assembly_product/////////////////////// 
+
+    $('#addassemblyprorow').on('click', function (e) {
+        e.preventDefault();
+        var tableLength = $("#addassemblypro tbody tr").length;
+        var tableRow;
+        var count;
+        var idno;
+
+
+        if (tableLength > 0) {
+            tableRow = $("#addassemblypro tbody tr:last").attr('id');
+            count = tableRow.substring(3);
+            count = Number(count) + 1;
+        } else {
+            // no table row
+            count = 1;
+        }
+
+        var noofrows = 0;
+        $("#addassemblypro tbody tr").each(function (index, tr) {
+            idno = Number($(this).attr('id').substring(3));
+            var rowvalue = Number($(".assembly_product_id_" + idno).val());
+            if (rowvalue > 0) {
+
+                noofrows++;
+
+            } else {
+                noofrows = 0;
+                Swal({
+                    type: 'warning',
+                    title: 'Please select product name!'
+                });
+            }
+        });
+        if (count < 500 && noofrows > 0) {
+            $("#addassemblyprorow").button("reset");
+
+            var tr = '<tr id="pro' + count + '" class="' + count + ' appended-new-row">' +
+                    ' <td class="col-sm-6">' +
+                    '  <div class="col-sm-12">' +
+                    '  <div class="form-group row">' +
+                    ' <div class="input-group">' +
+                    ' <input type="text" class="form-control assemblyproductSelection" onkeyup="assembly_productList(' + count + ')"  id="assemblypro' + count + '" name="assemblypro[' + count + ']" placeholder="' + display('product_name') + '"  />' +
+                    ' <input type="hidden" class="autocomplete_hidden_value assembly_product_id_' + count + '" value=""  name="assembly_product_id[' + count + ']"  />' +
+                    ' <div class="input-group-addon btn btn-danger remove_assembly_row" onclick="removeassemblyrow(' + count + ')"><i class="ti-minus"></i></div></div></div>' +
+                    '</td>' +
+                    '</tr>';
+            if (tableLength > 0) {
+                $("#addassemblypro tbody tr:last").after(tr);
+            } else {
+                $("#addassemblypro tbody").append(tr);
+            }
+
+        } else if (count >= 500) {
+            Swal({
+                type: 'warning',
+                title: 'No more Rows!'
+            });
+        }
+
+    });
+
+// --- End assembly_product --- //
 
     //--- product filter starts
     var f_count = 2;
@@ -423,3 +487,11 @@ function removepricerow(row = null) {
         alert('error! Refresh the page again');
 }
 }
+function removeassemblyrow(row = null) {
+    if (row) {
+        $("#pro" + row).remove();
+    } else {
+        alert('error! Refresh the page again');
+}
+}
+

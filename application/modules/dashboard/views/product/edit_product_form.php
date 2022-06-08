@@ -1,5 +1,8 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <link href="<?php echo MOD_URL . 'dashboard/assets/css/add_product_form.css'; ?>" rel="stylesheet" type="text/css" />
+<!-- Assemply Product  js -->
+<script src="<?php echo base_url() ?>my-assets/js/admin_js/json/assemply_product.js.php"></script>
+<!--  Assemply Product js -->
 <!-- Edit Product Start -->
 <div class="content-wrapper">
     <section class="content-header">
@@ -67,27 +70,33 @@
                                                 <span class="desc"><?php echo display('item_information') ?> </span>
                                             </a>
                                         </li>
-                                        <li>
+                                          <li>
                                             <a href="#tab2" data-toggle="tab" class="step" aria-expanded="true">
                                                 <span class="number"> <?php echo display('2') ?> </span>
-                                                <span class="desc"><?php echo display('web_store') ?></span>
+                                                <span class="desc"><?php echo display('assembly') ?></span>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="#tab3" data-toggle="tab" class="step" aria-expanded="true">
                                                 <span class="number"> <?php echo display('3') ?> </span>
-                                                <span class="desc"><?php echo display('price') ?></span>
+                                                <span class="desc"><?php echo display('web_store') ?></span>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="#tab4" data-toggle="tab" class="step" aria-expanded="true">
                                                 <span class="number"> <?php echo display('4') ?> </span>
-                                                <span class="desc"><?php echo display('image') ?></span>
+                                                <span class="desc"><?php echo display('price') ?></span>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="#tab5" data-toggle="tab" class="step" aria-expanded="true">
                                                 <span class="number"> <?php echo display('5') ?> </span>
+                                                <span class="desc"><?php echo display('image') ?></span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#tab6" data-toggle="tab" class="step" aria-expanded="true">
+                                                <span class="number"> <?php echo display('6') ?> </span>
                                                 <span class="desc"><?php echo display('product_translation') ?></span>
                                             </a>
                                         </li>
@@ -326,7 +335,16 @@
                                     </div>
 
                                 </div>
-                                <div class="tab-pane" id="tab2">
+                                  <div class="tab-pane" id="tab2">
+                                    <div class="assembly_row assembly_row_mb">
+                                        <!-- Start for assembly_productList -->
+                                        <div class="form-group row" id="show-assembly-result">
+
+                                        </div>
+                                        <!-- End for assembly_productList  --> 
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="tab3">
 
                                     <div class="row">
                                         <div class="col-sm-6">
@@ -467,7 +485,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane" id="tab3">
+                                <div class="tab-pane" id="tab4">
 
                                     <div class="form-group row">
                                         <label for="sell_price"
@@ -801,7 +819,7 @@
 
                                     </div>
                                 </div>
-                                <div class="tab-pane" id="tab4">
+                                <div class="tab-pane" id="tab5">
                                     <div class="col-md-12">
                                         <div class="form-group row">
                                             <label for="image_thumb"
@@ -886,7 +904,7 @@
                                         <?php } ?>
                                     </div>
                                 </div>
-                                <div class="tab-pane" id="tab5">
+                                <div class="tab-pane" id="tab6">
                                     <?php $product_languages = $this->db->select('*')
                                         ->from('product_translation')
                                         ->where('product_id', $product_id)

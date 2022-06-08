@@ -76,6 +76,18 @@ class Cfiltration_model extends CI_Model {
 
     /////////////////////////////////////////////////////
 
+    ////////////////assembly_products//////////////////////
+    
+    
+     public function get_assembly_products($product_id) {
+        $this->db->select('*');
+        $this->db->from('assembly_products');
+        $this->db->where('parent_product_id', $product_id);
+         $this->db->join('product_information', 'product_information.product_id = assembly_products.child_product_id');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+    
     public function category_list_all() {
         $this->db->select('category_name, category_id');
         $this->db->from('product_category');

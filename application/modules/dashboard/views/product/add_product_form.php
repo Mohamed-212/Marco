@@ -1,5 +1,8 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <link href="<?php echo MOD_URL . 'dashboard/assets/css/add_product_form.css'; ?>" rel="stylesheet" type="text/css" />
+<!-- Assemply Product  js -->
+<script src="<?php echo base_url() ?>my-assets/js/admin_js/json/assemply_product.js.php"></script>
+<!--  Assemply Product js -->
 <!-- Add Product Form Start -->
 <div class="content-wrapper">
     <section class="content-header">
@@ -204,27 +207,33 @@
                                                 <span class="desc"><?php echo display('item_information') ?> </span>
                                             </a>
                                         </li>
-                                        <li>
+                                         <li>
                                             <a href="#tab2" data-toggle="tab" class="step" aria-expanded="true">
                                                 <span class="number"> <?php echo display('2') ?> </span>
-                                                <span class="desc"><?php echo display('web_store') ?></span>
+                                                <span class="desc"><?php echo display('assembly') ?></span>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="#tab3" data-toggle="tab" class="step" aria-expanded="true">
                                                 <span class="number"> <?php echo display('3') ?> </span>
-                                                <span class="desc"><?php echo display('price') ?></span>
+                                                <span class="desc"><?php echo display('web_store') ?></span>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="#tab4" data-toggle="tab" class="step" aria-expanded="true">
                                                 <span class="number"> <?php echo display('4') ?> </span>
-                                                <span class="desc"><?php echo display('image') ?></span>
+                                                <span class="desc"><?php echo display('price') ?></span>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="#tab5" data-toggle="tab" class="step" aria-expanded="true">
                                                 <span class="number"> <?php echo display('5') ?> </span>
+                                                <span class="desc"><?php echo display('image') ?></span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#tab6" data-toggle="tab" class="step" aria-expanded="true">
+                                                <span class="number"> <?php echo display('6') ?> </span>
                                                 <span class="desc"><?php echo display('product_translation') ?></span>
                                             </a>
                                         </li>
@@ -379,7 +388,48 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane" id="tab2">
+                                  <div class="tab-pane" id="tab2">
+                                    <div class="assembly_row assembly_row_mb">
+
+                                        <!-- Start Row for assembly -->
+
+                                        <table class="" id="addassemblypro">
+                                            <tbody>
+                                                <?php
+                                                for ($x = 1; $x < 2; $x++) {
+                                                    ?>
+                                                    <tr id="pro<?php echo $x; ?>" class="<?php echo $x; ?>">
+                                                        
+                                                        <td class="col-sm-6">
+                                                            <div class="col-sm-12">
+                                                                <div class="form-group row">
+                                                                    <div class="input-group">
+                                                                        <input type="text" name="assemblypro" onkeyup="assembly_productList(<?php echo $x; ?>);"
+                                                                               class="form-control assemblyproductSelection"
+                                                                               placeholder='<?php echo display('product_name') ?>' 
+                                                                               id="assemblypro">
+
+                                                                        <input type="hidden" class="autocomplete_hidden_value assembly_product_id_1" value="" name="assembly_product_id[<?php echo $x; ?>]" />
+                                                                        <div class="input-group-addon btn btn-success" id="addassemblyprorow">
+                                                                            <i class="ti-plus"></i>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <?php
+                                                } // /.foreach 
+                                                ?>
+                                            </tbody>
+                                        </table>
+
+                                        <!-- End Row for assembly  --> 
+                                    </div>
+                                    <div class="new_pro_row"></div>
+
+                                </div>
+                                <div class="tab-pane" id="tab3">
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-group row">
@@ -493,7 +543,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane" id="tab3">
+                                <div class="tab-pane" id="tab4">
                                     <div class="form-group row">
                                         <label for="sell_price"
                                                class="col-sm-4 col-form-label"><?php echo display('sell_price') ?> <span
@@ -733,7 +783,7 @@ if ($variant_list) {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane" id="tab4">
+                                <div class="tab-pane" id="tab5">
                                     <div class="col-md-12">
                                         <div class="form-group row">
                                             <label for="image_thumb"
@@ -767,7 +817,7 @@ if ($variant_list) {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane" id="tab5">
+                                <div class="tab-pane" id="tab6">
                                     <div class="trans_row trans_row_mb">
                                         <div class="row">
                                             <div class="col-sm-6">
