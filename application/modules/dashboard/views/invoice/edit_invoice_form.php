@@ -338,7 +338,7 @@
                                                     </div>
 
                                                 </td>
-                                                <td class="text-center">
+                                                 <td class="text-center">
                                                     <?php if (!empty($value['pricing_id'])) { ?>
                                                         <div>
                                                             <select name="pricing[]" id="pricing_1"
@@ -350,6 +350,17 @@
                                                                         echo "selected";
                                                                     }
                                                                     ?>>
+                                                                                <?php echo $pricevalue['pri_type_name']; ?>
+                                                                    </option>
+                                                                <?php } ?>
+                                                            </select>
+                                                        </div>
+                                                    <?php } else { ?>
+                                                        <div>
+                                                            <select name="pricing[]" id="pricing_1"
+                                                                    class="form-control pricing width_100p">
+                                                                        <?php foreach ($pricing as $pricevalue) { ?>
+                                                                    <option value="<?php echo $pricevalue['pri_type_id'] ?>" >
                                                                                 <?php echo $pricevalue['pri_type_name']; ?>
                                                                     </option>
                                                                 <?php } ?>
