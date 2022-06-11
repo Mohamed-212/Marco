@@ -202,9 +202,9 @@ class Linvoice {
 		$subTotal_quantity=0;
 		$subTotal_cartoon =0;
 		$subTotal_discount=0;
-        $isTaxed = 0;
-        if ($invoice_detail[0]['total_vat'] > 0){
-            $isTaxed = 1;
+        $isTaxed = 1;
+        if ($invoice_detail[0]['is_quotation'] > 0){
+            $isTaxed = 0;
         }
 		if(!empty($invoice_detail)){
 			foreach($invoice_detail as $k=>$v){

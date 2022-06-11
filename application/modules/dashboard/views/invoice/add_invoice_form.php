@@ -9,7 +9,6 @@
 <script src="<?php echo MOD_URL . 'dashboard/assets/js/add_invoice_form.js'; ?>"></script>
 <link rel="stylesheet" href="<?php echo MOD_URL . 'dashboard/assets/css/invoice/add_invoice_form.css' ?>">
 
-
 <!-- Add New Invoice Start -->
 <div class="content-wrapper">
     <section class="content-header">
@@ -365,7 +364,15 @@
                                             </td>
                                             <td class="text-right" colspan="2">
                                                 <input type="number" id="total_cgst" class="form-control text-right"
-                                                       name="total_cgst" onkeyup="calculateSum();" onchange="calculateSum();" placeholder="0.00"  />
+                                                       name="total_cgst" placeholder="0.00" readonly="readonly" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-right" colspan="8">
+                                                <b><?php echo display('quotation') ?>:</b>
+                                            </td>
+                                            <td class="text-right" colspan="2">
+                                                <input type="checkbox" id="is_quotation" onclick="check_quotation();" value="0" class="form-control text-right" name="is_quotation" />
                                             </td>
                                         </tr>
                                         <?php
@@ -475,9 +482,6 @@
 
                                             <input class="btn btn-warning" id="full" value="<?php echo display('full_paid') ?>"
                                                    tabindex="15" onclick="full_paid();" type="button">
-                                            <input type="hidden" name="is_installment" id="is_installment" value="0">
-                                            <input class="btn btn-primary" id="installment_id" value="<?php echo display('installment') ?>"
-                                                   tabindex="15" onclick="installment();" type="button">
                                         </td>
                                         <td class="text-right" colspan="7"><b><?php echo display('paid_ammount') ?>
                                                 :</b></td>
@@ -491,8 +495,8 @@
                                             <input type="button" id="add-invoice" class="btn btn-primary payment_button"
                                                    value="<?php echo display('payment') ?>" />
 
-                                            <input type="submit" id="add-invoice_btn" class="btn btn-success"
-                                                   name="add-invoice" value="<?php echo display('submit') ?>" />
+                                            <input type="button" id="add-invoice_btn" class="btn btn-success"
+                                                   name="add-invoice" onclick="submit_form();" value="<?php echo display('submit') ?>" />
                                         </td>
                                         <td class="text-right" colspan="7"><b><?php echo display('due') ?>:</b></td>
                                         <td class="text-right" colspan="2">
@@ -543,62 +547,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <!-- Payment method -->
-                                    <tr class="installment_setup none">
-                                        <td colspan="10">
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <div class="form-group row">
-                                                        <label for="bank_id" class="col-sm-4 col-form-label">
-                                                            <?php echo display('number_of_month') ?> :
-                                                        </label>
-                                                        <div class="col-sm-8">
-                                                            <input class="form-control" onchange="add_month()" type="number"
-                                                                   id="month_no">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <div class="form-group row">
-                                                        <label for="pay_day"
-                                                               class="col-sm-4 col-form-label"><?php echo display('payment_day') ?>
-                                                            :</label>
-                                                        <div class="col-sm-8">
-                                                            <input class="form-control" onchange="add_month()" type="number" max="30"
-                                                                   id="pay_day">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div id="installment_header" class="none">
-                                                <div class="row">
-                                                    <div class="col-sm-4">
-                                                        <div class="form-group">
-                                                            <label class="col-sm-12 col-form-label"><?php echo display('payment_day') ?></label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-4">
-                                                        <div class="form-group">
-                                                            <label class="col-sm-12 col-form-label"><?php echo display('payment_day') ?></label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-4">
-                                                        <div class="form-group row">
-                                                            <div class="col-sm-2">
-                                                                <label class="col-sm-12 col-form-label"><?php echo display('payment_day') ?></label>
-                                                            </div>
-                                                            <div class="col-sm-8">
-                                                                <label class="col-sm-12 col-form-label"><?php echo display('payment_day') ?></label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div id="installment_details">
-
                                             </div>
                                         </td>
                                     </tr>

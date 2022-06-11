@@ -99,6 +99,96 @@ function quantity_calculate(item) {
     invoice_paidamount();
 }
 
+function check_quotation(){
+    var elem = $("#is_quotation");
+    if(elem.prop('checked') == true){
+        calculateSumQuotation();
+        elem.val('1');
+        $("#paidAmount").val('0');
+        $("#dueAmmount").val('0');
+    }
+    else {
+        calculateSum();
+        elem.val('0');
+    }
+}
+
+function submit_form(){
+    var elem = $("#is_quotation");
+    if(elem.prop('checked') == true){
+        $(".total_cgst").each(function() {
+            this.value = 0;
+        })
+        $("#total_cgst").val('0');
+    }
+    $("form#validate").submit();
+}
+
+function calculateSumQuotation(){
+    var cgst           =0;
+    var sgst           =0;
+    var igst           =0;
+    var e              =0;
+    var f              =0;
+    var total_discount =0;
+    var total_price    =0;
+    var inv_dis        =0;
+    var ser_chg        =0;
+    var shipping_charge=0;
+    var sum            =0;
+
+    if($("#is_quotation").val() == 0){
+
+    }
+    //Total CGST
+    $(".total_cgst").each(function() {
+        isNaN(this.value) || 0 == this.value.length || (cgst += parseFloat(this.value))
+    }),
+        cgst = 0;
+        $("#total_cgst").val(cgst.toFixed(2)),
+        $(".total_cgst_bill").text(cgst.toFixed(2)),
+
+        //Total SGST
+        $(".total_sgst").each(function() {
+            isNaN(this.value) || 0 == this.value.length || (sgst += parseFloat(this.value))
+        }),
+        $("#total_sgst").val(sgst.toFixed(2)),
+        $(".total_sgst_bill").text(sgst.toFixed(2)),
+
+        //Total IGST
+        $(".total_igst").each(function() {
+            isNaN(this.value) || 0 == this.value.length || (igst += parseFloat(this.value))
+        }),
+        $("#total_igst").val(igst.toFixed(2)),
+        $(".total_igst_bill").text(igst.toFixed(2)),
+
+        //Total Discount
+        $(".total_discount").each(function() {
+            isNaN(this.value) || 0 == this.value.length || (total_discount += parseFloat(this.value))
+        }),
+        $("#total_discount_ammount").val(total_discount.toFixed(2)),
+        $(".total_discount_bill").text(total_discount.toFixed(2)),
+
+        //Total Price
+        $(".total_price").each(function() {
+            isNaN(this.value) || 0 == this.value.length || (total_price += parseFloat(this.value))
+        }),
+
+        cgst = cgst.toFixed(2),
+        sgst = sgst.toFixed(2),
+        igst = igst.toFixed(2),
+        e    = total_price.toFixed(2),
+        f    = total_discount.toFixed(2),
+        inv_dis = $("#invoice_discount").val(),
+        ser_chg = $("#service_charge").val();
+    shipping_charge = (($("#shipping_charge").val())? $("#shipping_charge").val() : 0);
+
+    sum = +cgst+ +sgst+ +igst+ +e+ - f+ - inv_dis+ +ser_chg + +shipping_charge;
+    $("#grandTotal").val(sum.toFixed(2));
+    $(".total_bill").text(sum.toFixed(2));
+
+    invoice_paidamount();
+}
 
 //Calculate all summation
 function calculateSum() {
@@ -113,11 +203,15 @@ function calculateSum() {
     var ser_chg        =0;
     var shipping_charge=0;
     var sum            =0;
+
+    if($("#is_quotation").val() == 0){
+
+    }
     //Total CGST
     $(".total_cgst").each(function() {
         isNaN(this.value) || 0 == this.value.length || (cgst += parseFloat(this.value))
     }),
-        //cgst += parseFloat($('#total_cgst').val());
+
         $("#total_cgst").val(cgst.toFixed(2)),
         $(".total_cgst_bill").text(cgst.toFixed(2)),
 
@@ -214,79 +308,18 @@ function stockLimitAjax(t) {
     })
 }
 
-//Invoice installment
-function installment() {
-    $('#installment_details').html('');
-    $('#pay_day').val(0);
-    $('#month_no').val(0);
-    $('.installment_setup').toggle();
-}
-
-function add_month(){
-    $('#installment_details').html('');
-    var month_no = Math.ceil($('#month_no').val());
-    var due_amount = $('#dueAmmount').val();
-    var amount_per_month = due_amount/month_no;
-    var date = new Date();
-    var year = date.getFullYear();
-    var month = date.getMonth();
-    var day = Math.ceil($('#pay_day').val());
-    if(month_no > 0 && day > 0 && due_amount > 0) {
-        var content = '';
-        $('#installment_header').show();
-        for (let i = 1; i <= month_no; i++){
-            var d = new Date(year, month + i, day);
-            var m = d.getMonth()+1;
-            if(m < 10){
-                m = '0' + m;
-            }
-            var da = d.getDate();
-            if(da < 10){
-                da = '0' + da;
-            }
-            var y = d.getFullYear();
-            var date = y + '-' + m + '-' + da;
-            console.log(d);
-            console.log(date);
-            content += '<div class="row">' +
-                '<div class="col-sm-4">' +
-                '<div class="form-group">' +
-                '<input class="form-control" type="number" name="amount[]" value="' + amount_per_month + '" readonly>' +
-                '</div>' +
-                '</div>' +
-                '<div class="col-sm-4">' +
-                '<div class="form-group">' +
-                '<input class="form-control" type="date" value="'+ date +'" name="due_date[]" readonly>' +
-                '</div>' +
-                '</div>' +
-                '<div class="col-sm-4">' +
-                '<div class="form-group row">' +
-                '<div class="col-sm-2">' +
-                '<input type="checkbox" name="status[]" value="0" onclick="return false">' +
-                '</div>' +
-                '<div class="col-sm-8">' +
-                '<input class="form-control" type="date" name="payment_date[]" readonly>' +
-                '</div>' +
-                '</div>' +
-                '</div>' +
-                '</div>';
-        }
-        content += '<div class="col-sm-12 text-center">' +
-            '<div class="form-group">' +
-            '<input type="button" id="save_installment" class="btn btn-success" value="save">' +
-            '</div>' +
-            '</div>';
-        $('#installment_details').html(content);
-    }
-}
-
 //Invoice full paid
 function full_paid() {
     var grandTotal = $("#grandTotal").val();
     $("#paidAmount").val(grandTotal);
-    calculateSum();
+    var elem = $("#is_quotation");
+    if(elem.prop('checked') == true){
+        calculateSumQuotation();
+    }
+    else {
+        calculateSum();
+    }
     invoice_paidamount();
-    $('#installment_id').hide();
 }
 
 //Delete a row from invoice table

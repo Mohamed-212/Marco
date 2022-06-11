@@ -273,7 +273,7 @@ class Invoices extends CI_Model {
                 $this->db->insert('customer_ledger', $data2);
 
                 //Data inserting into invoice table
-                (($this->input->post('total_cgst', true)) ? $total_cgsti = $this->input->post('total_cgst', true) : $total_cgsti = 0);
+                (($this->input->post('total_cgst', true) && $this->input->post('is_quotation', true) == 0) ? $total_cgsti = $this->input->post('total_cgst', true) : $total_cgsti = 0);
                 (($this->input->post('total_sgst', true)) ? $total_sgsti = $this->input->post('total_sgst', true) : $total_sgsti = 0);
                 (($this->input->post('total_igst', true)) ? $total_igsti = $this->input->post('total_igst', true) : $total_igsti = 0);
 
@@ -286,6 +286,8 @@ class Invoices extends CI_Model {
                     'invoice' => 'Inv-' . $this->number_generator(),
                     'total_discount' => $this->input->post('total_discount', TRUE),
                     'total_vat' => $tota_vati,
+                    'is_quotation' => $this->input->post('is_quotation', true),
+                    'employee_id' => $this->input->post('employee_id', true),
                     'invoice_discount' => $this->input->post('invoice_discount', TRUE),
                     'user_id' => $this->session->userdata('user_id'),
                     'store_id' => $this->input->post('store_id', TRUE),

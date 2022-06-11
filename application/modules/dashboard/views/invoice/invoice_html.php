@@ -238,10 +238,21 @@
                                         <th><?php echo display('unit') ?></th>
                                         <th><?php echo display('batch_no') ?></th>
                                         <th><?php echo display('quantity') ?></th>
-                                        <th><?php echo display('unit_price_before_VAT') ?></th>
+                                        <?php
+                                        if ($isTaxed == 1) {
+                                            echo "<th>" . display('unit_price_before_VAT') . "</th>";
+                                        }
+                                        else{
+                                            echo "<th>" . display('rate') . "</th>";
+                                        }
+                                        ?>
                                         <th><?php echo display('discount') ?></th>
-                                        <th><?php echo display('vat_rate') ?></th>
-                                        <th><?php echo display('vat_value') ?></th>
+                                        <?php
+                                        if ($isTaxed == 1) {
+                                            echo "<th>" . display('vat_rate') . "</th>";
+                                            echo "<th>" . display('vat_value') . "</th>";
+                                        }
+                                        ?>
                                         <th><?php echo display('total_value') ?></th>
                                     </tr>
                                     </thead>
@@ -285,9 +296,13 @@
                                                 </td>
                                                 <td><?php echo(($position == 0) ? $currency . " " . $invoice['discount'] : $invoice['discount'] . " " . $currency) ?>
                                                 </td>
+                                                <?php if ($isTaxed == 1) { ?>
+
                                                 <?php
                                                 $item_tax = $this->db->select('*')->from('tax_product_service')->where('product_id', $invoice['product_id'])->where('tax_id', '52C2SKCKGQY6Q9J')->get()->row();
                                                 ?>
+
+
                                                 <td><?php if (!empty($item_tax)) {
                                                         echo $item_tax->tax_percentage . '%';
                                                     } else {
@@ -303,6 +318,8 @@
                                                     }
                                                     ?>
                                                 </td>
+
+                                                <?php } ?>
 
                                                 <td><?php if (!empty($invoice['total_price'])) {
                                                         echo(($position == 0) ? $currency . " " . $invoice['total_price'] : $invoice['total_price'] . " " . $currency);

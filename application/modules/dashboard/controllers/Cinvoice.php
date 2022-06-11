@@ -163,6 +163,7 @@ class Cinvoice extends MX_Controller
         $this->form_validation->set_rules('product_id[]', display('product_id'), 'required');
         $this->form_validation->set_rules('variant_id[]', display('variant'), 'required');
         $this->form_validation->set_rules('batch_no[]', display('batch_no'), 'required');
+        $this->form_validation->set_rules('employee_id', display('employee_id'), 'required');
         if ($this->form_validation->run() == false) {
             $this->session->set_userdata(array('error_message' => display('failed_try_again')));
             $this->index();
