@@ -494,4 +494,17 @@ function removeassemblyrow(row = null) {
         alert('error! Refresh the page again');
 }
 }
+function  check_price() {
+
+    let sell_price = $("#sell_price").val();
+    let supplier_price = $("#supplier_price").val();
+    if (supplier_price > 0) {
+        if (sell_price < supplier_price) {
+            alert('Sell price is lower than supplier price');
+            $("#sell_price").val(supplier_price);
+
+        }
+    }
+
+}
 

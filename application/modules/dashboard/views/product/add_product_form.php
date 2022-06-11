@@ -207,7 +207,7 @@
                                                 <span class="desc"><?php echo display('item_information') ?> </span>
                                             </a>
                                         </li>
-                                         <li>
+                                        <li>
                                             <a href="#tab2" data-toggle="tab" class="step" aria-expanded="true">
                                                 <span class="number"> <?php echo display('2') ?> </span>
                                                 <span class="desc"><?php echo display('assembly') ?></span>
@@ -388,7 +388,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                  <div class="tab-pane" id="tab2">
+                                <div class="tab-pane" id="tab2">
                                     <div class="assembly_row assembly_row_mb">
 
                                         <!-- Start Row for assembly -->
@@ -399,7 +399,7 @@
                                                 for ($x = 1; $x < 2; $x++) {
                                                     ?>
                                                     <tr id="pro<?php echo $x; ?>" class="<?php echo $x; ?>">
-                                                        
+
                                                         <td class="col-sm-6">
                                                             <div class="col-sm-12">
                                                                 <div class="form-group row">
@@ -550,7 +550,7 @@
                                                 class="color-red">*</span></label>
                                         <div class="col-sm-4">
                                             <input class="form-control text-right" name="price" type="number"
-                                                   required="" placeholder="<?php echo display('sell_price') ?>"
+                                                   required="" onchange="check_price();" placeholder="<?php echo display('sell_price') ?>"
                                                    value="<?php echo set_value('price') ?>" min="0" id="sell_price">
                                         </div>
                                     </div>
@@ -602,11 +602,11 @@
                                     <div class="form-group row">
                                         <label for="supplier_price"
                                                class="col-sm-4 col-form-label"><?php echo display('supplier_price') ?>
-                                            <span class="color-red">*</span></label>
+                                        </label>
                                         <div class="col-sm-4">
                                             <input type="number" tabindex="4" class="form-control text-right"
                                                    name="supplier_price" value="<?php echo set_value('supplier_price') ?>"
-                                                   placeholder="<?php echo display('supplier_price') ?>" required=""
+                                                   onchange="check_price();" placeholder="<?php echo display('supplier_price') ?>" readonly=""
                                                    min="0" id="supplier_price" />
                                         </div>
                                     </div>
@@ -650,38 +650,38 @@
                                             <select name="supplier_id" class="form-control select2" required=""
                                                     id="supplier">
                                                 <option value=""><?php echo display('select_supplier') ?></option>
-<?php if ($supplier) { ?>
+                                                <?php if ($supplier) { ?>
                                                     {supplier}
                                                     <option value="{supplier_id}">{supplier_name}</option>
                                                     {/supplier}
-<?php } ?>
+                                                <?php } ?>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <label for="variant"
-                                               class="col-sm-4 col-form-label"><?php echo display('variant') ?> <span
+                                               class="col-sm-4 col-form-label"><?php echo display('color') ?> <span
                                                 class="color-red">*</span></label>
                                         <div class="col-sm-4 custom_select">
-                                            <select name="variant[]" class="form-control select2" multiple required=""
+                                            <select name="variant[]" class="form-control select2"  required=""
                                                     id="variant">
                                                 <option></option>
-<?php
-if ($variant_list) {
-    foreach ($variant_list as $variant) {
-        if ($variant['variant_type'] == 'size') {
-            ?>
+                                                <?php
+                                                if ($variant_list) {
+                                                    foreach ($variant_list as $variant) {
+                                                        if ($variant['variant_type'] == 'color') {
+                                                            ?>
                                                             <option value="<?php echo html_escape($variant['variant_id']) ?>">
-                                                            <?php echo html_escape($variant['variant_name']); ?></option>
-                                                                <?php
-                                                            }
+                                                                <?php echo html_escape($variant['variant_name']); ?></option>
+                                                            <?php
                                                         }
                                                     }
-                                                    ?>
+                                                }
+                                                ?>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="form-group row">
+                                    <div class="form-group row hidden">
                                         <label for="default_variant"
                                                class="col-sm-4 col-form-label"><?php echo display('default_variant') ?>
                                             <span class="color-red">*</span></label>
@@ -693,28 +693,28 @@ if ($variant_list) {
                                     </div>
                                     <div class="form-group row">
                                         <label for="variant_colors"
-                                               class="col-sm-4 col-form-label"><?php echo display('color') ?></label>
+                                               class="col-sm-4 col-form-label"><?php echo display('size') ?></label>
                                         <div class="col-sm-4 custom_select">
-                                            <select name="variant_colors[]" class="form-control select2" multiple
+                                            <select name="variant_colors[]" class="form-control select2" 
                                                     id="variant_colors">
                                                 <option value="">Select</option>
-<?php
-if ($variant_list) {
-    foreach ($variant_list as $variant) {
-        if ($variant['variant_type'] == 'color') {
-            ?>
+                                                <?php
+                                                if ($variant_list) {
+                                                    foreach ($variant_list as $variant) {
+                                                        if ($variant['variant_type'] == 'size') {
+                                                            ?>
                                                             <option value="<?php echo html_escape($variant['variant_id']) ?>">
-                                                            <?php echo html_escape($variant['variant_name']); ?></option>
-                                                                <?php
-                                                            }
+                                                                <?php echo html_escape($variant['variant_name']); ?></option>
+                                                            <?php
                                                         }
                                                     }
-                                                    ?>
+                                                }
+                                                ?>
                                             </select>
                                         </div>
                                     </div>
                                     <div id="variant_price_area">
-                                        <div class="form-group row">
+                                        <div class="form-group row hidden">
                                             <div class="col-sm-4 col-sm-offset-4">
                                                 <div class="checkbox checkbox-success">
                                                     <input type="checkbox" name="variant_prices" value="1"
@@ -740,7 +740,7 @@ if ($variant_list) {
                                                             </tr>
                                                         </thead>
                                                         <tbody id="variant_area">
-<?php $i = 0; ?>
+                                                            <?php $i = 0; ?>
                                                             <tr>
 
                                                                 <td>
@@ -829,16 +829,16 @@ if ($variant_list) {
                                                             <select class="form-control" id="language"
                                                                     name="language[0]">
                                                                 <option value=""></option>
-<?php
-if (!empty($languages)) {
-    foreach ($languages as $lkey => $lvalue) {
-        ?>
+                                                                <?php
+                                                                if (!empty($languages)) {
+                                                                    foreach ($languages as $lkey => $lvalue) {
+                                                                        ?>
                                                                         <option value="<?php echo html_escape($lvalue); ?>">
-                                                                        <?php echo html_escape($lvalue); ?></option>
-                                                                            <?php
-                                                                        }
+                                                                            <?php echo html_escape($lvalue); ?></option>
+                                                                        <?php
                                                                     }
-                                                                    ?>
+                                                                }
+                                                                ?>
                                                             </select>
                                                             <div class="input-group-addon btn btn-success" id="add_row">
                                                                 <i class="ti-plus"></i>
@@ -914,7 +914,7 @@ if (!empty($languages)) {
                             </div>
                         </div>
                     </div>
-<?php echo form_close(); ?>
+                    <?php echo form_close(); ?>
                 </div>
             </div>
         </div>

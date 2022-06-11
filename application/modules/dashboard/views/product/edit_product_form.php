@@ -494,7 +494,7 @@
                                         <div class="col-sm-4">
                                             <input class="form-control text-right" name="price" type="number"
                                                 value="<?php echo html_escape($price); ?>" required
-                                                placeholder="<?php echo display('sell_price') ?>" tabindex="3" min="0">
+                                               onchange="check_price();" placeholder="<?php echo display('sell_price') ?>" tabindex="3" min="0">
                                         </div>
                                     </div>
                                     
@@ -509,12 +509,12 @@
                                     <div class="form-group row">
                                         <label for="supplier_price"
                                             class="col-sm-4 col-form-label"><?php echo display('supplier_price') ?>
-                                            <span class="color-red">*</span></label>
+                                            </label>
                                         <div class="col-sm-4">
                                             <input type="number" tabindex="4" class="form-control text-right"
                                                 value="<?php echo html_escape($supplier_price); ?>"
                                                 name="supplier_price"
-                                                placeholder="<?php echo display('supplier_price') ?>" required
+                                                onchange="check_price();" placeholder="<?php echo display('supplier_price') ?>" readonly=""
                                                 min="0" />
                                         </div>
                                     </div>
@@ -595,15 +595,15 @@
                                     ?>
                                     <div class="form-group row">
                                         <label for="variant"
-                                            class="col-sm-4 col-form-label"><?php echo display('variant') ?> <span
+                                            class="col-sm-4 col-form-label"><?php echo display('color') ?> <span
                                                 class="color-red">*</span></label>
                                         <div class="col-sm-4 custom_select">
-                                            <select name="variant[]" class="form-control select2" multiple required=""
+                                            <select name="variant[]" class="form-control select2"  required=""
                                                 id="variant">
                                                 <option value="">Select</option>
                                                 <?php if ($variant_list) {
                                                     foreach ($variant_list as $variant) {
-                                                        if ($variant['variant_type'] == 'size') {
+                                                        if ($variant['variant_type'] == 'color') {
                                                 ?>
                                                 <option value="<?php echo html_escape($variant['variant_id']) ?>"
                                                     <?php echo (in_array($variant['variant_id'], $exploded) ? 'selected' : '') ?>>
@@ -615,7 +615,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group row">
+                                    <div class="form-group row hidden">
                                         <label for="default_variant"
                                             class="col-sm-4 col-form-label"><?php echo display('default_variant') ?></label>
                                         <div class="col-sm-4 custom_select">
@@ -636,14 +636,14 @@
                                     </div>
                                     <div class="form-group row">
                                         <label for="variant_colors"
-                                            class="col-sm-4 col-form-label"><?php echo display('color') ?></label>
+                                            class="col-sm-4 col-form-label"><?php echo display('size') ?></label>
                                         <div class="col-sm-4 custom_select">
-                                            <select name="variant_colors[]" class="form-control select2" multiple
+                                            <select name="variant_colors[]" class="form-control select2" 
                                                 id="variant_colors">
                                                 <option value="">Select</option>
                                                 <?php if ($variant_list) {
                                                     foreach ($variant_list as $variant) {
-                                                        if ($variant['variant_type'] == 'color') {
+                                                        if ($variant['variant_type'] == 'size') {
                                                 ?>
                                                 <option value="<?php echo html_escape($variant['variant_id']) ?>"
                                                     <?php echo (in_array($variant['variant_id'], $exploded) ? 'selected' : '') ?>>
@@ -656,7 +656,7 @@
                                     </div>
                                     <div id="variant_price_area"
                                         style="<?php echo (($onsale == 0) ? "display: block" : "display: none"); ?>">
-                                        <div class="form-group row">
+                                        <div class="form-group row hidden">
                                             <div class="col-sm-4 col-sm-offset-4">
                                                 <div class="checkbox checkbox-success">
                                                     <input type="checkbox" name="variant_prices" value="1"

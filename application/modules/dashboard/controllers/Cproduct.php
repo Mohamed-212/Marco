@@ -44,7 +44,7 @@ class Cproduct extends MX_Controller {
         $this->form_validation->set_rules('category_id', display('category'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('onsale', display('onsale'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('price', display('sell_price'), 'trim|required|xss_clean');
-        $this->form_validation->set_rules('supplier_price', display('supplier_price'), 'trim|required|xss_clean');
+      //  $this->form_validation->set_rules('supplier_price', display('supplier_price'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('model', display('model'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('supplier_id', display('supplier'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('variant[]', display('variant'), 'trim|required|xss_clean');
@@ -391,7 +391,7 @@ class Cproduct extends MX_Controller {
         $this->form_validation->set_rules('category_id', display('category'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('onsale', display('onsale'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('price', display('sell_price'), 'trim|required|xss_clean');
-        $this->form_validation->set_rules('supplier_price', display('supplier_price'), 'trim|required|xss_clean');
+      //  $this->form_validation->set_rules('supplier_price', display('supplier_price'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('model', display('model'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('supplier_id', display('supplier'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('variant[]', display('variant'), 'trim|required|xss_clean');
