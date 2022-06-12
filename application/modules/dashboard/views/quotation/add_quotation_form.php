@@ -322,9 +322,17 @@
                                         <td class="text-right" colspan="7">
                                             <b><?php echo html_escape($tax['cgst_name']) ?>:</b>
                                         </td>
-                                        <td class="text-right">
+                                        <td class="text-right" colspan="2">
                                             <input type="text" id="total_cgst" class="form-control text-right"
                                                 name="total_cgst" placeholder="0.00" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-right" colspan="7">
+                                            <b><?php echo display('quotation') ?>:</b>
+                                        </td>
+                                        <td class="text-right" colspan="2">
+                                            <input type="checkbox" id="is_quotation" onclick="check_quotation();" value="0" class="form-control text-right" name="is_quotation" />
                                         </td>
                                     </tr>
                                     <?php }
@@ -333,7 +341,7 @@
                                         <td class="text-right" colspan="7">
                                             <b><?php echo html_escape($tax['sgst_name']) ?>:</b>
                                         </td>
-                                        <td class="text-right">
+                                        <td class="text-right" colspan="2">
                                             <input type="text" id="total_sgst" class="form-control text-right"
                                                 name="total_sgst" placeholder="0.00" readonly="readonly" />
                                         </td>
@@ -344,7 +352,7 @@
                                         <td class="text-right" colspan="7">
                                             <b><?php echo html_escape($tax['igst_name']) ?>:</b>
                                         </td>
-                                        <td class="text-right">
+                                        <td class="text-right" colspan="2">
                                             <input type="text" id="total_igst" class="form-control text-right"
                                                 name="total_igst" placeholder="0.00" readonly="readonly" />
                                         </td>
@@ -360,7 +368,7 @@
                                         <td class="text-right" colspan="2">
                                             <b><?php echo display('product_discount') ?>:</b>
                                         </td>
-                                        <td class="text-right">
+                                        <td class="text-right" colspan="2">
                                             <input type="text" id="total_discount_ammount"
                                                 class="form-control text-right" name="total_discount" placeholder="0.00"
                                                 readonly="readonly" />
@@ -370,7 +378,7 @@
                                         <td class="text-right" colspan="2">
                                             <b><?php echo display('invoice_discount') ?>:</b>
                                         </td>
-                                        <td class="text-right">
+                                        <td class="text-right" colspan="2">
                                             <input type="text" id="invoice_discount" class="form-control text-right"
                                                 name="invoice_discount" placeholder="0.00" onkeyup="calculateSum();"
                                                 onchange="calculateSum();" />
@@ -381,7 +389,7 @@
                                         <td class="text-right" colspan="2">
                                             <b><?php echo display('service_charge') ?>:</b>
                                         </td>
-                                        <td class="text-right">
+                                        <td class="text-right" colspan="2">
                                             <input type="text" id="service_charge" class="form-control text-right"
                                                 name="service_charge" placeholder="0.00" onkeyup="calculateSum();"
                                                 onchange="calculateSum();" />
@@ -390,7 +398,7 @@
                                     <tr>
                                         <td colspan="2" class="text-right"><b><?php echo display('grand_total') ?>:</b>
                                         </td>
-                                        <td class="text-right">
+                                        <td class="text-right" colspan="2">
                                             <input type="text" id="grandTotal" class="form-control text-right"
                                                 name="grand_total_price" placeholder="0.00" readonly="readonly" />
                                         </td>
@@ -403,8 +411,8 @@
                                                 value="<?php echo display('add_new_item') ?>" />
                                             <input type="hidden" name="baseUrl" class="baseUrl"
                                                 value="<?php echo base_url(); ?>" />
-                                            <input type="submit" id="add-invoice" class="btn btn-success" tabindex="15"
-                                                name="add-quotation" value="<?php echo display('submit') ?>" />
+                                            <input type="button" id="add-invoice" class="btn btn-success" tabindex="15"
+                                                name="add-quotation" onclick="submit_form();" value="<?php echo display('submit') ?>" />
                                         </td>
                                         <td class="text-right" colspan="7"></td>
 
