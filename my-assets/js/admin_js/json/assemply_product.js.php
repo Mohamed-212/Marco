@@ -22,9 +22,26 @@ $(this).parent().find(".autocomplete_hidden_value").val(ui.item.value);
 $(this).val(ui.item.label);
 
 var id=ui.item.value;
-var dataString = 'csrf_test_name='+csrf_test_name+'&assembly_product_id='+ id;
+var dataString = 'csrf_test_name='+csrf_test_name+'&product_id='+ id;
 var base_url = $('.baseUrl').val();
+var priceClass = 'price_item'+cName;
+var supplier_price = Number( $('#supplier_price').val());
+$.ajax
+({
+type: "POST",
+url: base_url+"dashboard/Cinvoice/retrieve_product_data",
+data: dataString,
+cache: false,
+success: function(data)
+{
 
+var obj = jQuery.parseJSON(data);
+$('.'+priceClass).val(obj.supplier_price);
+supplier_price+=Number(obj.supplier_price);
+$('#supplier_price').val(supplier_price);
+
+}
+});
 
 $(this).unbind("change");
 return false;
