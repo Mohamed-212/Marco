@@ -224,7 +224,7 @@ class Quotations extends CI_Model
 			'service_charge'	=> $this->input->post('service_charge', TRUE),
 			'user_id'			=> $this->session->userdata('user_id'),
 			'store_id'			=> $this->input->post('store_id', TRUE),
-			'is_quotation'			=> $this->input->post('is_quotation', TRUE),
+			'is_quotation'		=> ($this->input->post('is_quotation', True))?$this->input->post('is_quotation', True):0,
 			'status'			=> 1
 		);
 		$this->db->insert('quotation', $data);

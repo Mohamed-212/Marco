@@ -43,7 +43,8 @@ class Cquotation extends MX_Controller {
 
 		$quotation_id = $this->Quotations->quotation_entry();
 		$this->session->set_userdata(array('message'=>display('successfully_added')));
-		$this->quotation_inserted_data($quotation_id);
+		//$this->quotation_inserted_data($quotation_id);
+		$this->quotation_details_data($quotation_id);
 
 		if(isset($_POST['add-quotation'])){
 			redirect(base_url('dashboard/Cquotation'));
@@ -106,7 +107,7 @@ class Cquotation extends MX_Controller {
 	//Retrive right now inserted data to cretae html
 	public function quotation_inserted_data($quotation_id)
 	{	
-		$content = $this->lquotation->quotation_html_data($quotation_id);		
+		$content = $this->lquotation->quotation_html_data($quotation_id);
 		$this->template_lib->full_admin_html_view($content);
 	}
 	//Retrive right now inserted data to cretae html

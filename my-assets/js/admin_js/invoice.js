@@ -119,9 +119,14 @@ function submit_form(){
         $(".total_cgst").each(function() {
             this.value = 0;
         })
+        var cgst = $("#total_cgst").val();
+        if(cgst > 0){
+            $("#grandTotal").val($("#grandTotal").val() - cgst);
+            $("#dueAmmount").val($("#dueAmmount").val() - cgst);
+        }
         $("#total_cgst").val('0');
     }
-    $("form#validate").submit();
+    $("form#validate, form#normalinvoice").submit();
 }
 
 function calculateSumQuotation(){
@@ -310,8 +315,6 @@ function stockLimitAjax(t) {
 
 //Invoice full paid
 function full_paid() {
-    var grandTotal = $("#grandTotal").val();
-    $("#paidAmount").val(grandTotal);
     var elem = $("#is_quotation");
     if(elem.prop('checked') == true){
         calculateSumQuotation();
@@ -319,6 +322,8 @@ function full_paid() {
     else {
         calculateSum();
     }
+    var grandTotal = $("#grandTotal").val();
+    $("#paidAmount").val(grandTotal);
     invoice_paidamount();
 }
 

@@ -131,6 +131,7 @@ class Cproduct extends MX_Controller {
                 'image_large_details' => (!empty($image_url) ? $image_url : 'my-assets/image/product.png'),
                 'image_thumb' => (!empty($thumb_image) ? $thumb_image : 'my-assets/image/product.png'),
                 'status' => 1,
+                'created_at' => date("Y-m-d H:i:s"),
             );
             $languages = $this->input->post('language', TRUE);
             $trans_names = $this->input->post('trans_name', TRUE);
