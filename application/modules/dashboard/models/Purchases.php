@@ -2627,16 +2627,16 @@ class Purchases extends CI_Model {
         //  for ($i = 0, $n = count($p_id); $i < $n; $i++) {//
         foreach ($p_id as $key => $value) {
             if (!empty($p_id[$key]) && !empty($p_id[$key])) {
-                $product_quantity = $quantity[$i];
-                $product_rate = $rate[$i];
-                $product_id = $p_id[$i];
-                $total_price = $t_price[$i];
-                $variant = $variant_id[$i];
-                $variant_color = @$color_variant[$i];
-                $expiry_date = $expiry[$i];
-                $product_discount = $discount[$i];
-                $i_vat_rate = $vat_rate[$i];
-                $i_vat = $vat[$i];
+                $product_quantity = $quantity[$key];
+                $product_rate = $rate[$key];
+                $product_id = $p_id[$key];
+                $total_price = $t_price[$key];
+                $variant = $variant_id[$key];
+                $variant_color = @$color_variant[$key];
+                $expiry_date = $expiry[$key];
+                $product_discount = $discount[$key];
+                $i_vat_rate = $vat_rate[$key];
+                $i_vat = $vat[$key];
 
                 if ($product_quantity > 0) {
                     $data2[] = array(
