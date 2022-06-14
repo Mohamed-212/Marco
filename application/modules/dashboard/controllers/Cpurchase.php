@@ -550,11 +550,11 @@ class Cpurchase extends MX_Controller {
 
             $result = $this->Purchases->purchase_order_update($pur_order_id);
             if ($result) {
-                $this->session->set_userdata(array('message' => display('successfully_added')));
+                $this->session->set_userdata(array('message' => display('successfully_updated')));
 
-                if (isset($_POST['add-purchase'])) {
+           //     if (isset($_POST['add-purchase'])) {
                     redirect(base_url('dashboard/Cpurchase/purchase_order'));
-                }
+             //   }
             } else {
                 $this->session->set_userdata(array('error_message' => display('failed_try_again')));
             }
