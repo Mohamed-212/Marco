@@ -759,17 +759,18 @@ class Purchases extends CI_Model {
                 $pur_order_no = $this->input->post('purchase_order', TRUE);
                 $vat_rate = $this->input->post('vat_rate', TRUE);
                 $vat = $this->input->post('vat', TRUE);
+                $color = $this->input->post('colorv', TRUE);
+                $size = $this->input->post('sizev', TRUE);
 
 
                 //Variant id required check
                 $result = array();
-                foreach ($p_id as $k => $v) {
-                    if (empty($variant_id[$k])) {
-                        $this->session->set_userdata(array('error_message' => display('variant_is_required')));
-                        redirect('dashboard/Cpurchase');
-                    }
-                }
-
+//                foreach ($p_id as $k => $v) {
+//                    if (empty($variant_id[$k])) {
+//                        $this->session->set_userdata(array('error_message' => display('variant_is_required')));
+//                        redirect('dashboard/Cpurchase');
+//                    }
+//                }
                 //proof of purchase expense 
                 $cost_sectors = $this->input->post('bank_id', TRUE);
                 if (!empty($cost_sectors)) {
@@ -828,91 +829,97 @@ class Purchases extends CI_Model {
                 $rate = $this->input->post('product_rate', TRUE);
                 $t_price = $this->input->post('total_price', TRUE);
                 $total_price_without_discount = 0;
-                for ($i = 0, $n = count($p_id); $i < $n; $i++) {
-                    $product_quantity = $quantity[$i];
-                    $product_rate = $rate[$i];
-                    $product_id = $p_id[$i];
-                    $batch_no = $batch[$i];
-                    $expiry_date = $expiry[$i];
-                    $total_price = $t_price[$i];
-                    $variant = $variant_id[$i];
-                    $variant_color = @$color_variant[$i];
-                    $product_discount = $discount[$i];
-                    $total_price_without_discount += ($rate[$i] * $quantity[$i]);
+                //  for ($i = 0, $n = count($p_id); $i < $n; $i++) {
+                foreach ($p_id as $key => $value) {
+                    if (!empty($p_id[$key]) && !empty($p_id[$key])) {
+                        $product_quantity = $quantity[$key];
+                        $product_rate = $rate[$key];
+                        $product_id = $p_id[$key];
+                        $batch_no = $batch[$key];
+                        $expiry_date = $expiry[$key];
+                        $total_price = $t_price[$key];
+                        // $variant = $variant_id[$i];
+                        $variant = $size[$key];
+                        // $variant_color = @$color_variant[$i];
+                        $variant_color = $color[$key];
+                        $product_discount = $discount[$key];
+                        $total_price_without_discount += ($rate[$key] * $quantity[$key]);
 
-                    $i_vat_rate = $vat_rate[$i];
-                    $i_vat = $vat[$i];
-                    $data1 = array(
-                        'purchase_detail_id' => $this->auth->generator(15),
-                        'purchase_id' => $purchase_id,
-                        'product_id' => $product_id,
-                        'batch_no' => $batch_no,
-                        'expiry_date' => !empty($expiry_date) ? date('Y-m-d', strtotime($expiry_date)) : '',
-                        'wearhouse_id' => '',
-                        'store_id' => $this->input->post('store_id', TRUE),
-                        'quantity' => $product_quantity,
-                        'rate' => $product_rate,
-                        'discount' => $product_discount,
-                        'vat_rate' => $i_vat_rate,
-                        'vat' => $i_vat,
-                        'total_amount' => $total_price,
-                        'variant_id' => $variant,
-                        'variant_color' => (!empty($variant_color) ? $variant_color : NULL),
-                        'status' => 1
-                    );
+                        $i_vat_rate = $vat_rate[$key];
+                        $i_vat = $vat[$key];
+                        $data1 = array(
+                            'purchase_detail_id' => $this->auth->generator(15),
+                            'purchase_id' => $purchase_id,
+                            'product_id' => $product_id,
+                            'batch_no' => $batch_no,
+                            'expiry_date' => !empty($expiry_date) ? date('Y-m-d', strtotime($expiry_date)) : '',
+                            'wearhouse_id' => '',
+                            'store_id' => $this->input->post('store_id', TRUE),
+                            'quantity' => $product_quantity,
+                            'rate' => $product_rate,
+                            'discount' => $product_discount,
+                            'vat_rate' => $i_vat_rate,
+                            'vat' => $i_vat,
+                            'total_amount' => $total_price,
+                            'variant_id' => $variant,
+                            // 'variant_color' => (!empty($variant_color) ? $variant_color : NULL),
+                            'variant_color' => $variant_color,
+                            'status' => 1
+                        );
 
-                    if (!empty($quantity)) {
-                        $this->db->insert('product_purchase_details', $data1);
-                    }
-                    $store = array(
-                        'transfer_id' => $this->auth->generator(15),
-                        'purchase_id' => $purchase_id,
-                        'store_id' => $this->input->post('store_id', TRUE),
-                        'product_id' => $product_id,
-                        'variant_id' => $variant,
-                        'variant_color' => (!empty($variant_color) ? $variant_color : NULL),
-                        'date_time' => $this->input->post('purchase_date', TRUE),
-                        'quantity' => $product_quantity,
-                        'status' => 3
-                    );
-                    if (!empty($quantity)) {
-                        $this->db->insert('transfer', $store);
-                        // stock 
-                        $store_id = $this->input->post('store_id', TRUE);
-                        $check_stock = $this->check_stock($store_id, $product_id, $variant, $variant_color);
-                        if (empty($check_stock)) {
-                            // insert
-                            $stock = array(
-                                'store_id' => $store_id,
-                                'product_id' => $product_id,
-                                'variant_id' => $variant,
-                                'variant_color' => (!empty($variant_color) ? $variant_color : NULL),
-                                'quantity' => $product_quantity,
-                                'warehouse_id' => '',
-                            );
-                            $this->db->insert('purchase_stock_tbl', $stock);
-                            // insert
-                        } else {
-                            //update
-                            $stock = array(
-                                'quantity' => $check_stock->quantity + $product_quantity
-                            );
-                            if (!empty($store_id)) {
-                                $this->db->where('store_id', $store_id);
-                            }
-                            if (!empty($product_id)) {
-                                $this->db->where('product_id', $product_id);
-                            }
-                            if (!empty($variant)) {
-                                $this->db->where('variant_id', $variant);
-                            }
-                            if (!empty($variant_color)) {
-                                $this->db->where('variant_color', $variant_color);
-                            }
-                            $this->db->update('purchase_stock_tbl', $stock);
-                            //update
+                        if (!empty($quantity)) {
+                            $this->db->insert('product_purchase_details', $data1);
                         }
-                        // stock
+                        $store = array(
+                            'transfer_id' => $this->auth->generator(15),
+                            'purchase_id' => $purchase_id,
+                            'store_id' => $this->input->post('store_id', TRUE),
+                            'product_id' => $product_id,
+                            'variant_id' => $variant,
+                            'variant_color' => $variant_color,
+                            'date_time' => $this->input->post('purchase_date', TRUE),
+                            'quantity' => $product_quantity,
+                            'status' => 3
+                        );
+                        if (!empty($quantity)) {
+                            $this->db->insert('transfer', $store);
+                            // stock 
+                            $store_id = $this->input->post('store_id', TRUE);
+                            $check_stock = $this->check_stock($store_id, $product_id, $variant, $variant_color);
+                            if (empty($check_stock)) {
+                                // insert
+                                $stock = array(
+                                    'store_id' => $store_id,
+                                    'product_id' => $product_id,
+                                    'variant_id' => $variant,
+                                    'variant_color' => $variant_color,
+                                    'quantity' => $product_quantity,
+                                    'warehouse_id' => '',
+                                );
+                                $this->db->insert('purchase_stock_tbl', $stock);
+                                // insert
+                            } else {
+                                //update
+                                $stock = array(
+                                    'quantity' => $check_stock->quantity + $product_quantity
+                                );
+                                if (!empty($store_id)) {
+                                    $this->db->where('store_id', $store_id);
+                                }
+                                if (!empty($product_id)) {
+                                    $this->db->where('product_id', $product_id);
+                                }
+                                if (!empty($variant)) {
+                                    $this->db->where('variant_id', $variant);
+                                }
+                                if (!empty($variant_color)) {
+                                    $this->db->where('variant_color', $variant_color);
+                                }
+                                $this->db->update('purchase_stock_tbl', $stock);
+                                //update
+                            }
+                            // stock
+                        }
                     }
                 }
 
@@ -2778,23 +2785,26 @@ class Purchases extends CI_Model {
             $t_price = $this->input->post('total_price', TRUE);
 
             $data2 = [];
-            for ($i = 0, $n = count($p_id); $i < $n; $i++) {
-                $pur_order_detail_id = $pur_order_detail_ids[$i];
-                $product_quantity = $quantity[$i];
-                $product_rate = $rate[$i];
-                $product_id = $p_id[$i];
-                $total_price = $t_price[$i];
-                $variant = $variant_id[$i];
-                $variant_color = $color_variant[$i];
-                if ($product_quantity > 0) {
-                    $data2[] = array(
-                        'pur_order_detail_id' => $pur_order_detail_id,
-                        'pur_order_id' => $pur_order_id,
-                        'product_id' => $product_id,
-                        'rc_quantity' => $product_quantity,
-                        'rc_rate' => $product_rate,
-                        'rc_total_amount' => $total_price
-                    );
+            // for ($i = 0, $n = count($p_id); $i < $n; $i++) {
+            foreach ($p_id as $key => $value) {
+                if (!empty($p_id[$key]) && !empty($p_id[$key])) {
+                    $pur_order_detail_id = $pur_order_detail_ids[$key];
+                    $product_quantity = $quantity[$key];
+                    $product_rate = $rate[$key];
+                    $product_id = $p_id[$key];
+                    $total_price = $t_price[$key];
+                    $variant = $variant_id[$key];
+                    $variant_color = $color_variant[$key];
+                    if ($product_quantity > 0) {
+                        $data2[] = array(
+                            'pur_order_detail_id' => $pur_order_detail_id,
+                            'pur_order_id' => $pur_order_id,
+                            'product_id' => $product_id,
+                            'rc_quantity' => $product_quantity,
+                            'rc_rate' => $product_rate,
+                            'rc_total_amount' => $total_price
+                        );
+                    }
                 }
             }
             $this->db->trans_start();
