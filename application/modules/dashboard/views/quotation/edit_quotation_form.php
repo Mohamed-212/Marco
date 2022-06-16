@@ -344,7 +344,7 @@
                                                 value="<?php echo html_escape($value['rate']) ?>"
                                                 id="price_item_<?php echo $i ?>"
                                                 class="price_item<?php echo $i ?> form-control text-right" required=""
-                                                min="0" />
+                                                min="0" readonly="readonly" />
                                         </td>
                                         <td>
                                             <input type="number" name="discount[]"

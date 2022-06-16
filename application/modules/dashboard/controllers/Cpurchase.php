@@ -273,6 +273,7 @@ class Cpurchase extends MX_Controller {
         $data = array(
             'title' => display('purchase_ledger'),
             'purchase_id' => $purchase_detail[0]['purchase_id'],
+            'invoice' => $purchase_detail[0]['invoice'],
             'purchase_details' => $purchase_detail[0]['purchase_details'],
             'supplier_name' => $purchase_detail[0]['supplier_name'],
             'final_date' => $purchase_detail[0]['convert_date'],
@@ -822,6 +823,7 @@ class Cpurchase extends MX_Controller {
         $data = array(
             'title' => display('purchase_details'),
             'purchase_id' => $purchase_detail[0]['purchase_id'],
+            'invoice' => $purchase_detail[0]['invoice'],
             'invoice_no' => $purchase_detail[0]['invoice_no'],
             'supplier_name' => $purchase_detail[0]['supplier_name'],
             'supplier_mobile' => $purchase_detail[0]['mobile'],
