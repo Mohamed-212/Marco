@@ -114,6 +114,14 @@ class Purchases extends CI_Model {
                 $color = $this->input->post('colorv', TRUE);
                 $size = $this->input->post('sizev', TRUE);
 
+                //start for total discount
+                //إجمالي الخصم على مستوى الفاتورة
+                $total_discount = $this->input->post('total_purchase_dis', TRUE);
+                //إجمالي الفاتورة بعد الخصم الخاص بكل منتج و قبل الضريبة
+                $sub_total = $this->input->post('sub_total_price', TRUE);
+                // توزيع الخصم على إجمالي الفاتورة لمعرفة نسبة الخصم
+                $ratio = $total_discount / $sub_total;
+                //End for total discount
                 // Supplier & product id relation ship checker.
                 for ($i = 1, $n = count($p_id); $i <= $n; $i++) {
                     $product_id = $p_id[$i];
@@ -165,6 +173,7 @@ class Purchases extends CI_Model {
                     'total_items' => $this->input->post('total_number_of_items', TRUE),
                     'purchase_vat' => $this->input->post('purchase_vat', TRUE),
                     'total_purchase_vat' => $this->input->post('total_purchase_vat', TRUE),
+                    'total_purchase_dis' => $total_discount,
                     'grand_total_amount' => $this->input->post('grand_total_price', TRUE),
                     'purchase_date' => $this->input->post('purchase_date', TRUE),
                     'purchase_details' => $this->input->post('purchase_details', TRUE),
@@ -206,6 +215,17 @@ class Purchases extends CI_Model {
                         $product_discount = $discount[$i];
                         $total_price_without_discount += ($rate[$i] * $quantity[$i]);
 
+
+                        //start for total discount
+                        //ضرب نسبة الخصم في إجمالي الصنف لمعرفة مقدار الخصم من كل صنف
+                        $total_price_dis = $ratio * $total_price;
+                        //تحديد إجمالي سعر المنتج بعد الخصم
+                        $total_price_after_dis = $total_price - $total_price_dis;
+                        //تحديد سعر المنتج الواحد بعد الخصم
+                        $rate2 = $total_price_after_dis / $product_quantity;
+                        //End for total discount
+
+
                         $i_vat_rate = $vat_rate[$i];
                         $i_vat = $vat[$i];
                         $data1 = array(
@@ -218,6 +238,7 @@ class Purchases extends CI_Model {
                             'store_id' => $this->input->post('store_id', TRUE),
                             'quantity' => $product_quantity,
                             'rate' => $product_rate,
+                            'rate_after_discount' => $rate2,
                             'discount' => $product_discount,
                             'vat_rate' => $i_vat_rate,
                             'vat' => $i_vat,
@@ -786,7 +807,14 @@ class Purchases extends CI_Model {
                 $color = $this->input->post('colorv', TRUE);
                 $size = $this->input->post('sizev', TRUE);
 
-
+                //start for total discount
+                //إجمالي الخصم على مستوى الفاتورة
+                $total_discount = $this->input->post('total_purchase_dis', TRUE);
+                //إجمالي الفاتورة بعد الخصم الخاص بكل منتج و قبل الضريبة
+                $sub_total = $this->input->post('sub_total_price', TRUE);
+                // توزيع الخصم على إجمالي الفاتورة لمعرفة نسبة الخصم
+                $ratio = $total_discount / $sub_total;
+                //End for total discount
                 //Variant id required check
                 $result = array();
 //                foreach ($p_id as $k => $v) {
@@ -829,6 +857,7 @@ class Purchases extends CI_Model {
                     'total_items' => $this->input->post('total_number_of_items', TRUE),
                     'purchase_vat' => $this->input->post('purchase_vat', TRUE),
                     'total_purchase_vat' => $this->input->post('total_purchase_vat', TRUE),
+                    'total_purchase_dis' => $total_discount,
                     'grand_total_amount' => $this->input->post('grand_total_price', TRUE),
                     'purchase_date' => $this->input->post('purchase_date', TRUE),
                     'purchase_details' => $this->input->post('purchase_details', TRUE),
@@ -870,6 +899,15 @@ class Purchases extends CI_Model {
                         $product_discount = $discount[$key];
                         $total_price_without_discount += ($rate[$key] * $quantity[$key]);
 
+                        //start for total discount
+                        //ضرب نسبة الخصم في إجمالي الصنف لمعرفة مقدار الخصم من كل صنف
+                        $total_price_dis = $ratio * $total_price;
+                        //تحديد إجمالي سعر المنتج بعد الخصم
+                        $total_price_after_dis = $total_price - $total_price_dis;
+                        //تحديد سعر المنتج الواحد بعد الخصم
+                        $rate2 = $total_price_after_dis / $product_quantity;
+                        //End for total discount
+
                         $i_vat_rate = $vat_rate[$key];
                         $i_vat = $vat[$key];
                         $data1 = array(
@@ -882,6 +920,7 @@ class Purchases extends CI_Model {
                             'store_id' => $this->input->post('store_id', TRUE),
                             'quantity' => $product_quantity,
                             'rate' => $product_rate,
+                            'rate_after_discount' => $rate2,
                             'discount' => $product_discount,
                             'vat_rate' => $i_vat_rate,
                             'vat' => $i_vat,
@@ -2644,6 +2683,16 @@ class Purchases extends CI_Model {
         $size = $this->input->post('sizev', TRUE);
         $discount = $this->input->post('discount', TRUE);
 
+        //start for total discount
+        //إجمالي الخصم على مستوى الفاتورة
+        $total_discount = $this->input->post('total_purchase_dis', TRUE);
+        //إجمالي الفاتورة بعد الخصم الخاص بكل منتج و قبل الضريبة
+        $sub_total = $this->input->post('sub_total_price', TRUE);
+        // توزيع الخصم على إجمالي الفاتورة لمعرفة نسبة الخصم
+        $ratio = $total_discount / $sub_total;
+        //End for total discount
+
+
         $vat_rate = $this->input->post('vat_rate', TRUE);
         $vat = $this->input->post('vat', TRUE);
 
@@ -2679,6 +2728,15 @@ class Purchases extends CI_Model {
                 $i_vat_rate = $vat_rate[$key];
                 $i_vat = $vat[$key];
 
+                //start for total discount
+                //ضرب نسبة الخصم في إجمالي الصنف لمعرفة مقدار الخصم من كل صنف
+                $total_price_dis = $ratio * $total_price;
+                //تحديد إجمالي سعر المنتج بعد الخصم
+                $total_price_after_dis = $total_price - $total_price_dis;
+                //تحديد سعر المنتج الواحد بعد الخصم
+                $rate2 = $total_price_after_dis / $product_quantity;
+                //End for total discount
+
                 if ($product_quantity > 0) {
                     $data2[] = array(
                         'pur_order_detail_id' => $this->auth->generator(15),
@@ -2687,6 +2745,7 @@ class Purchases extends CI_Model {
                         'store_id' => $this->input->post('store_id', TRUE),
                         'quantity' => $product_quantity,
                         'rate' => $product_rate,
+                        'rate_after_discount' => $rate2,
                         'total_amount' => $total_price,
                         // 'variant_id' => $variant,
                         'variant_id' => $sizeid,
@@ -2720,6 +2779,7 @@ class Purchases extends CI_Model {
             'user_id' => $this->session->userdata('user_id'),
             'purchase_vat' => $this->input->post('purchase_vat', TRUE),
             'total_purchase_vat' => $this->input->post('total_purchase_vat', TRUE),
+            'total_purchase_dis' => $total_discount
         );
         $this->db->insert('purchase_orders', $data);
 
@@ -2810,6 +2870,15 @@ class Purchases extends CI_Model {
             $rate = $this->input->post('product_rate', TRUE);
             $t_price = $this->input->post('total_price', TRUE);
 
+            //start for total discount
+            //إجمالي الخصم على مستوى الفاتورة
+            $total_discount = $this->input->post('total_purchase_dis', TRUE);
+            //إجمالي الفاتورة بعد الخصم الخاص بكل منتج و قبل الضريبة
+            $sub_total = $this->input->post('sub_total_price', TRUE);
+            // توزيع الخصم على إجمالي الفاتورة لمعرفة نسبة الخصم
+            $ratio = $total_discount / $sub_total;
+            //End for total discount
+
             $data2 = [];
             // for ($i = 0, $n = count($p_id); $i < $n; $i++) {
             foreach ($p_id as $key => $value) {
@@ -2821,6 +2890,16 @@ class Purchases extends CI_Model {
                     $total_price = $t_price[$key];
                     $variant = $variant_id[$key];
                     $variant_color = $color_variant[$key];
+
+                    //start for total discount
+                    //ضرب نسبة الخصم في إجمالي الصنف لمعرفة مقدار الخصم من كل صنف
+                    $total_price_dis = $ratio * $total_price;
+                    //تحديد إجمالي سعر المنتج بعد الخصم
+                    $total_price_after_dis = $total_price - $total_price_dis;
+                    //تحديد سعر المنتج الواحد بعد الخصم
+                    $rate2 = $total_price_after_dis / $product_quantity;
+                    //End for total discount
+
                     if ($product_quantity > 0) {
                         $data2[] = array(
                             'pur_order_detail_id' => $pur_order_detail_id,
@@ -2828,6 +2907,7 @@ class Purchases extends CI_Model {
                             'product_id' => $product_id,
                             'rc_quantity' => $product_quantity,
                             'rc_rate' => $product_rate,
+                            'rc_rate_after_discount' => $rate2,
                             'rc_total_amount' => $total_price
                         );
                     }
@@ -2872,6 +2952,16 @@ class Purchases extends CI_Model {
         $variants = $this->input->post('variant_id', TRUE);
         $variant_colors = $this->input->post('color_variant', TRUE);
         $discount = $this->input->post('discount', TRUE);
+
+        //start for total discount
+        //إجمالي الخصم على مستوى الفاتورة
+        $total_discount = $this->input->post('total_purchase_dis', TRUE);
+        //إجمالي الفاتورة بعد الخصم الخاص بكل منتج و قبل الضريبة
+        $sub_total = $this->input->post('sub_total_price', TRUE);
+        // توزيع الخصم على إجمالي الفاتورة لمعرفة نسبة الخصم
+        $ratio = $total_discount / $sub_total;
+        //End for total discount
+
         $vat_rate = $this->input->post('vat_rate', TRUE);
         $vat = $this->input->post('vat', TRUE);
         $color = $this->input->post('colorv', TRUE);
@@ -2905,6 +2995,7 @@ class Purchases extends CI_Model {
             'store_id' => $this->input->post('store_id', TRUE),
             'purchase_vat' => $this->input->post('purchase_vat', TRUE),
             'total_purchase_vat' => $this->input->post('total_purchase_vat', TRUE),
+            'total_purchase_dis' => $total_discount,
             'sub_total_price' => $this->input->post('sub_total_price', TRUE),
             'total_items' => $this->input->post('total_number_of_items', TRUE),
             'grand_total_amount' => $this->input->post('grand_total_price', TRUE),
@@ -2942,6 +3033,16 @@ class Purchases extends CI_Model {
                 $product_discount = $discount[$key];
                 $i_vat_rate = $vat_rate[$key];
                 $i_vat = $vat[$key];
+
+                //start for total discount
+                //ضرب نسبة الخصم في إجمالي الصنف لمعرفة مقدار الخصم من كل صنف
+                $total_price_dis = $ratio * $total_price;
+                //تحديد إجمالي سعر المنتج بعد الخصم
+                $total_price_after_dis = $total_price - $total_price_dis;
+                //تحديد سعر المنتج الواحد بعد الخصم
+                $rate2 = $total_price_after_dis / $product_quantity;
+                //End for total discount
+
                 $data1 = array(
                     'pur_order_detail_id' => $this->auth->generator(15),
                     'pur_order_id' => $pur_order_id,
@@ -2953,6 +3054,7 @@ class Purchases extends CI_Model {
                     'store_id' => $this->input->post('store_id', TRUE),
                     'quantity' => $product_quantity,
                     'rate' => $product_rate,
+                    'rate_after_discount' => $rate2,
                     'discount' => $product_discount,
                     'vat_rate' => $i_vat_rate,
                     'vat' => $i_vat,

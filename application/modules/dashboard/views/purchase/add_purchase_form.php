@@ -334,6 +334,15 @@
                                             <input type="text" id="total_vat" class="text-right form-control"
                                                 name="total_purchase_vat" placeholder="0.00" readonly="readonly" />
                                         </td>
+                                         <td class="text-right">
+                                            <b><?php echo display('total_dis') ?>:</b>
+                                        </td>
+                                        <td>
+                                            <input type="number" id="total_dis" class="text-right form-control" value=""
+                                                   onkeyup="calculate_total();"
+                                                    onchange="calculate_total();"
+                                                   name="total_purchase_dis" placeholder="0.00"  />
+                                        </td>
                                         <td class="text-right">
                                             <b><?php echo display('grand_total') ?>:</b>
                                         </td>

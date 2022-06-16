@@ -650,7 +650,7 @@
                                                                     <div class="col-sm-12">
                                                                         <div class="form-group row">
                                                                             <div class="input-group">
-                                                                                <input type="number" class="form-control text-left" onkeyup=""  value="<?php echo set_value('pricepri' . $x) ?>" id="pricepri<?php echo $x; ?>" name="pricepri[<?php echo $x; ?>]" placeholder="0.00" />
+                                                                                <input type="number" class="form-control text-left"  onchange="check_price2(<?php echo $x; ?>);"  value="<?php echo set_value('pricepri' . $x) ?>" id="pricepri<?php echo $x; ?>" name="pricepri[<?php echo $x; ?>]" placeholder="0.00" />
                                                                                 <div class="input-group-addon btn btn-success" id="addpricerow">
                                                                                     <i class="ti-plus"></i>
                                                                                 </div>

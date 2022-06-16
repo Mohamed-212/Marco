@@ -210,6 +210,7 @@
                                                 $grand_total_without_discount = +$total_without_discount;
                                                 $total_discount += $item_total_discount;
                                                 $total_vat += $vat_value;
+                                                $total_discount2=$total_purchase_dis;
                                                 ?>
                                         <?php }
                                         } ?>
@@ -234,15 +235,21 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <th class="grand_total"> Discount Value: </th>
+                                                <th class="grand_total"> Discount For Items: </th>
                                                 <td>
                                                     <?php echo (($position == 0) ? $currency . " " . $total_discount : $total_discount . " " . $currency); ?>
                                                 </td>
                                             </tr>
                                             <tr>
+                                                <th class="grand_total"> Discount For Purchase : </th>
+                                                <td>
+                                                    <?php echo (($position == 0) ? $currency . " " . $total_discount2 : $total_discount2 . " " . $currency); ?>
+                                                </td>
+                                            </tr>
+                                            <tr>
                                                 <th class="invoice_discount">Total price After Discount : </th>
                                                 <td class="invoice_discount">
-                                                    <?php $after_discount = ($grand_total_without_discount - $total_discount);
+                                                    <?php $after_discount = ($grand_total_without_discount - $total_discount-$total_discount2);
                                                     echo (($position == 0) ? $currency . " " . $after_discount : $after_discount . " " . $currency) ?>
                                                 </td>
                                             </tr>

@@ -463,6 +463,17 @@
                                                    value="{total_purchase_vat}" name="total_purchase_vat"
                                                    placeholder="0.00" readonly="readonly" />
                                         </td>
+                                         <td class="text-right">
+                                            <b><?php echo display('total_dis') ?>:</b>
+                                        </td>
+                                        <td>
+                                            <input type="number" id="total_dis"
+                                                   value="<?php echo html_escape($purchase_info[0]['total_purchase_dis']) ?>"
+                                                   class="text-right form-control"  name="total_purchase_dis"
+                                                    onkeyup="calculate_total();"
+                                                    onchange="calculate_total();"
+                                                   placeholder="0.00"  />
+                                        </td>
                                         <td class="text-right">
                                             <b><?php echo display('grand_total') ?>:</b>
                                         </td>

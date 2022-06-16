@@ -342,7 +342,6 @@ class Cpurchase extends MX_Controller {
         echo json_encode($result);
     }
 
-    
     public function check_pos_batch_wise_stock_info() {
         $product_id = urldecode($this->input->post('product_id', TRUE));
         $store_id = urldecode($this->input->post('store_id', TRUE));
@@ -553,9 +552,9 @@ class Cpurchase extends MX_Controller {
             if ($result) {
                 $this->session->set_userdata(array('message' => display('successfully_updated')));
 
-           //     if (isset($_POST['add-purchase'])) {
-                    redirect(base_url('dashboard/Cpurchase/purchase_order'));
-             //   }
+                //     if (isset($_POST['add-purchase'])) {
+                redirect(base_url('dashboard/Cpurchase/purchase_order'));
+                //   }
             } else {
                 $this->session->set_userdata(array('error_message' => display('failed_try_again')));
             }
@@ -628,6 +627,7 @@ class Cpurchase extends MX_Controller {
             'currency' => $currency_details[0]['currency_icon'],
             'position' => $currency_details[0]['currency_position'],
             'Soft_settings' => $Soft_settings,
+            'total_purchase_dis' => $purchase_detail[0]['total_purchase_dis'],
         );
 
 
@@ -793,6 +793,8 @@ class Cpurchase extends MX_Controller {
                 'currency' => $currency_details[0]['currency_icon'],
                 'position' => $currency_details[0]['currency_position'],
                 'Soft_settings' => $Soft_settings,
+                'total_purchase_dis' => $purchase_detail[0]['total_purchase_dis'],
+                 'total_purchase_vat' => $purchase_detail[0]['total_purchase_vat']
             );
 
 
@@ -839,6 +841,7 @@ class Cpurchase extends MX_Controller {
             'sub_total_price' => $purchase_detail[0]['sub_total_price'],
             'purchase_vat' => $purchase_detail[0]['purchase_vat'],
             'total_purchase_vat' => $purchase_detail[0]['total_purchase_vat'],
+             'total_purchase_dis' => $purchase_detail[0]['total_purchase_dis'],
             'grand_total_amount' => $purchase_detail[0]['grand_total_amount'],
             'purchase_all_data' => $purchase_detail,
             'purchase_expense_detail' => $purchase_expense_detail,

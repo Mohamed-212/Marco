@@ -263,7 +263,7 @@
                                             <input type="hidden" class="sl" value="1">
                                             <input type="hidden" name="colorv[1]" id="color1" value="">
                                             <input type="hidden" name="sizev[1]" id="size1" value="">
-                                            
+
                                         </td>
                                         <td class="text-center">
                                             <div id="color_variant_area_1">
@@ -364,11 +364,13 @@
                                             <input type="text" id="total_vat" class="text-right form-control" value=""
                                                    name="total_purchase_vat" placeholder="0.00" readonly="readonly" />
                                         </td>
-                                         <td class="text-right">
+                                        <td class="text-right">
                                             <b><?php echo display('total_dis') ?>:</b>
                                         </td>
                                         <td>
                                             <input type="number" id="total_dis" class="text-right form-control" value=""
+                                                   onkeyup="calculate_total();"
+                                                    onchange="calculate_total();"
                                                    name="total_purchase_dis" placeholder="0.00"  />
                                         </td>
                                         <td class="text-right">
@@ -378,6 +380,7 @@
                                             <input type="text" id="grandTotal" class="text-right form-control"
                                                    name="grand_total_price" placeholder="0.00" readonly="readonly" />
                                         </td>
+
                                     </tr>
                                 </tfoot>
                             </table>
