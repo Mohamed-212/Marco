@@ -108,6 +108,11 @@
 											}
 											if($purchase['receive_status']) {
 												echo '<span class="label label-success">'.display('received').'</span> ';
+											}else{
+												echo '<span class="label label-warning">'.display('not_received').'</span> ';
+											}
+											if($purchase['return_status']) {
+												echo '<span class="label label-danger">'.display('returned').'</span> ';
 											}
 											?>
 										</td>

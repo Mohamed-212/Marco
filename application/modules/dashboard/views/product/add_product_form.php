@@ -216,19 +216,19 @@
                                         <li>
                                             <a href="#tab3" data-toggle="tab" class="step" aria-expanded="true">
                                                 <span class="number"> <?php echo display('3') ?> </span>
-                                                <span class="desc"><?php echo display('web_store') ?></span>
+                                                <span class="desc"><?php echo display('price') ?></span>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="#tab4" data-toggle="tab" class="step" aria-expanded="true">
                                                 <span class="number"> <?php echo display('4') ?> </span>
-                                                <span class="desc"><?php echo display('price') ?></span>
+                                                <span class="desc"><?php echo display('image') ?></span>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="#tab5" data-toggle="tab" class="step" aria-expanded="true">
                                                 <span class="number"> <?php echo display('5') ?> </span>
-                                                <span class="desc"><?php echo display('image') ?></span>
+                                                <span class="desc"><?php echo display('web_store') ?></span>
                                             </a>
                                         </li>
                                         <li>
@@ -261,6 +261,149 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group row">
+                                                <label for="model"
+                                                       class="col-sm-3 col-form-label"><?php echo display('item_code') ?> <span
+                                                        class="color-red">*</span></label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" tabindex="5" class="form-control" name="model"
+                                                           placeholder="<?php echo display('item_code') ?>"
+                                                           value="<?php echo set_value('model') ?>" required id="model" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group row hidden">
+                                                <label for="bar_code"
+                                                       class="col-sm-3 col-form-label"><?php echo display('bar_code') ?></label>
+                                                <div class="col-sm-9">
+                                                    <input type="number" id="bar_code" name="bar_code"
+                                                           placeholder="<?php echo display('please_enter_bar_code'); ?>"
+                                                           class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group row">
+                                                <label for="variant"
+                                                       class="col-sm-3 col-form-label"><?php echo display('color') ?> <span
+                                                        class="color-red">*</span></label>
+                                                <div class="col-sm-9 custom_select">
+                                                    <select name="variant[]" class="form-control select2"  required=""
+                                                            id="variant">
+                                                        <option></option>
+                                                        <?php
+                                                        if ($variant_list) {
+                                                            foreach ($variant_list as $variant) {
+                                                                if ($variant['variant_type'] == 'color') {
+                                                                    ?>
+                                                                    <option value="<?php echo html_escape($variant['variant_id']) ?>">
+                                                                        <?php echo html_escape($variant['variant_name']); ?></option>
+                                                                    <?php
+                                                                }
+                                                            }
+                                                        }
+                                                        ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row hidden">
+                                                <label for="default_variant"
+                                                       class="col-sm-3 col-form-label"><?php echo display('default_variant') ?>
+                                                    <span class="color-red">*</span></label>
+                                                <div class="col-sm-9 custom_select">
+                                                    <select name="default_variant" class="form-control select2" required=""
+                                                            id="default_variant">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group row">
+                                                <label for="variant_colors"
+                                                       class="col-sm-3 col-form-label"><?php echo display('size') ?></label>
+                                                <div class="col-sm-9 custom_select">
+                                                    <select name="variant_colors[]" class="form-control select2" 
+                                                            id="variant_colors">
+                                                        <option value="">Select</option>
+                                                        <?php
+                                                        if ($variant_list) {
+                                                            foreach ($variant_list as $variant) {
+                                                                if ($variant['variant_type'] == 'size') {
+                                                                    ?>
+                                                                    <option value="<?php echo html_escape($variant['variant_id']) ?>">
+                                                                        <?php echo html_escape($variant['variant_name']); ?></option>
+                                                                    <?php
+                                                                }
+                                                            }
+                                                        }
+                                                        ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div id="variant_price_area">
+                                                <div class="form-group row hidden">
+                                                    <div class="col-sm-4 col-sm-offset-4">
+                                                        <div class="checkbox checkbox-success">
+                                                            <input type="checkbox" name="variant_prices" value="1"
+                                                                   id="variant_prices">
+                                                            <label class=""
+                                                                   for="variant_prices"><?php echo display('set_variant_wise_price') ?></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row none" id="set_variant_price">
+                                                    <div class="col-sm-6 col-sm-offset-4">
+                                                        <div>
+                                                            <table class="table table-bordered">
+                                                                <thead>
+                                                                    <tr>
+
+                                                                        <th><?php echo display('size') ?><span
+                                                                                class="color-red">*</span></th>
+                                                                        <th><?php echo display('color') ?></th>
+                                                                        <th><?php echo display('price') ?><span
+                                                                                class="color-red">*</span></th>
+                                                                        <th><?php echo display('action') ?></th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="variant_area">
+                                                                    <?php $i = 0; ?>
+                                                                    <tr>
+
+                                                                        <td>
+                                                                            <select name="variant_1" id="size_var"
+                                                                                    class="form-control select2 custom_select">
+                                                                                <option value=""></option>
+                                                                            </select>
+                                                                        </td>
+                                                                        <td>
+                                                                            <select name="variant_2" id="color_var"
+                                                                                    class="form-control select2 custom_select">
+                                                                                <option value=""></option>
+                                                                            </select>
+                                                                        </td>
+                                                                        <td>
+                                                                            <input type="text" name="var_price_1" id="var_price"
+                                                                                   class="form-control" placeholder="0.00"
+                                                                                   value="">
+                                                                        </td>
+                                                                        <td>
+                                                                            <input type="button" value="Add"
+                                                                                   class="btn btn-info" id="variant-row-add"
+                                                                                   data-key="<?php echo $i; ?>">
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group row">
                                                 <label for="category_id"
                                                        class="col-sm-3 col-form-label"><?php echo display('category') ?>
                                                     <span class="color-red">*</span></label>
@@ -282,6 +425,59 @@
                                                         ?>
                                                     </select>
                                                 </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-6">
+                                            <div class="form-group row">
+                                                <label for="brand"
+                                                       class="col-sm-3 col-form-label"><?php echo display('brand') ?></label>
+                                                <div class="col-sm-9">
+                                                    <select class="form-control select2 width_100p" id="brand"
+                                                            name="brand">
+                                                        <option value=""><?php echo display('select_one') ?></option>
+                                                        <?php foreach ($brand_list as $brand) { ?>
+                                                            <option value="<?php echo html_escape($brand['brand_id']); ?>">
+                                                                <?php echo html_escape($brand['brand_name']); ?></option>
+                                                        <?php } ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="form-group row">
+                                                        <label for="supplier"
+                                                               class="col-sm-3 col-form-label"><?php echo display('supplier') ?> <span
+                                                                class="color-red">*</span></label>
+                                                        <div class="col-sm-9 custom_select">
+                                                            <select name="supplier_id" class="form-control select2" required=""
+                                                                    id="supplier">
+                                                                <option value=""><?php echo display('select_supplier') ?></option>
+                                                                <?php if ($supplier) { ?>
+                                                                    {supplier}
+                                                                    <option value="{supplier_id}">{supplier_name}</option>
+                                                                    {/supplier}
+                                                                <?php } ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="form-group row">
+                                                        <label for="warrantee"
+                                                               class="col-sm-3 col-form-label"><?php echo display('warrantee') ?></label>
+                                                        <div class="col-sm-9">
+                                                            <input type="number" id="warrantee" name="warrantee"
+                                                                   placeholder="<?php echo display('please_enter_number_of_months'); ?>"
+                                                                   class="form-control">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                             </div>
                                         </div>
                                     </div>
@@ -333,87 +529,53 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <div class="form-group row">
-                                                        <label for="warrantee"
-                                                               class="col-sm-3 col-form-label"><?php echo display('warrantee') ?></label>
-                                                        <div class="col-sm-9">
-                                                            <input type="number" id="warrantee" name="warrantee"
-                                                                   placeholder="<?php echo display('please_enter_number_of_months'); ?>"
-                                                                   class="form-control">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <div class="form-group row">
-                                                        <label for="bar_code"
-                                                               class="col-sm-3 col-form-label"><?php echo display('bar_code') ?></label>
-                                                        <div class="col-sm-9">
-                                                            <input type="number" id="bar_code" name="bar_code"
-                                                                   placeholder="<?php echo display('please_enter_bar_code'); ?>"
-                                                                   class="form-control">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <div class="form-group row">
-                                                <label for="details"
-                                                       class="col-sm-2 col-form-label"><?php echo display('details') ?></label>
-                                                <div class="col-sm-10">
-                                                    <textarea class="form-control summernote" name="details"
-                                                              id="details" rows="3"
-                                                              placeholder="<?php echo display('details') ?>"></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <div class="form-group row">
-                                                <label for="invoice_details"
-                                                       class="col-sm-2 col-form-label"><?php echo display('invoice_details') ?></label>
-                                                <div class="col-sm-10">
-                                                    <textarea class="form-control" name="invoice_details"
-                                                              id="invoice_details" rows="3"
-                                                              placeholder="<?php echo display('invoice_details') ?>"></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+
+
                                 </div>
                                 <div class="tab-pane" id="tab2">
                                     <div class="assembly_row assembly_row_mb">
-
+                                        <input type="hidden" class="baseUrl" value="<?php echo base_url(); ?>" />
                                         <!-- Start Row for assembly -->
-
-                                        <table class="" id="addassemblypro">
+                                        <table class="table" id="addassemblypro">
+                                            <thead>
+                                                <tr>
+                                                    <th class="col-sm-6 text-center">
+                                                        <div class="btn btn-success" id="addassemblyprorow">
+                                                            Add <i class="ti-plus"></i>
+                                                        </div>
+                                                        Product Name
+                                                    </th>
+                                                    <th class="col-sm-6 text-center">Supplier Price</th>
+                                                </tr>
+                                            </thead>
                                             <tbody>
                                                 <?php
                                                 for ($x = 1; $x < 2; $x++) {
                                                     ?>
                                                     <tr id="pro<?php echo $x; ?>" class="<?php echo $x; ?>">
-
                                                         <td class="col-sm-6">
                                                             <div class="col-sm-12">
                                                                 <div class="form-group row">
                                                                     <div class="input-group">
-                                                                        <input type="text" name="assemblypro" onkeyup="assembly_productList(<?php echo $x; ?>);"
+                                                                        <input type="text" name="assemblypro[<?php echo $x; ?>]" onkeyup="assembly_productList(<?php echo $x; ?>);"
                                                                                class="form-control assemblyproductSelection"
                                                                                placeholder='<?php echo display('product_name') ?>' 
-                                                                               id="assemblypro">
+                                                                               id="assemblypro<?php echo $x; ?>">
 
                                                                         <input type="hidden" class="autocomplete_hidden_value assembly_product_id_1" value="" name="assembly_product_id[<?php echo $x; ?>]" />
-                                                                        <div class="input-group-addon btn btn-success" id="addassemblyprorow">
-                                                                            <i class="ti-plus"></i>
+
+                                                                        <div class="input-group-addon btn btn-danger remove_assembly_row" onclick="removeassemblyrow(<?php echo $x; ?>)">
+                                                                            <i class="ti-minus"></i>
                                                                         </div>
                                                                     </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td class="col-sm-6">
+                                                            <div class="col-sm-12">
+                                                                <div class="form-group row">
+                                                                    <input type="text" name="product_rate[<?php echo $x; ?>]"  id="price_item_<?php echo $x; ?>"
+                                                                           class="price_item<?php echo $x; ?> form-control"  min="0" readonly="" />
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -423,127 +585,36 @@
                                                 ?>
                                             </tbody>
                                         </table>
-
                                         <!-- End Row for assembly  --> 
                                     </div>
                                     <div class="new_pro_row"></div>
-
                                 </div>
                                 <div class="tab-pane" id="tab3">
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <div class="form-group row">
-                                                <label for="unit"
-                                                       class="col-sm-3 col-form-label"><?php echo display('unit') ?></label>
-                                                <div class="col-sm-9">
-                                                    <select class="form-control select2 width_100p" id="unit"
-                                                            name="unit">
-                                                        <option value=""><?php echo display('select_one') ?></option>
-                                                        <?php foreach ($unit_list as $unit) { ?>
-                                                            <option value="<?php echo html_escape($unit['unit_id']); ?>">
-                                                                <?php echo html_escape($unit['unit_name']); ?></option>
-                                                        <?php } ?>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group row">
-                                                <label for="brand"
-                                                       class="col-sm-3 col-form-label"><?php echo display('brand') ?></label>
-                                                <div class="col-sm-9">
-                                                    <select class="form-control select2 width_100p" id="brand"
-                                                            name="brand">
-                                                        <option value=""><?php echo display('select_one') ?></option>
-                                                        <?php foreach ($brand_list as $brand) { ?>
-                                                            <option value="<?php echo html_escape($brand['brand_id']); ?>">
-                                                                <?php echo html_escape($brand['brand_name']); ?></option>
-                                                        <?php } ?>
-                                                    </select>
-                                                </div>
-                                            </div>
+                                    <div class="form-group row">
+                                        <label for="supplier_price"
+                                               class="col-sm-4 col-form-label"><?php echo display('supplier_price') ?>
+                                        </label>
+                                        <div class="col-sm-4">
+                                            <input type="number" tabindex="4" class="form-control text-right"
+                                                   name="supplier_price" value="<?php echo set_value('supplier_price') ?>"
+                                                   onchange="check_price();" placeholder="<?php echo display('supplier_price') ?>" readonly=""
+                                                   min="0" id="supplier_price" />
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <div class="form-group row">
-                                                <label for="type"
-                                                       class="col-sm-3 col-form-label"><?php echo display('type') ?>
-                                                </label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" name="type" class="form-control" id="type"
-                                                           placeholder="<?php echo display('type') ?>">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group row">
-                                                <label for="tag"
-                                                       class="col-sm-3 col-form-label"><?php echo display('tag') ?></label>
-                                                <div class="col-md-9">
-                                                    <input type="text" class="form-control" data-role="tagsinput"
-                                                           name="tag" placeholder="<?php echo display('tag') ?>">
-                                                </div>
-                                            </div>
+                                    <div class="form-group row">
+                                        <label for="unit"
+                                               class="col-sm-4 col-form-label"><?php echo display('unit') ?></label>
+                                        <div class="col-sm-4 custom_select">
+                                            <select class="form-control select2 width_100p" id="unit"
+                                                    name="unit">
+                                                <option value=""><?php echo display('select_one') ?></option>
+                                                <?php foreach ($unit_list as $unit) { ?>
+                                                    <option value="<?php echo html_escape($unit['unit_id']); ?>">
+                                                        <?php echo html_escape($unit['unit_name']); ?></option>
+                                                <?php } ?>
+                                            </select>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <div class="form-group row">
-                                                <label for="best_sale"
-                                                       class="col-sm-3 col-form-label"><?php echo display('best_sale') ?></label>
-                                                <div class="col-md-9">
-                                                    <select class="form-control select2 width_100p" id="best_sale"
-                                                            name="best_sale">
-                                                        <option value=""><?php echo display('select_one') ?></option>
-                                                        <option value="1"><?php echo display('yes') ?></option>
-                                                        <option value="0"><?php echo display('no') ?></option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <div class="form-group row">
-                                                <label for="review"
-                                                       class="col-sm-3 col-form-label"><?php echo display('review') ?></label>
-                                                <div class="col-md-9">
-                                                    <textarea name="review" class="form-control summernote"
-                                                              placeholder="<?php echo display('review') ?>" id="review"
-                                                              required row="3"></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group row">
-                                                <label for="description"
-                                                       class="col-sm-3 col-form-label"><?php echo display('description') ?></label>
-                                                <div class="col-md-9">
-                                                    <textarea name="description" class="form-control summernote"
-                                                              placeholder="<?php echo display('description') ?>"
-                                                              id="description" required row="3"></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <div class="form-group row">
-                                                <label for="specification"
-                                                       class="col-sm-2 col-form-label"><?php echo display('specification') ?></label>
-                                                <div class="col-md-10">
-                                                    <textarea name="specification" class="form-control summernote"
-                                                              placeholder="<?php echo display('specification') ?>"
-                                                              id="specification" required row="3"></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="tab-pane" id="tab4">
                                     <div class="form-group row">
                                         <label for="sell_price"
                                                class="col-sm-4 col-form-label"><?php echo display('sell_price') ?> <span
@@ -598,23 +669,11 @@
                                         </div>
                                     </div>
                                     <!-- End for pricing  --> 
-
-                                    <div class="form-group row">
-                                        <label for="supplier_price"
-                                               class="col-sm-4 col-form-label"><?php echo display('supplier_price') ?>
-                                        </label>
-                                        <div class="col-sm-4">
-                                            <input type="number" tabindex="4" class="form-control text-right"
-                                                   name="supplier_price" value="<?php echo set_value('supplier_price') ?>"
-                                                   onchange="check_price();" placeholder="<?php echo display('supplier_price') ?>" readonly=""
-                                                   min="0" id="supplier_price" />
-                                        </div>
-                                    </div>
                                     <div class="form-group row">
                                         <label for="onsale"
                                                class="col-sm-4 col-form-label"><?php echo display('onsale') ?> <span
                                                 class="color-red">*</span></label>
-                                        <div class="col-md-4">
+                                        <div class="col-sm-4 custom_select">
                                             <select class="form-control select2 width_100p" id="onsale" name="onsale"
                                                     required="">
                                                 <option value="0"><?php echo display('no') ?></option>
@@ -632,158 +691,35 @@
                                                    id="onsale_price">
                                         </div>
                                     </div>
-                                    <div class="form-group row">
-                                        <label for="model"
-                                               class="col-sm-4 col-form-label"><?php echo display('item_code') ?> <span
-                                                class="color-red">*</span></label>
-                                        <div class="col-sm-4">
-                                            <input type="text" tabindex="5" class="form-control" name="model"
-                                                   placeholder="<?php echo display('item_code') ?>"
-                                                   value="<?php echo set_value('model') ?>" required id="model" />
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="supplier"
-                                               class="col-sm-4 col-form-label"><?php echo display('supplier') ?> <span
-                                                class="color-red">*</span></label>
-                                        <div class="col-sm-4 custom_select">
-                                            <select name="supplier_id" class="form-control select2" required=""
-                                                    id="supplier">
-                                                <option value=""><?php echo display('select_supplier') ?></option>
-                                                <?php if ($supplier) { ?>
-                                                    {supplier}
-                                                    <option value="{supplier_id}">{supplier_name}</option>
-                                                    {/supplier}
-                                                <?php } ?>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="variant"
-                                               class="col-sm-4 col-form-label"><?php echo display('color') ?> <span
-                                                class="color-red">*</span></label>
-                                        <div class="col-sm-4 custom_select">
-                                            <select name="variant[]" class="form-control select2"  required=""
-                                                    id="variant">
-                                                <option></option>
-                                                <?php
-                                                if ($variant_list) {
-                                                    foreach ($variant_list as $variant) {
-                                                        if ($variant['variant_type'] == 'color') {
-                                                            ?>
-                                                            <option value="<?php echo html_escape($variant['variant_id']) ?>">
-                                                                <?php echo html_escape($variant['variant_name']); ?></option>
-                                                            <?php
-                                                        }
-                                                    }
-                                                }
-                                                ?>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row hidden">
-                                        <label for="default_variant"
-                                               class="col-sm-4 col-form-label"><?php echo display('default_variant') ?>
-                                            <span class="color-red">*</span></label>
-                                        <div class="col-sm-4 custom_select">
-                                            <select name="default_variant" class="form-control select2" required=""
-                                                    id="default_variant">
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="variant_colors"
-                                               class="col-sm-4 col-form-label"><?php echo display('size') ?></label>
-                                        <div class="col-sm-4 custom_select">
-                                            <select name="variant_colors[]" class="form-control select2" 
-                                                    id="variant_colors">
-                                                <option value="">Select</option>
-                                                <?php
-                                                if ($variant_list) {
-                                                    foreach ($variant_list as $variant) {
-                                                        if ($variant['variant_type'] == 'size') {
-                                                            ?>
-                                                            <option value="<?php echo html_escape($variant['variant_id']) ?>">
-                                                                <?php echo html_escape($variant['variant_name']); ?></option>
-                                                            <?php
-                                                        }
-                                                    }
-                                                }
-                                                ?>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div id="variant_price_area">
-                                        <div class="form-group row hidden">
-                                            <div class="col-sm-4 col-sm-offset-4">
-                                                <div class="checkbox checkbox-success">
-                                                    <input type="checkbox" name="variant_prices" value="1"
-                                                           id="variant_prices">
-                                                    <label class=""
-                                                           for="variant_prices"><?php echo display('set_variant_wise_price') ?></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row none" id="set_variant_price">
-                                            <div class="col-sm-6 col-sm-offset-4">
-                                                <div>
-                                                    <table class="table table-bordered">
-                                                        <thead>
-                                                            <tr>
-
-                                                                <th><?php echo display('size') ?><span
-                                                                        class="color-red">*</span></th>
-                                                                <th><?php echo display('color') ?></th>
-                                                                <th><?php echo display('price') ?><span
-                                                                        class="color-red">*</span></th>
-                                                                <th><?php echo display('action') ?></th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody id="variant_area">
-                                                            <?php $i = 0; ?>
-                                                            <tr>
-
-                                                                <td>
-                                                                    <select name="variant_1" id="size_var"
-                                                                            class="form-control select2 custom_select">
-                                                                        <option value=""></option>
-                                                                    </select>
-                                                                </td>
-                                                                <td>
-                                                                    <select name="variant_2" id="color_var"
-                                                                            class="form-control select2 custom_select">
-                                                                        <option value=""></option>
-                                                                    </select>
-                                                                </td>
-                                                                <td>
-                                                                    <input type="text" name="var_price_1" id="var_price"
-                                                                           class="form-control" placeholder="0.00"
-                                                                           value="">
-                                                                </td>
-                                                                <td>
-                                                                    <input type="button" value="Add"
-                                                                           class="btn btn-info" id="variant-row-add"
-                                                                           data-key="<?php echo $i; ?>">
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="form-group row">
+                                                <label for="details"
+                                                       class="col-sm-2 col-form-label"><?php echo display('details') ?></label>
+                                                <div class="col-sm-10">
+                                                    <textarea class="form-control summernote" name="details"
+                                                              id="details" rows="3"
+                                                              placeholder="<?php echo display('details') ?>"></textarea>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group row">
-                                        <label for="video"
-                                               class="col-sm-4 col-form-label"><?php echo display('video_link') ?> </label>
-                                        <div class="col-sm-4">
-                                            <input type="text" name="video" class="form-control" />
-                                            <p class="color4 color5 demo-notice">Demo Video Link :
-                                                <b>https://www.youtube.com/watch?v=nQZvbmaO0ws</b>
-                                            </p>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="form-group row">
+                                                <label for="invoice_details"
+                                                       class="col-sm-2 col-form-label"><?php echo display('invoice_details') ?></label>
+                                                <div class="col-sm-10">
+                                                    <textarea class="form-control" name="invoice_details"
+                                                              id="invoice_details" rows="3"
+                                                              placeholder="<?php echo display('invoice_details') ?>"></textarea>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
+
                                 </div>
-                                <div class="tab-pane" id="tab5">
+                                <div class="tab-pane" id="tab4">
                                     <div class="col-md-12">
                                         <div class="form-group row">
                                             <label for="image_thumb"
@@ -813,6 +749,97 @@
                                                        class="btn btn-info" id="image-add">
                                                 <input type="button" value="-" onclick="deleteImageRow(this);"
                                                        class="btn btn-danger" id="image-remove">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="tab5">
+
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group row">
+                                                <label for="type"
+                                                       class="col-sm-3 col-form-label"><?php echo display('type') ?>
+                                                </label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" name="type" class="form-control" id="type"
+                                                           placeholder="<?php echo display('type') ?>">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group row">
+                                                <label for="tag"
+                                                       class="col-sm-3 col-form-label"><?php echo display('tag') ?></label>
+                                                <div class="col-md-9">
+                                                    <input type="text" class="form-control" data-role="tagsinput"
+                                                           name="tag" placeholder="<?php echo display('tag') ?>">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group row">
+                                                <label for="best_sale"
+                                                       class="col-sm-3 col-form-label"><?php echo display('best_sale') ?></label>
+                                                <div class="col-md-9 custom_select">
+                                                    <select class="form-control select2 width_100p" id="best_sale"
+                                                            name="best_sale">
+                                                        <option value=""><?php echo display('select_one') ?></option>
+                                                        <option value="1"><?php echo display('yes') ?></option>
+                                                        <option value="0"><?php echo display('no') ?></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group row ">
+                                                <label for="video"
+                                                       class="col-sm-3 col-form-label"><?php echo display('video_link') ?> </label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" name="video" class="form-control" />
+                                                    <p class="color4 color5 demo-notice hidden">Demo Video Link :
+                                                        <b>https://www.youtube.com/watch?v=nQZvbmaO0ws</b>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group row">
+                                                <label for="review"
+                                                       class="col-sm-3 col-form-label"><?php echo display('review') ?></label>
+                                                <div class="col-md-9">
+                                                    <textarea name="review" class="form-control summernote"
+                                                              placeholder="<?php echo display('review') ?>" id="review"
+                                                              required row="3"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group row">
+                                                <label for="description"
+                                                       class="col-sm-3 col-form-label"><?php echo display('description') ?></label>
+                                                <div class="col-md-9">
+                                                    <textarea name="description" class="form-control summernote"
+                                                              placeholder="<?php echo display('description') ?>"
+                                                              id="description" required row="3"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="form-group row">
+                                                <label for="specification"
+                                                       class="col-sm-2 col-form-label"><?php echo display('specification') ?></label>
+                                                <div class="col-md-10">
+                                                    <textarea name="specification" class="form-control summernote"
+                                                              placeholder="<?php echo display('specification') ?>"
+                                                              id="specification" required row="3"></textarea>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -908,8 +935,10 @@
                                     <li class="previous"><a href="#"><?php echo display('prev') ?></a></li>
                                     <li class="next last none"><a href="#"><?php echo display('last') ?></a></li>
                                     <li class="next"><a href="#"><?php echo display('next') ?></a></li>
-                                    <li class="finish pull-right"><button type="submit" name="add-product"
-                                                                          class="btn btn-success"><?php echo display('submit') ?></button></li>
+                                    <li class="finish pull-right">
+                                        <button type="submit" name="add-product" class="btn btn-success"><?php echo display('submit') ?>
+                                        </button>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
