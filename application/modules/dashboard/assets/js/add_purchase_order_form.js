@@ -234,6 +234,18 @@ function calculate_add_purchase(sl) {
     $("#total_vat").val(total_vat.toFixed(2, 2));
     $("#subTotal").val(gr_tot.toFixed(2, 2));
     $("#grandTotal").val((gr_tot + total_vat).toFixed(2, 2));
+
+    //new for discount
+    var rate1 = price_item - (price_item * item_discount) / 100;
+    var total_dis = Number($("#total_dis").val());
+    var subtotal = Number(gr_tot.toFixed(2, 2));
+    var ratio = Number(total_dis / subtotal);
+    var total_price_dis = ratio * Number(total_price.toFixed(2));
+    var total_price_after_dis = total_price - total_price_dis;
+    var rate2 = total_price_after_dis / total_qntt;
+
+   // alert(rate2);
+    //End
 }
 
 //Select stock by product and variant id

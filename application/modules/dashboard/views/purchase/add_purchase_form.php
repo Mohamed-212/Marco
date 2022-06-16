@@ -225,11 +225,19 @@
                                             <input type="hidden" class="autocomplete_hidden_value product_id_1"
                                                 name="product_id[1]" id="SchoolHiddenId" />
                                             <input type="hidden" class="sl" value="1">
+                                            <input type="hidden" name="colorv[1]" id="color1" value="">
+                                            <input type="hidden" name="sizev[1]" id="size1" value="">
                                         </td>
                                         <td class="text-center">
+                                             <div id="color_variant_area_1">
+                                                <select name="color_variant[1]" id="color_variant_1"
+                                                    class="form-control color_variant width_100p" disabled="">
+                                                    <option value=""></option>
+                                                </select>
+                                            </div>
                                             <div class="variant_id_div">
                                                 <select name="variant_id[1]" id="variant_id_1"
-                                                    class="form-control variant_id width_100p" required="">
+                                                    class="form-control variant_id width_100p" disabled="">
                                                     <option value=""></option>
                                                     <?php foreach ($variant_list as $variant) : ?>
                                                     <option value=" <?php echo html_escape($variant['variant_id']) ?>">
@@ -237,12 +245,7 @@
                                                     <?php endforeach; ?>
                                                 </select>
                                             </div>
-                                            <div id="color_variant_area_1">
-                                                <select name="color_variant[1]" id="color_variant_1"
-                                                    class="form-control color_variant width_100p">
-                                                    <option value=""></option>
-                                                </select>
-                                            </div>
+                                           
                                         </td>
                                         <td class="text-right">
                                             <input type="text" name="batch_no[1]" id="batch_no_1" required
