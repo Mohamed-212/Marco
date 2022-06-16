@@ -126,7 +126,7 @@
                                 <div class="col-sm-2 text-left cus_div">
                                     <h2 class="m-t-0"><?php echo display('invoice') ?></h2>
                                     <div>
-                                        <?php echo display('invoice_no') ?> : <?php echo html_escape($purchase_id); ?>
+                                        <?php echo display('invoice_no') ?> : <?php echo html_escape($invoice); ?>
                                     </div>
                                     <div>
                                         <?php echo display('supplier_invoice_no') ?> :

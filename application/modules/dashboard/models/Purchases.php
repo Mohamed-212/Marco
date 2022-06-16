@@ -77,6 +77,22 @@ class Purchases extends CI_Model {
         return $query->row();
     }
 
+    //NUMBER GENERATOR
+    public function number_generator() {
+        $this->db->select('invoice', 'invoice_no');
+        $query = $this->db->get('product_purchase');
+        $result = $query->result_array();
+        $invoice_no = count($result);
+        if ($invoice_no >= 1 && $invoice_no < 2) {
+            $invoice_no = 1000 + (($invoice_no == 1) ? 0 : $invoice_no) + 1;
+        } elseif ($invoice_no >= 2) {
+            $invoice_no = 1000 + (($invoice_no == 1) ? 0 : $invoice_no);
+        } else {
+            $invoice_no = 1000;
+        }
+        return $invoice_no;
+    }
+
     //Purchase entry
     public function purchase_entry() {
         if (check_module_status('accounting') == 1) {
@@ -142,6 +158,7 @@ class Purchases extends CI_Model {
                     'pur_order_no' => $pur_order_no,
                     'supplier_id' => $this->input->post('supplier_id', TRUE),
                     'store_id' => $this->input->post('store_id', TRUE),
+                    'invoice' => 'Inv-' . $this->number_generator(),
                     'wearhouse_id' => '',
                     'sub_total_price' => $this->input->post('sub_total_price', TRUE),
                     'total_items' => $this->input->post('total_number_of_items', TRUE),
@@ -799,6 +816,7 @@ class Purchases extends CI_Model {
                     'pur_order_no' => $pur_order_no,
                     'supplier_id' => $this->input->post('supplier_id', TRUE),
                     'store_id' => $this->input->post('store_id', TRUE),
+                    'invoice' => 'Inv-' . $this->number_generator(),
                     'wearhouse_id' => '',
                     'sub_total_price' => $this->input->post('sub_total_price', TRUE),
                     'total_items' => $this->input->post('total_number_of_items', TRUE),
@@ -1488,6 +1506,7 @@ class Purchases extends CI_Model {
                     'invoice_no' => !empty($this->input->post('invoice_no', TRUE)) ? $this->input->post('invoice_no', TRUE) : $ninvoice_no,
                     'supplier_id' => $this->input->post('supplier_id', TRUE),
                     'store_id' => $this->input->post('store_id', TRUE),
+                    'invoice' => 'Inv-' . $this->number_generator(),
                     'wearhouse_id' => '',
                     'sub_total_price' => $this->input->post('sub_total_price', TRUE),
                     'total_items' => $this->input->post('total_number_of_items', TRUE),
@@ -3248,7 +3267,7 @@ class Purchases extends CI_Model {
 
     //purchase return List
     public function purchase_return_list() {
-        $this->db->select('a.*,b.supplier_name,c.invoice_no');
+        $this->db->select('a.*,b.supplier_name,c.invoice_no,c.invoice');
         $this->db->from('product_purchase_return a');
         $this->db->join('supplier_information b', 'b.supplier_id = a.supplier_id');
         $this->db->join('product_purchase c', 'c.purchase_id = a.purchase_id');

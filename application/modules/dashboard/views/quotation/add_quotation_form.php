@@ -241,7 +241,7 @@
                                         <td>
                                             <input type="number" name="product_rate[]" onkeyup="quantity_calculate(1);"
                                                 onchange="quantity_calculate(1);" placeholder="0.00" id="price_item_1"
-                                                class="price_item1 form-control text-right" required="" min="0" />
+                                                class="price_item1 form-control text-right" required="" min="0" readonly="readonly" />
                                         </td>
 
                                         <td>

@@ -104,12 +104,12 @@
                             <div class="col-sm-6">
                                 <div class="form-group row">
                                     <label for="invoice_no"
-                                        class="col-sm-4 col-form-label"><?php echo display('invoice_no') ?>
+                                        class="col-sm-4 col-form-label"><?php echo display('supplier_invoice_no') ?>
                                         <i class="text-danger">*</i>
                                     </label>
                                     <div class="col-sm-8">
                                         <input type="text" tabindex="3" class="form-control" name="invoice_no"
-                                            placeholder="<?php echo display('invoice_no') ?>" id="invoice_no"
+                                            placeholder="<?php echo display('supplier_invoice_no') ?>" id="invoice_no"
                                             required />
                                     </div>
                                 </div>

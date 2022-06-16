@@ -160,6 +160,16 @@ class Cproduct extends MX_Controller {
                 $result2 = $this->db->insert_batch('product_translation', $data2);
             }
             $result = $this->Products->product_entry($data);
+            if($this->input->post('category_id', TRUE) == 'XJIMM9X3ZAWUYXQ'){
+                $data = array(
+                    't_p_s_id' => $this->auth->generator(15),
+                    'product_id' => $product_id,
+                    'tax_id' => '52C2SKCKGQY6Q9J',
+                    'tax_percentage' => '14',
+                );
+
+                $this->db->insert('tax_product_service',$data);
+            }
 
             // filter section start
             $filter_types = $this->input->post('filter_type', true);
