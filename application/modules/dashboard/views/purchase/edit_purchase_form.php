@@ -106,11 +106,11 @@ else {
                             <div class="col-sm-6">
                                 <div class="form-group row">
                                     <label for="product_name"
-                                        class="col-sm-3 col-form-label"><?php echo display('invoice_no') ?> <i
+                                        class="col-sm-3 col-form-label"><?php echo display('supplier_invoice_no') ?> <i
                                             class="text-danger">*</i></label>
                                     <div class="col-sm-9">
                                         <input type="text" tabindex="3" class="form-control" name="invoice_no"
-                                            placeholder="<?php echo display('invoice_no') ?>" required
+                                            placeholder="<?php echo display('supplier_invoice_no') ?>" required
                                             value="{invoice_no}" />
                                     </div>
                                 </div>

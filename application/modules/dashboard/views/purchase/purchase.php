@@ -82,7 +82,7 @@
                                         <td>
                                             <a
                                                 href="<?php echo base_url().'dashboard/Cpurchase/purchase_details_data/'.$purchase['purchase_id']; ?>">
-                                                <?php echo html_escape($purchase['invoice_no'])?><i
+                                                <?php echo html_escape($purchase['invoice'])?><i
                                                     class="fa fa-tasks pull-right" aria-hidden="true"></i>
                                             </a>
                                         </td>

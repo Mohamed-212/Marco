@@ -74,7 +74,7 @@
                                     class="supp_name"><?php echo display('supplier_invoice') ?> </span> <br />
 
                                 <?php echo display('date') ?> :&nbsp;{final_date}
-                                <br /><?php echo display('invoice_no') ?> :&nbsp; {invoice_no}<br> {purchase_details}
+                                <br /><?php echo display('supplier_invoice_no') ?> :&nbsp; {invoice_no}<br> {purchase_details}
                                 <span class="ft_right"><?php echo display('print_date') ?> :
                                     <?php echo date("m/d/Y h:i:s"); ?> </span>
                             </th>

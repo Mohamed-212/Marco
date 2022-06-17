@@ -46,7 +46,7 @@ class Cfiltration_model extends CI_Model {
     public function get_all_pricing_types2($idarray) {
         $this->db->select('*');
         $this->db->from('pricing_types');
-         $this->db->where_not_in('pri_type_id', $idarray);
+        $this->db->where_not_in('pri_type_id', $idarray);
         $this->db->order_by('pri_type_id', 'desc');
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
@@ -75,19 +75,25 @@ class Cfiltration_model extends CI_Model {
     }
 
     /////////////////////////////////////////////////////
-
     ////////////////assembly_products//////////////////////
-    
-    
-     public function get_assembly_products($product_id) {
+
+    public function check_assembly($product_id) {
+        $this->db->select('*');
+        $this->db->from('product_information');
+        $this->db->where('product_id', $product_id);
+        $query = $this->db->get();
+        return$query->row_array();
+    }
+
+    public function get_assembly_products($product_id) {
         $this->db->select('*');
         $this->db->from('assembly_products');
         $this->db->where('parent_product_id', $product_id);
-         $this->db->join('product_information', 'product_information.product_id = assembly_products.child_product_id');
+        $this->db->join('product_information', 'product_information.product_id = assembly_products.child_product_id');
         $query = $this->db->get();
         return $query->result_array();
     }
-    
+
     public function category_list_all() {
         $this->db->select('category_name, category_id');
         $this->db->from('product_category');
