@@ -407,7 +407,7 @@ function addpricerow() {
                                 '  <div class="col-sm-12">' +
                                 '  <div class="form-group row">' +
                                 ' <div class="input-group">' +
-                                ' <input type="number" class="form-control text-left " onkeyup=""  id="pricepri' + count + '" name="pricepri[' + count + ']" placeholder="0.00" />' +
+                                ' <input type="number" class="form-control text-left " onchange="check_price2(' + count + ');"  id="pricepri' + count + '" name="pricepri[' + count + ']" placeholder="0.00" />' +
                                 ' <div class="input-group-addon btn btn-danger remove_filter_row" onclick="removepricerow(' + count + ')"><i class="ti-minus"></i></div></div></div>' +
                                 '</td>' +
                                 '</tr>';
@@ -462,22 +462,24 @@ function get_assembly_products() {
 }
 
 function addassemblyprorow() {
-    var tableLength = $("#addassemblypro tbody tr").length;
+   var tableLength = $("#addassemblypro tbody tr").length;
         var tableRow;
         var count;
         var idno;
-
+        var noofrows = 0;
 
         if (tableLength > 0) {
             tableRow = $("#addassemblypro tbody tr:last").attr('id');
             count = tableRow.substring(3);
             count = Number(count) + 1;
+
         } else {
             // no table row
             count = 1;
+             noofrows++;
         }
 
-        var noofrows = 0;
+
         $("#addassemblypro tbody tr").each(function (index, tr) {
             idno = Number($(this).attr('id').substring(3));
             var rowvalue = Number($(".assembly_product_id_" + idno).val());
@@ -494,17 +496,24 @@ function addassemblyprorow() {
             }
         });
         if (count < 500 && noofrows > 0) {
+            // var lastcount = count-1;
+            //   document.getElementById('assemblypro'+lastcount).readOnly = true;
             $("#addassemblyprorow").button("reset");
 
             var tr = '<tr id="pro' + count + '" class="' + count + ' appended-new-row">' +
-                    ' <td class="col-sm-6">' +
-                    '  <div class="col-sm-12">' +
-                    '  <div class="form-group row">' +
-                    ' <div class="input-group">' +
-                    ' <input type="text" class="form-control assemblyproductSelection" onkeyup="assembly_productList(' + count + ')"  id="assemblypro' + count + '" name="assemblypro[' + count + ']" placeholder="' + display('product_name') + '"  />' +
-                    ' <input type="hidden" class="autocomplete_hidden_value assembly_product_id_' + count + '" value=""  name="assembly_product_id[' + count + ']"  />' +
-                    ' <div class="input-group-addon btn btn-danger remove_assembly_row" onclick="removeassemblyprorow(' + count + ')"><i class="ti-minus"></i></div></div></div>' +
+                    '<td class="col-sm-6">' +
+                    '<div class="col-sm-12">' +
+                    '<div class="form-group row">' +
+                    '<div class="input-group">' +
+                    '<input type="text" class="form-control assemblyproductSelection" onkeyup="assembly_productList(' + count + ')"  id="assemblypro' + count + '" name="assemblypro[' + count + ']" placeholder="' + display('product_name') + '"  />' +
+                    '<input type="hidden" class="autocomplete_hidden_value assembly_product_id_' + count + '" value=""  name="assembly_product_id[' + count + ']"  />' +
+                    '<div class="input-group-addon btn btn-danger remove_assembly_row" onclick="removeassemblyprorow(' + count + ')"><i class="ti-minus"></i></div></div></div>' +
                     '</td>' +
+                    '<td class="col-sm-6">' +
+                    '<div class="col-sm-12">' +
+                    '<div class="form-group row">' +
+                    '<input type="text" class="price_item' + count + ' form-control" id="price_item_' + count + '" value=""  name="product_rate[' + count + ']" min="0" readonly=""  />' +
+                    '</div></div></td>' +
                     '</tr>';
             if (tableLength > 0) {
                 $("#addassemblypro tbody tr:last").after(tr);
@@ -517,12 +526,15 @@ function addassemblyprorow() {
                 type: 'warning',
                 title: 'No more Rows!'
             });
-        } 
+        }
   
 }
 
 function removeassemblyprorow(row = null) {
     if (row) {
+        var price = Number($('#price_item_' + row).val());
+        var supplier_price = Number($('#supplier_price').val());
+        $('#supplier_price').val(supplier_price - price)
         $("#pro" + row).remove();
     } else {
         alert('error! Refresh the page again');
@@ -531,12 +543,26 @@ function removeassemblyprorow(row = null) {
 // --- End assembly_products  --- //
 function  check_price() {
 
-    let sell_price = $("#sell_price").val();
-    let supplier_price = $("#supplier_price").val();
+    let sell_price = Number($("#sell_price").val());
+    let supplier_price = Number($("#supplier_price").val());
     if (supplier_price > 0) {
         if (sell_price < supplier_price) {
             alert('Sell price is lower than supplier price');
             $("#sell_price").val(supplier_price);
+
+        }
+    }
+
+}
+
+function  check_price2(row = null) {
+
+    let sell_price = Number($('#pricepri'+ row).val());
+    let supplier_price = Number($("#supplier_price").val());
+    if (supplier_price > 0) {
+        if (sell_price < supplier_price) {
+            alert('Sell price is lower than supplier price');
+            $('#pricepri'+ row).val(supplier_price);
 
         }
     }

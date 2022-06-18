@@ -77,6 +77,22 @@ class Purchases extends CI_Model {
         return $query->row();
     }
 
+    //NUMBER GENERATOR
+    public function number_generator() {
+        $this->db->select('invoice', 'invoice_no');
+        $query = $this->db->get('product_purchase');
+        $result = $query->result_array();
+        $invoice_no = count($result);
+        if ($invoice_no >= 1 && $invoice_no < 2) {
+            $invoice_no = 1000 + (($invoice_no == 1) ? 0 : $invoice_no) + 1;
+        } elseif ($invoice_no >= 2) {
+            $invoice_no = 1000 + (($invoice_no == 1) ? 0 : $invoice_no);
+        } else {
+            $invoice_no = 1000;
+        }
+        return $invoice_no;
+    }
+
     //Purchase entry
     public function purchase_entry() {
         if (check_module_status('accounting') == 1) {
@@ -95,7 +111,17 @@ class Purchases extends CI_Model {
                 $pur_order_no = $this->input->post('purchase_order', TRUE);
                 $vat_rate = $this->input->post('vat_rate', TRUE);
                 $vat = $this->input->post('vat', TRUE);
+                $color = $this->input->post('colorv', TRUE);
+                $size = $this->input->post('sizev', TRUE);
 
+                //start for total discount
+                //إجمالي الخصم على مستوى الفاتورة
+                $total_discount = $this->input->post('total_purchase_dis', TRUE);
+                //إجمالي الفاتورة بعد الخصم الخاص بكل منتج و قبل الضريبة
+                $sub_total = $this->input->post('sub_total_price', TRUE);
+                // توزيع الخصم على إجمالي الفاتورة لمعرفة نسبة الخصم
+                $ratio = $total_discount / $sub_total;
+                //End for total discount
                 // Supplier & product id relation ship checker.
                 for ($i = 1, $n = count($p_id); $i <= $n; $i++) {
                     $product_id = $p_id[$i];
@@ -107,13 +133,12 @@ class Purchases extends CI_Model {
                 }
                 //Variant id required check
                 $result = array();
-                foreach ($p_id as $k => $v) {
-                    if (empty($variant_id[$k])) {
-                        $this->session->set_userdata(array('error_message' => display('variant_is_required')));
-                        redirect('dashboard/Cpurchase');
-                    }
-                }
-
+//                foreach ($p_id as $k => $v) {
+//                    if (empty($variant_id[$k])) {
+//                        $this->session->set_userdata(array('error_message' => display('variant_is_required')));
+//                        redirect('dashboard/Cpurchase');
+//                    }
+//                }
                 //proof of purchase expense 
                 $cost_sectors = $this->input->post('bank_id', TRUE);
                 if (!empty($cost_sectors)) {
@@ -142,11 +167,13 @@ class Purchases extends CI_Model {
                     'pur_order_no' => $pur_order_no,
                     'supplier_id' => $this->input->post('supplier_id', TRUE),
                     'store_id' => $this->input->post('store_id', TRUE),
+                    'invoice' => 'Inv-' . $this->number_generator(),
                     'wearhouse_id' => '',
                     'sub_total_price' => $this->input->post('sub_total_price', TRUE),
                     'total_items' => $this->input->post('total_number_of_items', TRUE),
                     'purchase_vat' => $this->input->post('purchase_vat', TRUE),
                     'total_purchase_vat' => $this->input->post('total_purchase_vat', TRUE),
+                    'total_purchase_dis' => $total_discount,
                     'grand_total_amount' => $this->input->post('grand_total_price', TRUE),
                     'purchase_date' => $this->input->post('purchase_date', TRUE),
                     'purchase_details' => $this->input->post('purchase_details', TRUE),
@@ -172,91 +199,109 @@ class Purchases extends CI_Model {
                 $rate = $this->input->post('product_rate', TRUE);
                 $t_price = $this->input->post('total_price', TRUE);
                 $total_price_without_discount = 0;
-                for ($i = 1, $n = count($p_id); $i <= $n; $i++) {
-                    $product_quantity = $quantity[$i];
-                    $product_rate = $rate[$i];
-                    $product_id = $p_id[$i];
-                    $batch_no = $batch[$i];
-                    $expiry_date = $expiry[$i];
-                    $total_price = $t_price[$i];
-                    $variant = $variant_id[$i];
-                    $variant_color = @$color_variant[$i];
-                    $product_discount = $discount[$i];
-                    $total_price_without_discount += ($rate[$i] * $quantity[$i]);
 
-                    $i_vat_rate = $vat_rate[$i];
-                    $i_vat = $vat[$i];
-                    $data1 = array(
-                        'purchase_detail_id' => $this->auth->generator(15),
-                        'purchase_id' => $purchase_id,
-                        'product_id' => $product_id,
-                        'batch_no' => $batch_no,
-                        'expiry_date' => !empty($expiry_date) ? date('Y-m-d', strtotime($expiry_date)) : '',
-                        'wearhouse_id' => '',
-                        'store_id' => $this->input->post('store_id', TRUE),
-                        'quantity' => $product_quantity,
-                        'rate' => $product_rate,
-                        'discount' => $product_discount,
-                        'vat_rate' => $i_vat_rate,
-                        'vat' => $i_vat,
-                        'total_amount' => $total_price,
-                        'variant_id' => $variant,
-                        'variant_color' => (!empty($variant_color) ? $variant_color : NULL),
-                        'status' => 1
-                    );
+                foreach ($p_id as $i => $value) {
+                    if (!empty($p_id[$i]) && !empty($p_id[$i])) {
+                        $product_quantity = $quantity[$i];
+                        $product_rate = $rate[$i];
+                        $product_id = $p_id[$i];
+                        $batch_no = $batch[$i];
+                        $expiry_date = $expiry[$i];
+                        $total_price = $t_price[$i];
+                        // $variant = $variant_id[$i];
+                        $variant = $size[$i];
+                        // $variant_color = @$color_variant[$i];
+                        $variant_color = $color[$i];
+                        $product_discount = $discount[$i];
+                        $total_price_without_discount += ($rate[$i] * $quantity[$i]);
 
-                    if (!empty($quantity)) {
-                        $this->db->insert('product_purchase_details', $data1);
-                    }
-                    $store = array(
-                        'transfer_id' => $this->auth->generator(15),
-                        'purchase_id' => $purchase_id,
-                        'store_id' => $this->input->post('store_id', TRUE),
-                        'product_id' => $product_id,
-                        'variant_id' => $variant,
-                        'variant_color' => (!empty($variant_color) ? $variant_color : NULL),
-                        'date_time' => $this->input->post('purchase_date', TRUE),
-                        'quantity' => $product_quantity,
-                        'status' => 3
-                    );
-                    if (!empty($quantity)) {
-                        $this->db->insert('transfer', $store);
-                        // stock 
-                        $store_id = $this->input->post('store_id', TRUE);
-                        $check_stock = $this->check_stock($store_id, $product_id, $variant, $variant_color);
-                        if (empty($check_stock)) {
-                            // insert
-                            $stock = array(
-                                'store_id' => $store_id,
-                                'product_id' => $product_id,
-                                'variant_id' => $variant,
-                                'variant_color' => (!empty($variant_color) ? $variant_color : NULL),
-                                'quantity' => $product_quantity,
-                                'warehouse_id' => '',
-                            );
-                            $this->db->insert('purchase_stock_tbl', $stock);
-                            // insert
-                        } else {
-                            //update
-                            $stock = array(
-                                'quantity' => $check_stock->quantity + $product_quantity
-                            );
-                            if (!empty($store_id)) {
-                                $this->db->where('store_id', $store_id);
-                            }
-                            if (!empty($product_id)) {
-                                $this->db->where('product_id', $product_id);
-                            }
-                            if (!empty($variant)) {
-                                $this->db->where('variant_id', $variant);
-                            }
-                            if (!empty($variant_color)) {
-                                $this->db->where('variant_color', $variant_color);
-                            }
-                            $this->db->update('purchase_stock_tbl', $stock);
-                            //update
+
+                        //start for total discount
+                        //ضرب نسبة الخصم في إجمالي الصنف لمعرفة مقدار الخصم من كل صنف
+                        $total_price_dis = $ratio * $total_price;
+                        //تحديد إجمالي سعر المنتج بعد الخصم
+                        $total_price_after_dis = $total_price - $total_price_dis;
+                        //تحديد سعر المنتج الواحد بعد الخصم
+                        $rate2 = $total_price_after_dis / $product_quantity;
+                        //End for total discount
+
+
+                        $i_vat_rate = $vat_rate[$i];
+                        $i_vat = $vat[$i];
+                        $data1 = array(
+                            'purchase_detail_id' => $this->auth->generator(15),
+                            'purchase_id' => $purchase_id,
+                            'product_id' => $product_id,
+                            'batch_no' => $batch_no,
+                            'expiry_date' => !empty($expiry_date) ? date('Y-m-d', strtotime($expiry_date)) : '',
+                            'wearhouse_id' => '',
+                            'store_id' => $this->input->post('store_id', TRUE),
+                            'quantity' => $product_quantity,
+                            'rate' => $product_rate,
+                            'rate_after_discount' => $rate2,
+                            'discount' => $product_discount,
+                            'vat_rate' => $i_vat_rate,
+                            'vat' => $i_vat,
+                            'total_amount' => $total_price,
+                            'variant_id' => $variant,
+                            // 'variant_color' => (!empty($variant_color) ? $variant_color : NULL),
+                            'variant_color' => $variant_color,
+                            'status' => 1
+                        );
+
+                        if (!empty($quantity)) {
+                            $this->db->insert('product_purchase_details', $data1);
                         }
-                        // stock
+                        $store = array(
+                            'transfer_id' => $this->auth->generator(15),
+                            'purchase_id' => $purchase_id,
+                            'store_id' => $this->input->post('store_id', TRUE),
+                            'product_id' => $product_id,
+                            'variant_id' => $variant,
+                            'variant_color' => $variant_color,
+                            'date_time' => $this->input->post('purchase_date', TRUE),
+                            'quantity' => $product_quantity,
+                            'status' => 3
+                        );
+                        if (!empty($quantity)) {
+                            $this->db->insert('transfer', $store);
+                            // stock 
+                            $store_id = $this->input->post('store_id', TRUE);
+                            $check_stock = $this->check_stock($store_id, $product_id, $variant, $variant_color);
+                            if (empty($check_stock)) {
+                                // insert
+                                $stock = array(
+                                    'store_id' => $store_id,
+                                    'product_id' => $product_id,
+                                    'variant_id' => $variant,
+                                    'variant_color' => $variant_color,
+                                    'quantity' => $product_quantity,
+                                    'warehouse_id' => '',
+                                );
+                                $this->db->insert('purchase_stock_tbl', $stock);
+                                // insert
+                            } else {
+                                //update
+                                $stock = array(
+                                    'quantity' => $check_stock->quantity + $product_quantity
+                                );
+                                if (!empty($store_id)) {
+                                    $this->db->where('store_id', $store_id);
+                                }
+                                if (!empty($product_id)) {
+                                    $this->db->where('product_id', $product_id);
+                                }
+                                if (!empty($variant)) {
+                                    $this->db->where('variant_id', $variant);
+                                }
+                                if (!empty($variant_color)) {
+                                    $this->db->where('variant_color', $variant_color);
+                                }
+                                $this->db->update('purchase_stock_tbl', $stock);
+                                //update
+                            }
+                            // stock
+                        }
                     }
                 }
 
@@ -759,17 +804,25 @@ class Purchases extends CI_Model {
                 $pur_order_no = $this->input->post('purchase_order', TRUE);
                 $vat_rate = $this->input->post('vat_rate', TRUE);
                 $vat = $this->input->post('vat', TRUE);
+                $color = $this->input->post('colorv', TRUE);
+                $size = $this->input->post('sizev', TRUE);
 
-
+                //start for total discount
+                //إجمالي الخصم على مستوى الفاتورة
+                $total_discount = $this->input->post('total_purchase_dis', TRUE);
+                //إجمالي الفاتورة بعد الخصم الخاص بكل منتج و قبل الضريبة
+                $sub_total = $this->input->post('sub_total_price', TRUE);
+                // توزيع الخصم على إجمالي الفاتورة لمعرفة نسبة الخصم
+                $ratio = $total_discount / $sub_total;
+                //End for total discount
                 //Variant id required check
                 $result = array();
-                foreach ($p_id as $k => $v) {
-                    if (empty($variant_id[$k])) {
-                        $this->session->set_userdata(array('error_message' => display('variant_is_required')));
-                        redirect('dashboard/Cpurchase');
-                    }
-                }
-
+//                foreach ($p_id as $k => $v) {
+//                    if (empty($variant_id[$k])) {
+//                        $this->session->set_userdata(array('error_message' => display('variant_is_required')));
+//                        redirect('dashboard/Cpurchase');
+//                    }
+//                }
                 //proof of purchase expense 
                 $cost_sectors = $this->input->post('bank_id', TRUE);
                 if (!empty($cost_sectors)) {
@@ -798,11 +851,13 @@ class Purchases extends CI_Model {
                     'pur_order_no' => $pur_order_no,
                     'supplier_id' => $this->input->post('supplier_id', TRUE),
                     'store_id' => $this->input->post('store_id', TRUE),
+                    'invoice' => 'Inv-' . $this->number_generator(),
                     'wearhouse_id' => '',
                     'sub_total_price' => $this->input->post('sub_total_price', TRUE),
                     'total_items' => $this->input->post('total_number_of_items', TRUE),
                     'purchase_vat' => $this->input->post('purchase_vat', TRUE),
                     'total_purchase_vat' => $this->input->post('total_purchase_vat', TRUE),
+                    'total_purchase_dis' => $total_discount,
                     'grand_total_amount' => $this->input->post('grand_total_price', TRUE),
                     'purchase_date' => $this->input->post('purchase_date', TRUE),
                     'purchase_details' => $this->input->post('purchase_details', TRUE),
@@ -828,91 +883,107 @@ class Purchases extends CI_Model {
                 $rate = $this->input->post('product_rate', TRUE);
                 $t_price = $this->input->post('total_price', TRUE);
                 $total_price_without_discount = 0;
-                for ($i = 0, $n = count($p_id); $i < $n; $i++) {
-                    $product_quantity = $quantity[$i];
-                    $product_rate = $rate[$i];
-                    $product_id = $p_id[$i];
-                    $batch_no = $batch[$i];
-                    $expiry_date = $expiry[$i];
-                    $total_price = $t_price[$i];
-                    $variant = $variant_id[$i];
-                    $variant_color = @$color_variant[$i];
-                    $product_discount = $discount[$i];
-                    $total_price_without_discount += ($rate[$i] * $quantity[$i]);
+                //  for ($i = 0, $n = count($p_id); $i < $n; $i++) {
+                foreach ($p_id as $key => $value) {
+                    if (!empty($p_id[$key]) && !empty($p_id[$key])) {
+                        $product_quantity = $quantity[$key];
+                        $product_rate = $rate[$key];
+                        $product_id = $p_id[$key];
+                        $batch_no = $batch[$key];
+                        $expiry_date = $expiry[$key];
+                        $total_price = $t_price[$key];
+                        // $variant = $variant_id[$i];
+                        $variant = $size[$key];
+                        // $variant_color = @$color_variant[$i];
+                        $variant_color = $color[$key];
+                        $product_discount = $discount[$key];
+                        $total_price_without_discount += ($rate[$key] * $quantity[$key]);
 
-                    $i_vat_rate = $vat_rate[$i];
-                    $i_vat = $vat[$i];
-                    $data1 = array(
-                        'purchase_detail_id' => $this->auth->generator(15),
-                        'purchase_id' => $purchase_id,
-                        'product_id' => $product_id,
-                        'batch_no' => $batch_no,
-                        'expiry_date' => !empty($expiry_date) ? date('Y-m-d', strtotime($expiry_date)) : '',
-                        'wearhouse_id' => '',
-                        'store_id' => $this->input->post('store_id', TRUE),
-                        'quantity' => $product_quantity,
-                        'rate' => $product_rate,
-                        'discount' => $product_discount,
-                        'vat_rate' => $i_vat_rate,
-                        'vat' => $i_vat,
-                        'total_amount' => $total_price,
-                        'variant_id' => $variant,
-                        'variant_color' => (!empty($variant_color) ? $variant_color : NULL),
-                        'status' => 1
-                    );
+                        //start for total discount
+                        //ضرب نسبة الخصم في إجمالي الصنف لمعرفة مقدار الخصم من كل صنف
+                        $total_price_dis = $ratio * $total_price;
+                        //تحديد إجمالي سعر المنتج بعد الخصم
+                        $total_price_after_dis = $total_price - $total_price_dis;
+                        //تحديد سعر المنتج الواحد بعد الخصم
+                        $rate2 = $total_price_after_dis / $product_quantity;
+                        //End for total discount
 
-                    if (!empty($quantity)) {
-                        $this->db->insert('product_purchase_details', $data1);
-                    }
-                    $store = array(
-                        'transfer_id' => $this->auth->generator(15),
-                        'purchase_id' => $purchase_id,
-                        'store_id' => $this->input->post('store_id', TRUE),
-                        'product_id' => $product_id,
-                        'variant_id' => $variant,
-                        'variant_color' => (!empty($variant_color) ? $variant_color : NULL),
-                        'date_time' => $this->input->post('purchase_date', TRUE),
-                        'quantity' => $product_quantity,
-                        'status' => 3
-                    );
-                    if (!empty($quantity)) {
-                        $this->db->insert('transfer', $store);
-                        // stock 
-                        $store_id = $this->input->post('store_id', TRUE);
-                        $check_stock = $this->check_stock($store_id, $product_id, $variant, $variant_color);
-                        if (empty($check_stock)) {
-                            // insert
-                            $stock = array(
-                                'store_id' => $store_id,
-                                'product_id' => $product_id,
-                                'variant_id' => $variant,
-                                'variant_color' => (!empty($variant_color) ? $variant_color : NULL),
-                                'quantity' => $product_quantity,
-                                'warehouse_id' => '',
-                            );
-                            $this->db->insert('purchase_stock_tbl', $stock);
-                            // insert
-                        } else {
-                            //update
-                            $stock = array(
-                                'quantity' => $check_stock->quantity + $product_quantity
-                            );
-                            if (!empty($store_id)) {
-                                $this->db->where('store_id', $store_id);
-                            }
-                            if (!empty($product_id)) {
-                                $this->db->where('product_id', $product_id);
-                            }
-                            if (!empty($variant)) {
-                                $this->db->where('variant_id', $variant);
-                            }
-                            if (!empty($variant_color)) {
-                                $this->db->where('variant_color', $variant_color);
-                            }
-                            $this->db->update('purchase_stock_tbl', $stock);
-                            //update
+                        $i_vat_rate = $vat_rate[$key];
+                        $i_vat = $vat[$key];
+                        $data1 = array(
+                            'purchase_detail_id' => $this->auth->generator(15),
+                            'purchase_id' => $purchase_id,
+                            'product_id' => $product_id,
+                            'batch_no' => $batch_no,
+                            'expiry_date' => !empty($expiry_date) ? date('Y-m-d', strtotime($expiry_date)) : '',
+                            'wearhouse_id' => '',
+                            'store_id' => $this->input->post('store_id', TRUE),
+                            'quantity' => $product_quantity,
+                            'rate' => $product_rate,
+                            'rate_after_discount' => $rate2,
+                            'discount' => $product_discount,
+                            'vat_rate' => $i_vat_rate,
+                            'vat' => $i_vat,
+                            'total_amount' => $total_price,
+                            'variant_id' => $variant,
+                            // 'variant_color' => (!empty($variant_color) ? $variant_color : NULL),
+                            'variant_color' => $variant_color,
+                            'status' => 1
+                        );
+
+                        if (!empty($quantity)) {
+                            $this->db->insert('product_purchase_details', $data1);
                         }
-                        // stock
+                        $store = array(
+                            'transfer_id' => $this->auth->generator(15),
+                            'purchase_id' => $purchase_id,
+                            'store_id' => $this->input->post('store_id', TRUE),
+                            'product_id' => $product_id,
+                            'variant_id' => $variant,
+                            'variant_color' => $variant_color,
+                            'date_time' => $this->input->post('purchase_date', TRUE),
+                            'quantity' => $product_quantity,
+                            'status' => 3
+                        );
+                        if (!empty($quantity)) {
+                            $this->db->insert('transfer', $store);
+                            // stock 
+                            $store_id = $this->input->post('store_id', TRUE);
+                            $check_stock = $this->check_stock($store_id, $product_id, $variant, $variant_color);
+                            if (empty($check_stock)) {
+                                // insert
+                                $stock = array(
+                                    'store_id' => $store_id,
+                                    'product_id' => $product_id,
+                                    'variant_id' => $variant,
+                                    'variant_color' => $variant_color,
+                                    'quantity' => $product_quantity,
+                                    'warehouse_id' => '',
+                                );
+                                $this->db->insert('purchase_stock_tbl', $stock);
+                                // insert
+                            } else {
+                                //update
+                                $stock = array(
+                                    'quantity' => $check_stock->quantity + $product_quantity
+                                );
+                                if (!empty($store_id)) {
+                                    $this->db->where('store_id', $store_id);
+                                }
+                                if (!empty($product_id)) {
+                                    $this->db->where('product_id', $product_id);
+                                }
+                                if (!empty($variant)) {
+                                    $this->db->where('variant_id', $variant);
+                                }
+                                if (!empty($variant_color)) {
+                                    $this->db->where('variant_color', $variant_color);
+                                }
+                                $this->db->update('purchase_stock_tbl', $stock);
+                                //update
+                            }
+                            // stock
+                        }
                     }
                 }
 
@@ -1481,6 +1552,7 @@ class Purchases extends CI_Model {
                     'invoice_no' => !empty($this->input->post('invoice_no', TRUE)) ? $this->input->post('invoice_no', TRUE) : $ninvoice_no,
                     'supplier_id' => $this->input->post('supplier_id', TRUE),
                     'store_id' => $this->input->post('store_id', TRUE),
+                    'invoice' => 'Inv-' . $this->number_generator(),
                     'wearhouse_id' => '',
                     'sub_total_price' => $this->input->post('sub_total_price', TRUE),
                     'total_items' => $this->input->post('total_number_of_items', TRUE),
@@ -1686,8 +1758,8 @@ class Purchases extends CI_Model {
 //                        );
 //                    }
 //                    $reverse = $this->db->insert_batch('acc_transaction', $transection_reverse);
-                    
-                     $this->db->where('VNo', 'p-' . $purchase_id);
+
+                    $this->db->where('VNo', 'p-' . $purchase_id);
                     $this->db->delete('acc_transaction');
                 }
                 // Reverse purchase transections end		
@@ -2255,20 +2327,22 @@ class Purchases extends CI_Model {
             $variant_list = $this->db->get()->result();
             $var_types = array_column($variant_list, 'variant_type');
 
-            $html .= "<select id=\"variant_id\" class=\"form-control variant_id\" required=\"\" style=\"width:200px\">
-	                    <option value=\"\">" . display('select_variant') . "</option>";
+            $html .= "<select id=\"variant_id\" class=\"form-control variant_id\" required=\"\" style=\"width:200px\">";
             foreach ($variant_list as $varitem) {
 
                 if ($varitem->variant_type == 'size') {
+                    $size = $varitem->variant_id;
                     $html .= "<option value=" . $varitem->variant_id . ">" . $varitem->variant_name . "</option>";
                 }
             }
             $html .= "</select>";
 
             if (in_array('color', $var_types)) {
-                $colorhtml .= "<option value=''></option>";
+
                 foreach ($variant_list as $varitem2) {
+
                     if ($varitem2->variant_type == 'color') {
+                        $color = $varitem2->variant_id;
                         $colorhtml .= "<option value=" . $varitem2->variant_id . ">" . $varitem2->variant_name . "</option>";
                     }
                 }
@@ -2280,7 +2354,9 @@ class Purchases extends CI_Model {
             'product_id' => $product_information->product_id,
             'supplier_price' => $product_information->supplier_price,
             'variant' => $html,
-            'variant_color' => $colorhtml
+            'variant_color' => $colorhtml,
+            'size' => $size,
+            'color' => $color,
         );
 
         return $data2;
@@ -2335,12 +2411,12 @@ class Purchases extends CI_Model {
         //Delete transer info table
         $this->db->where('purchase_id', $purchase_id);
         $this->db->delete('transfer');
-         //Delete acc_transaction data
+        //Delete acc_transaction data
         $this->db->where('VNo', 'p-' . $purchase_id);
         $this->db->delete('acc_transaction');
-        
+
         //Delete acc_transaction data
-         $this->db->where('purchase_id', $purchase_id);
+        $this->db->where('purchase_id', $purchase_id);
         $this->db->delete('supplier_ledger');
         return true;
     }
@@ -2603,7 +2679,19 @@ class Purchases extends CI_Model {
         $quantity = $this->input->post('product_quantity', TRUE);
         $variant_id = $this->input->post('variant_id', TRUE);
         $color_variant = $this->input->post('color_variant', TRUE);
+        $color = $this->input->post('colorv', TRUE);
+        $size = $this->input->post('sizev', TRUE);
         $discount = $this->input->post('discount', TRUE);
+
+        //start for total discount
+        //إجمالي الخصم على مستوى الفاتورة
+        $total_discount = $this->input->post('total_purchase_dis', TRUE);
+        //إجمالي الفاتورة بعد الخصم الخاص بكل منتج و قبل الضريبة
+        $sub_total = $this->input->post('sub_total_price', TRUE);
+        // توزيع الخصم على إجمالي الفاتورة لمعرفة نسبة الخصم
+        $ratio = $total_discount / $sub_total;
+        //End for total discount
+
 
         $vat_rate = $this->input->post('vat_rate', TRUE);
         $vat = $this->input->post('vat', TRUE);
@@ -2613,12 +2701,12 @@ class Purchases extends CI_Model {
 
         //Variant id required check
         $result = array();
-        foreach ($p_id as $k => $v) {
-            if (empty($variant_id[$k])) {
-                $this->session->set_userdata(array('error_message' => display('variant_is_required')));
-                redirect('dashboard/Cpurchase/purchase_order');
-            }
-        }
+//        foreach ($p_id as $k => $v) {
+//            if (empty($variant_id[$k])) {
+//                $this->session->set_userdata(array('error_message' => display('variant_is_required')));
+//                redirect('dashboard/Cpurchase/purchase_order');
+//            }
+//        }
         //Product Purchase Details
         $rate = $this->input->post('product_rate', TRUE);
         $t_price = $this->input->post('total_price', TRUE);
@@ -2627,16 +2715,27 @@ class Purchases extends CI_Model {
         //  for ($i = 0, $n = count($p_id); $i < $n; $i++) {//
         foreach ($p_id as $key => $value) {
             if (!empty($p_id[$key]) && !empty($p_id[$key])) {
-                $product_quantity = $quantity[$i];
-                $product_rate = $rate[$i];
-                $product_id = $p_id[$i];
-                $total_price = $t_price[$i];
-                $variant = $variant_id[$i];
-                $variant_color = @$color_variant[$i];
-                $expiry_date = $expiry[$i];
-                $product_discount = $discount[$i];
-                $i_vat_rate = $vat_rate[$i];
-                $i_vat = $vat[$i];
+                $product_quantity = $quantity[$key];
+                $product_rate = $rate[$key];
+                $product_id = $p_id[$key];
+                $total_price = $t_price[$key];
+                $variant = $variant_id[$key];
+                $variant_color = @$color_variant[$key];
+                $colorid = $color[$key];
+                $sizeid = $size[$key];
+                $expiry_date = $expiry[$key];
+                $product_discount = $discount[$key];
+                $i_vat_rate = $vat_rate[$key];
+                $i_vat = $vat[$key];
+
+                //start for total discount
+                //ضرب نسبة الخصم في إجمالي الصنف لمعرفة مقدار الخصم من كل صنف
+                $total_price_dis = $ratio * $total_price;
+                //تحديد إجمالي سعر المنتج بعد الخصم
+                $total_price_after_dis = $total_price - $total_price_dis;
+                //تحديد سعر المنتج الواحد بعد الخصم
+                $rate2 = $total_price_after_dis / $product_quantity;
+                //End for total discount
 
                 if ($product_quantity > 0) {
                     $data2[] = array(
@@ -2646,9 +2745,12 @@ class Purchases extends CI_Model {
                         'store_id' => $this->input->post('store_id', TRUE),
                         'quantity' => $product_quantity,
                         'rate' => $product_rate,
+                        'rate_after_discount' => $rate2,
                         'total_amount' => $total_price,
-                        'variant_id' => $variant,
-                        'variant_color' => (!empty(@$variant_color) ? @$variant_color : NULL),
+                        // 'variant_id' => $variant,
+                        'variant_id' => $sizeid,
+                        // 'variant_color' => (!empty(@$variant_color) ? @$variant_color : NULL),
+                        'variant_color' => $colorid,
                         'discount' => $product_discount,
                         'vat_rate' => $i_vat_rate,
                         'vat' => $i_vat,
@@ -2677,6 +2779,7 @@ class Purchases extends CI_Model {
             'user_id' => $this->session->userdata('user_id'),
             'purchase_vat' => $this->input->post('purchase_vat', TRUE),
             'total_purchase_vat' => $this->input->post('total_purchase_vat', TRUE),
+            'total_purchase_dis' => $total_discount
         );
         $this->db->insert('purchase_orders', $data);
 
@@ -2767,24 +2870,47 @@ class Purchases extends CI_Model {
             $rate = $this->input->post('product_rate', TRUE);
             $t_price = $this->input->post('total_price', TRUE);
 
+            //start for total discount
+            //إجمالي الخصم على مستوى الفاتورة
+            $total_discount = $this->input->post('total_purchase_dis', TRUE);
+            //إجمالي الفاتورة بعد الخصم الخاص بكل منتج و قبل الضريبة
+            $sub_total = $this->input->post('sub_total_price', TRUE);
+            // توزيع الخصم على إجمالي الفاتورة لمعرفة نسبة الخصم
+            $ratio = $total_discount / $sub_total;
+            //End for total discount
+
             $data2 = [];
-            for ($i = 0, $n = count($p_id); $i < $n; $i++) {
-                $pur_order_detail_id = $pur_order_detail_ids[$i];
-                $product_quantity = $quantity[$i];
-                $product_rate = $rate[$i];
-                $product_id = $p_id[$i];
-                $total_price = $t_price[$i];
-                $variant = $variant_id[$i];
-                $variant_color = $color_variant[$i];
-                if ($product_quantity > 0) {
-                    $data2[] = array(
-                        'pur_order_detail_id' => $pur_order_detail_id,
-                        'pur_order_id' => $pur_order_id,
-                        'product_id' => $product_id,
-                        'rc_quantity' => $product_quantity,
-                        'rc_rate' => $product_rate,
-                        'rc_total_amount' => $total_price
-                    );
+            // for ($i = 0, $n = count($p_id); $i < $n; $i++) {
+            foreach ($p_id as $key => $value) {
+                if (!empty($p_id[$key]) && !empty($p_id[$key])) {
+                    $pur_order_detail_id = $pur_order_detail_ids[$key];
+                    $product_quantity = $quantity[$key];
+                    $product_rate = $rate[$key];
+                    $product_id = $p_id[$key];
+                    $total_price = $t_price[$key];
+                    $variant = $variant_id[$key];
+                    $variant_color = $color_variant[$key];
+
+                    //start for total discount
+                    //ضرب نسبة الخصم في إجمالي الصنف لمعرفة مقدار الخصم من كل صنف
+                    $total_price_dis = $ratio * $total_price;
+                    //تحديد إجمالي سعر المنتج بعد الخصم
+                    $total_price_after_dis = $total_price - $total_price_dis;
+                    //تحديد سعر المنتج الواحد بعد الخصم
+                    $rate2 = $total_price_after_dis / $product_quantity;
+                    //End for total discount
+
+                    if ($product_quantity > 0) {
+                        $data2[] = array(
+                            'pur_order_detail_id' => $pur_order_detail_id,
+                            'pur_order_id' => $pur_order_id,
+                            'product_id' => $product_id,
+                            'rc_quantity' => $product_quantity,
+                            'rc_rate' => $product_rate,
+                            'rc_rate_after_discount' => $rate2,
+                            'rc_total_amount' => $total_price
+                        );
+                    }
                 }
             }
             $this->db->trans_start();
@@ -2826,12 +2952,25 @@ class Purchases extends CI_Model {
         $variants = $this->input->post('variant_id', TRUE);
         $variant_colors = $this->input->post('color_variant', TRUE);
         $discount = $this->input->post('discount', TRUE);
+
+        //start for total discount
+        //إجمالي الخصم على مستوى الفاتورة
+        $total_discount = $this->input->post('total_purchase_dis', TRUE);
+        //إجمالي الفاتورة بعد الخصم الخاص بكل منتج و قبل الضريبة
+        $sub_total = $this->input->post('sub_total_price', TRUE);
+        // توزيع الخصم على إجمالي الفاتورة لمعرفة نسبة الخصم
+        $ratio = $total_discount / $sub_total;
+        //End for total discount
+
         $vat_rate = $this->input->post('vat_rate', TRUE);
         $vat = $this->input->post('vat', TRUE);
+        $color = $this->input->post('colorv', TRUE);
+        $size = $this->input->post('sizev', TRUE);
 
         //Supplier & product id relation ship checker.
-        for ($i = 1, $n = count($p_id); $i <= $n; $i++) {
-            $product_id = $p_id[$i];
+        //  for ($i = 1, $n = count($p_id); $i <= $n; $i++) {
+        foreach ($p_id as $key => $value) {
+            $product_id = $p_id[$key];
             $value = $this->product_supplier_check($product_id, $supplier_id);
             if ($value == 0) {
                 $this->session->set_userdata('error_message', display("product_and_supplier_did_not_match"));
@@ -2840,13 +2979,12 @@ class Purchases extends CI_Model {
         }
         //Variant id required check
         $result = array();
-        foreach ($p_id as $k => $v) {
-            if (empty($variants[$k])) {
-                $this->session->set_userdata(array('error_message' => display('variant_is_required')));
-                redirect(base_url('dashboard/Cpurchase/purchase_order'));
-            }
-        }
-
+//        foreach ($p_id as $k => $v) {
+//            if (empty($variants[$k])) {
+//                $this->session->set_userdata(array('error_message' => display('variant_is_required')));
+//                redirect(base_url('dashboard/Cpurchase/purchase_order'));
+//            }
+//        }
         //Update Product Purchase Table
         $pdate = $this->input->post('purchase_date', TRUE);
         $edate = $this->input->post('expire_date', TRUE);
@@ -2857,6 +2995,7 @@ class Purchases extends CI_Model {
             'store_id' => $this->input->post('store_id', TRUE),
             'purchase_vat' => $this->input->post('purchase_vat', TRUE),
             'total_purchase_vat' => $this->input->post('total_purchase_vat', TRUE),
+            'total_purchase_dis' => $total_discount,
             'sub_total_price' => $this->input->post('sub_total_price', TRUE),
             'total_items' => $this->input->post('total_number_of_items', TRUE),
             'grand_total_amount' => $this->input->post('grand_total_price', TRUE),
@@ -2879,35 +3018,52 @@ class Purchases extends CI_Model {
         $t_price = $this->input->post('total_price', TRUE);
         $purchase_detail_id = $this->input->post('purchase_detail_id', TRUE);
 
-        for ($i = 1, $n = count($p_id); $i < $n; $i++) {
-            $product_quantity = $quantity[$i];
-            $product_rate = $rate[$i];
-            $product_id = $p_id[$i];
-            $expiry_date = $expiry[$i];
-            $total_price = $t_price[$i];
-            $variant_id = $variants[$i];
-            $variant_color = (!empty($variant_colors[$i]) ? $variant_colors[$i] : NULL);
-            $product_discount = $discount[$i];
-            $i_vat_rate = $vat_rate[$i];
-            $i_vat = $vat[$i];
-            $data1 = array(
-                'pur_order_detail_id' => $this->auth->generator(15),
-                'pur_order_id' => $pur_order_id,
-                'product_id' => $product_id,
-                'variant_id' => $variant_id,
-                'variant_color' => (!empty($variant_color) ? $variant_color : NULL),
-                'expiry_date' => date('Y-m-d', strtotime($expiry_date)),
-                'store_id' => $this->input->post('store_id', TRUE),
-                'quantity' => $product_quantity,
-                'rate' => $product_rate,
-                'discount' => $product_discount,
-                'vat_rate' => $i_vat_rate,
-                'vat' => $i_vat,
-                'total_amount' => $total_price,
-            );
+        // for ($i = 1, $n = count($p_id); $i < $n; $i++) {
+        foreach ($p_id as $key => $value) {
+            if (!empty($p_id[$key]) && !empty($p_id[$key])) {
+                $product_quantity = $quantity[$key];
+                $product_rate = $rate[$key];
+                $product_id = $p_id[$key];
+                $expiry_date = $expiry[$key];
+                $total_price = $t_price[$key];
+                //  $variant_id = $variants[$i];
+                $variant_id = $size[$key];
+                // $variant_color = (!empty($variant_colors[$i]) ? $variant_colors[$i] : NULL);
+                $variant_color = $color[$key];
+                $product_discount = $discount[$key];
+                $i_vat_rate = $vat_rate[$key];
+                $i_vat = $vat[$key];
 
-            if (!empty($quantity)) {
-                $this->db->insert('purchase_order_details', $data1);
+                //start for total discount
+                //ضرب نسبة الخصم في إجمالي الصنف لمعرفة مقدار الخصم من كل صنف
+                $total_price_dis = $ratio * $total_price;
+                //تحديد إجمالي سعر المنتج بعد الخصم
+                $total_price_after_dis = $total_price - $total_price_dis;
+                //تحديد سعر المنتج الواحد بعد الخصم
+                $rate2 = $total_price_after_dis / $product_quantity;
+                //End for total discount
+
+                $data1 = array(
+                    'pur_order_detail_id' => $this->auth->generator(15),
+                    'pur_order_id' => $pur_order_id,
+                    'product_id' => $product_id,
+                    'variant_id' => $variant_id,
+                    // 'variant_color' => (!empty($variant_color) ? $variant_color : NULL),
+                    'variant_color' => $variant_color,
+                    'expiry_date' => date('Y-m-d', strtotime($expiry_date)),
+                    'store_id' => $this->input->post('store_id', TRUE),
+                    'quantity' => $product_quantity,
+                    'rate' => $product_rate,
+                    'rate_after_discount' => $rate2,
+                    'discount' => $product_discount,
+                    'vat_rate' => $i_vat_rate,
+                    'vat' => $i_vat,
+                    'total_amount' => $total_price,
+                );
+
+                if (!empty($quantity)) {
+                    $this->db->insert('purchase_order_details', $data1);
+                }
             }
         }
         return true;
@@ -3220,7 +3376,7 @@ class Purchases extends CI_Model {
 
     //purchase return List
     public function purchase_return_list() {
-        $this->db->select('a.*,b.supplier_name,c.invoice_no');
+        $this->db->select('a.*,b.supplier_name,c.invoice_no,c.invoice');
         $this->db->from('product_purchase_return a');
         $this->db->join('supplier_information b', 'b.supplier_id = a.supplier_id');
         $this->db->join('product_purchase c', 'c.purchase_id = a.purchase_id');

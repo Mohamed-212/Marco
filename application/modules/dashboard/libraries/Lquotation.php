@@ -97,6 +97,7 @@ class Lquotation {
 			'service_charge'	=>	$quotation_detail[0]['service_charge'],
 			'details'			=>	$quotation_detail[0]['details'],
 			'status'			=>	$quotation_detail[0]['status'],
+			'is_quotation'		=>	$quotation_detail[0]['is_quotation'],
 			'quotation_all_data'=>	$quotation_detail,
 			'store_list'		=>	$store_list,
 			'store_list_selected'=>	$store_list_selected,

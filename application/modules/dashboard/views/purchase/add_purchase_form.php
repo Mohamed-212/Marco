@@ -104,12 +104,12 @@
                             <div class="col-sm-6">
                                 <div class="form-group row">
                                     <label for="invoice_no"
-                                        class="col-sm-4 col-form-label"><?php echo display('invoice_no') ?>
+                                        class="col-sm-4 col-form-label"><?php echo display('supplier_invoice_no') ?>
                                         <i class="text-danger">*</i>
                                     </label>
                                     <div class="col-sm-8">
                                         <input type="text" tabindex="3" class="form-control" name="invoice_no"
-                                            placeholder="<?php echo display('invoice_no') ?>" id="invoice_no"
+                                            placeholder="<?php echo display('supplier_invoice_no') ?>" id="invoice_no"
                                             required />
                                     </div>
                                 </div>
@@ -225,11 +225,19 @@
                                             <input type="hidden" class="autocomplete_hidden_value product_id_1"
                                                 name="product_id[1]" id="SchoolHiddenId" />
                                             <input type="hidden" class="sl" value="1">
+                                            <input type="hidden" name="colorv[1]" id="color1" value="">
+                                            <input type="hidden" name="sizev[1]" id="size1" value="">
                                         </td>
                                         <td class="text-center">
+                                             <div id="color_variant_area_1">
+                                                <select name="color_variant[1]" id="color_variant_1"
+                                                    class="form-control color_variant width_100p" disabled="">
+                                                    <option value=""></option>
+                                                </select>
+                                            </div>
                                             <div class="variant_id_div">
                                                 <select name="variant_id[1]" id="variant_id_1"
-                                                    class="form-control variant_id width_100p" required="">
+                                                    class="form-control variant_id width_100p" disabled="">
                                                     <option value=""></option>
                                                     <?php foreach ($variant_list as $variant) : ?>
                                                     <option value=" <?php echo html_escape($variant['variant_id']) ?>">
@@ -237,12 +245,7 @@
                                                     <?php endforeach; ?>
                                                 </select>
                                             </div>
-                                            <div id="color_variant_area_1">
-                                                <select name="color_variant[1]" id="color_variant_1"
-                                                    class="form-control color_variant width_100p">
-                                                    <option value=""></option>
-                                                </select>
-                                            </div>
+                                           
                                         </td>
                                         <td class="text-right">
                                             <input type="text" name="batch_no[1]" id="batch_no_1" required
@@ -330,6 +333,15 @@
                                         <td>
                                             <input type="text" id="total_vat" class="text-right form-control"
                                                 name="total_purchase_vat" placeholder="0.00" readonly="readonly" />
+                                        </td>
+                                         <td class="text-right">
+                                            <b><?php echo display('total_dis') ?>:</b>
+                                        </td>
+                                        <td>
+                                            <input type="number" id="total_dis" class="text-right form-control" value=""
+                                                   onkeyup="calculate_total();"
+                                                    onchange="calculate_total();"
+                                                   name="total_purchase_dis" placeholder="0.00"  />
                                         </td>
                                         <td class="text-right">
                                             <b><?php echo display('grand_total') ?>:</b>

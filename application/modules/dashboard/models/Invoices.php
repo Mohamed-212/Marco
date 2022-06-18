@@ -286,7 +286,7 @@ class Invoices extends CI_Model {
                     'invoice' => 'Inv-' . $this->number_generator(),
                     'total_discount' => $this->input->post('total_discount', TRUE),
                     'total_vat' => $tota_vati,
-                    'is_quotation' => $this->input->post('is_quotation', true),
+                    'is_quotation'		=> ($this->input->post('is_quotation', True))?$this->input->post('is_quotation', True):0,
                     'employee_id' => $this->input->post('employee_id', true),
                     'invoice_discount' => $this->input->post('invoice_discount', TRUE),
                     'user_id' => $this->session->userdata('user_id'),

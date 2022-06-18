@@ -46,6 +46,11 @@ function addInputField(divName) {
       allowClear: true,
     });
 
+    var elem = $("#is_quotation");
+    if(elem.prop('checked') == true){
+      elem.trigger('click');
+    }
+
     var cgst_status = $("#cgst_status").val();
     var sgst_status = $("#sgst_status").val();
     var igst_status = $("#igst_status").val();
@@ -62,7 +67,7 @@ function addInputField(divName) {
         '">';
     }
     if (sgst_status == 1) {
-      taxhtmlval =
+      taxhtmlval +=
         '<input type="hidden" id="sgst_' +
         count +
         '" class="sgst"/> <input type="hidden" id="total_sgst_' +
@@ -72,7 +77,7 @@ function addInputField(divName) {
         '">';
     }
     if (igst_status == 1) {
-      taxhtmlval =
+      taxhtmlval +=
         '<input type="hidden" id="igst_' +
         count +
         '" class="igst"/><input type="hidden" id="total_igst_' +

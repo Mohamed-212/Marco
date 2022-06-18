@@ -60,7 +60,7 @@ class Suppliers extends CI_Model {
 	//Product search item
 	public function product_search_item($supplier_id,$product_name){
 
-		$query = $this->db->query("SELECT * FROM `product_information` WHERE `supplier_id` = '".$supplier_id."' AND  (`product_name` LIKE '%".$product_name."%' ESCAPE '!' OR `product_model` LIKE '%".$product_name."%')");
+		$query = $this->db->query("SELECT * FROM `product_information` WHERE `assembly` = '0' AND `supplier_id` = '".$supplier_id."' AND  (`product_name` LIKE '%".$product_name."%' ESCAPE '!' OR `product_model` LIKE '%".$product_name."%')");
 		return $query->result_array();
 	}
 

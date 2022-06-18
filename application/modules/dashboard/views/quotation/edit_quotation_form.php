@@ -344,7 +344,7 @@
                                                 value="<?php echo html_escape($value['rate']) ?>"
                                                 id="price_item_<?php echo $i ?>"
                                                 class="price_item<?php echo $i ?> form-control text-right" required=""
-                                                min="0" />
+                                                min="0" readonly="readonly" />
                                         </td>
                                         <td>
                                             <input type="number" name="discount[]"
@@ -373,15 +373,15 @@
 
                                                     if (!empty($tax_information)) {
                                                         foreach ($tax_information as $k => $v) {
-                                                            if ($v->tax_id == '5SN9PRWPN131T4V') {
+                                                            if ($v->tax_id == '52C2SKCKGQY6Q9J') {
                                                                 $tax['cgst_name'] = $v->tax_name;
                                                                 $tax['cgst_id']  = $v->tax_id;
                                                                 $tax['cgst_status']  = $v->status;
-                                                            } elseif ($v->tax_id == '52C2SKCKGQY6Q9J') {
+                                                            } elseif ($v->tax_id == 'H5MQN4NXJBSDX4L') {
                                                                 $tax['sgst_name'] = $v->tax_name;
                                                                 $tax['sgst_id']  = $v->tax_id;
                                                                 $tax['sgst_status']  = $v->status;
-                                                            } elseif ($v->tax_id == 'H5MQN4NXJBSDX4L') {
+                                                            } elseif ($v->tax_id == '5SN9PRWPN131T4V') {
                                                                 $tax['igst_name']   = $v->tax_name;
                                                                 $tax['igst_id']     = $v->tax_id;
                                                                 $tax['igst_status'] = $v->status;
@@ -424,10 +424,18 @@
                                         <td class="text-right" colspan="6">
                                             <b><?php echo html_escape($tax['cgst_name']) ?>:</b>
                                         </td>
-                                        <td class="text-right">
+                                        <td class="text-right" colspan="2">
                                             <input type="text" id="total_cgst" class="form-control text-right"
                                                 name="total_cgst" value="<?php echo  html_escape($cgst_tax_amount) ?>"
                                                 readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-right" colspan="6">
+                                            <b><?php echo display('quotation') ?>:</b>
+                                        </td>
+                                        <td class="text-right" colspan="2">
+                                            <input type="checkbox" id="is_quotation" <?php if($is_quotation == 1) echo'checked'; ?> onclick="check_quotation();" value="{is_quotation}" class="form-control text-right" name="is_quotation" />
                                         </td>
                                     </tr>
                                     <?php }
@@ -436,7 +444,7 @@
                                         <td class="text-right" colspan="6">
                                             <b><?php echo html_escape($tax['sgst_name']) ?>:</b>
                                         </td>
-                                        <td class="text-right">
+                                        <td class="text-right" colspan="2">
                                             <input type="text" id="total_sgst" class="form-control text-right"
                                                 name="total_sgst"
                                                 value="<?php echo  html_escape($sgst_tax_amount)
@@ -450,7 +458,7 @@
                                         <td class="text-right" colspan="6">
                                             <b><?php echo html_escape($tax['igst_name']) ?>:</b>
                                         </td>
-                                        <td class="text-right">
+                                        <td class="text-right" colspan="2">
                                             <input type="text" id="total_igst" class="form-control text-right"
                                                 name="total_igst"
                                                 value="<?php echo  html_escape($igst_tax_amount)
@@ -468,7 +476,7 @@
                                         <td class="text-right" colspan="2">
                                             <b><?php echo display('product_discount') ?>:</b>
                                         </td>
-                                        <td class="text-right">
+                                        <td class="text-right" colspan="2">
                                             <input type="text" id="total_discount_ammount"
                                                 class="form-control text-right" name="total_discount"
                                                 readonly="readonly" value="{total_discount}" />
@@ -478,7 +486,7 @@
                                         <td class="text-right" colspan="2">
                                             <b><?php echo display('quotation_discount') ?>:</b>
                                         </td>
-                                        <td class="text-right">
+                                        <td class="text-right" colspan="2">
                                             <input type="text" id="invoice_discount" class="form-control text-right"
                                                 name="invoice_discount"
                                                 value="<?php if ($quotation_discount) {
@@ -493,7 +501,7 @@
                                         <td class="text-right" colspan="2">
                                             <b><?php echo display('service_charge') ?>:</b>
                                         </td>
-                                        <td class="text-right">
+                                        <td class="text-right" colspan="2">
                                             <input type="text" id="service_charge" class="form-control text-right"
                                                 name="service_charge" value="<?php echo html_escape($service_charge) ?>"
                                                 onkeyup="quantity_calculate();" onchange="quantity_calculate();" />
@@ -503,7 +511,7 @@
                                     <tr>
                                         <td colspan="2" class="text-right"><b><?php echo display('grand_total') ?>:</b>
                                         </td>
-                                        <td class="text-right">
+                                        <td class="text-right" colspan="2">
                                             <input type="text" id="grandTotal" class="form-control text-right"
                                                 name="grand_total_price" value="{total_amount}" readonly="readonly" />
                                         </td>
@@ -527,7 +535,7 @@
                                         </td>
                                         <td class="text-right" colspan="5"><b><?php echo display('paid_ammount') ?>:</b>
                                         </td>
-                                        <td class="text-right">
+                                        <td class="text-right" colspan="2">
                                             <input type="text" id="paidAmount" onkeyup="invoice_paidamount();"
                                                 class="form-control text-right" name="paid_amount"
                                                 value="{paid_amount}" />
@@ -535,13 +543,13 @@
                                     </tr>
                                     <tr>
                                         <td align="center" class="width_220">
-                                            <input type="submit" id="add-invoice" class="btn btn-success btn-large"
-                                                name="add-invoice" value="<?php echo display('update') ?>" />
+                                            <input type="button" id="add-invoice" class="btn btn-success btn-large"
+                                                name="add-invoice" onclick="submit_form();" value="<?php echo display('update') ?>" />
 
                                         </td>
 
                                         <td class="text-right" colspan="5"><b><?php echo display('due') ?>:</b></td>
-                                        <td class="text-right">
+                                        <td class="text-right" colspan="2">
                                             <input type="text" id="dueAmmount" class="form-control text-right"
                                                 name="due_amount" value="{due_amount}" readonly="readonly" />
                                         </td>
