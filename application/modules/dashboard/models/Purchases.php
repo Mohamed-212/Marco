@@ -7,6 +7,9 @@ class Purchases extends CI_Model {
 
     public function __construct() {
         parent::__construct();
+        $this->load->model(array(
+            'dashboard/Products'
+        ));
     }
 
     //Count purchase
@@ -116,12 +119,26 @@ class Purchases extends CI_Model {
 
                 //start for total discount
                 //إجمالي الخصم على مستوى الفاتورة
-                $total_discount = $this->input->post('total_purchase_dis', TRUE);
+                $total_discount = floatval($this->input->post('total_purchase_dis', TRUE));
                 //إجمالي الفاتورة بعد الخصم الخاص بكل منتج و قبل الضريبة
-                $sub_total = $this->input->post('sub_total_price', TRUE);
+                $sub_total = floatval($this->input->post('sub_total_price', TRUE));
                 // توزيع الخصم على إجمالي الفاتورة لمعرفة نسبة الخصم
                 $ratio = $total_discount / $sub_total;
                 //End for total discount
+                //
+                //
+                //start for total Expense & VAT
+                //إجمالي المصاريف على مستوى الفاتورة
+                $total_expence = floatval($this->input->post('purchase_expences', TRUE));
+                //إجمالي الضريبة على مستوى الفاتورة
+                $total_vat = floatval($this->input->post('total_purchase_vat', TRUE));
+                //إجمالي الفاتورة بدون  VAT
+                $grand_total_without_VAT = floatval($this->input->post('grand_total_price', TRUE) - $total_vat);
+                // توزيع المصاريف على إجمالي الفاتورة لمعرفة نسبة الخصم
+                $ratio_expence = ($total_expence + $total_vat) / $grand_total_without_VAT;
+                //End for total Expense & VAT
+                //
+                //
                 // Supplier & product id relation ship checker.
                 for ($i = 1, $n = count($p_id); $i <= $n; $i++) {
                     $product_id = $p_id[$i];
@@ -224,6 +241,14 @@ class Purchases extends CI_Model {
                         //تحديد سعر المنتج الواحد بعد الخصم
                         $rate2 = $total_price_after_dis / $product_quantity;
                         //End for total discount
+                        //start for total Expense & VAT
+                        //ضرب نسبة المصروف في إجمالي الصنف بعد الخصم لمعرفة مقدار الزيادة في  كل صنف
+                        $total_price_exp = $ratio_expence * $total_price_after_dis;
+                        //تحديد إجمالي سعر المنتج بعد الزيادة
+                        $total_price_after_exp = $total_price_after_dis + $total_price_exp;
+                        //تحديد سعر المنتج الواحد بعد الزيادة
+                        $rate3 = $total_price_after_exp / $product_quantity;
+                        //End for total Expense & VAT
 
 
                         $i_vat_rate = $vat_rate[$i];
@@ -239,6 +264,7 @@ class Purchases extends CI_Model {
                             'quantity' => $product_quantity,
                             'rate' => $product_rate,
                             'rate_after_discount' => $rate2,
+                            'rate_after_exp' => $rate3,
                             'discount' => $product_discount,
                             'vat_rate' => $i_vat_rate,
                             'vat' => $i_vat,
@@ -251,6 +277,27 @@ class Purchases extends CI_Model {
 
                         if (!empty($quantity)) {
                             $this->db->insert('product_purchase_details', $data1);
+                            //////////////////////////////////////////////////////////////
+                            $purchaseData = $this->Products->product_purchase_info($product_id);
+                            $totalPurchase = 0;
+                            $totalPrcsAmnt = 0;
+                            if (!empty($purchaseData)) {
+                                foreach ($purchaseData as $k => $v) {
+                                    $rate_after_exp_up = floatval($purchaseData[$k]['rate_after_exp']);
+                                    $quantity_up = floatval($purchaseData[$k]['quantity']);
+                                    $newtotal = $rate_after_exp_up * $quantity_up;
+                                    $totalPrcsAmnt = ($totalPrcsAmnt + $newtotal);
+                                    $totalPurchase = ($totalPurchase + $purchaseData[$k]['quantity']);
+                                }
+                            }
+                            $newrate = $totalPrcsAmnt / $totalPurchase;
+                            $supplier_price = array(
+                                'supplier_price' => $newrate,
+                            );
+
+                            $this->db->where('product_id', $product_id);
+                            $this->db->update('product_information', $supplier_price);
+                            /////////////////////////////////////////////////////////////////
                         }
                         $store = array(
                             'transfer_id' => $this->auth->generator(15),
@@ -809,12 +856,26 @@ class Purchases extends CI_Model {
 
                 //start for total discount
                 //إجمالي الخصم على مستوى الفاتورة
-                $total_discount = $this->input->post('total_purchase_dis', TRUE);
+                $total_discount = floatval($this->input->post('total_purchase_dis', TRUE));
                 //إجمالي الفاتورة بعد الخصم الخاص بكل منتج و قبل الضريبة
-                $sub_total = $this->input->post('sub_total_price', TRUE);
+                $sub_total = floatval($this->input->post('sub_total_price', TRUE));
                 // توزيع الخصم على إجمالي الفاتورة لمعرفة نسبة الخصم
                 $ratio = $total_discount / $sub_total;
                 //End for total discount
+                //
+                //
+                //start for total Expense & VAT
+                //إجمالي المصاريف على مستوى الفاتورة
+                $total_expence = floatval($this->input->post('purchase_expences', TRUE));
+                //إجمالي الضريبة على مستوى الفاتورة
+                $total_vat = floatval($this->input->post('total_purchase_vat', TRUE));
+                //إجمالي الفاتورة بدون  VAT
+                $grand_total_without_VAT = floatval($this->input->post('grand_total_price', TRUE) - $total_vat);
+                // توزيع المصاريف على إجمالي الفاتورة لمعرفة نسبة الخصم
+                $ratio_expence = ($total_expence + $total_vat) / $grand_total_without_VAT;
+                //End for total Expense & VAT
+                //
+                //
                 //Variant id required check
                 $result = array();
 //                foreach ($p_id as $k => $v) {
@@ -907,6 +968,15 @@ class Purchases extends CI_Model {
                         //تحديد سعر المنتج الواحد بعد الخصم
                         $rate2 = $total_price_after_dis / $product_quantity;
                         //End for total discount
+                        //start for total Expense & VAT
+                        //ضرب نسبة المصروف في إجمالي الصنف بعد الخصم لمعرفة مقدار الزيادة في  كل صنف
+                        $total_price_exp = $ratio_expence * $total_price_after_dis;
+                        //تحديد إجمالي سعر المنتج بعد الزيادة
+                        $total_price_after_exp = $total_price_after_dis + $total_price_exp;
+                        //تحديد سعر المنتج الواحد بعد الزيادة
+                        $rate3 = $total_price_after_exp / $product_quantity;
+                        //End for total Expense & VAT
+                      
 
                         $i_vat_rate = $vat_rate[$key];
                         $i_vat = $vat[$key];
@@ -921,6 +991,7 @@ class Purchases extends CI_Model {
                             'quantity' => $product_quantity,
                             'rate' => $product_rate,
                             'rate_after_discount' => $rate2,
+                            'rate_after_exp' => $rate3,
                             'discount' => $product_discount,
                             'vat_rate' => $i_vat_rate,
                             'vat' => $i_vat,
@@ -933,6 +1004,27 @@ class Purchases extends CI_Model {
 
                         if (!empty($quantity)) {
                             $this->db->insert('product_purchase_details', $data1);
+                           //////////////////////////////////////////////////////////////
+                            $purchaseData = $this->Products->product_purchase_info($product_id);
+                            $totalPurchase = 0;
+                            $totalPrcsAmnt = 0;
+                            if (!empty($purchaseData)) {
+                                foreach ($purchaseData as $k => $v) {
+                                    $rate_after_exp_up = floatval($purchaseData[$k]['rate_after_exp']);
+                                    $quantity_up = floatval($purchaseData[$k]['quantity']);
+                                    $newtotal = $rate_after_exp_up * $quantity_up;
+                                    $totalPrcsAmnt = ($totalPrcsAmnt + $newtotal);
+                                    $totalPurchase = ($totalPurchase + $purchaseData[$k]['quantity']);
+                                }
+                            }
+                            $newrate = $totalPrcsAmnt / $totalPurchase;
+                            $supplier_price = array(
+                                'supplier_price' => $newrate,
+                            );
+
+                            $this->db->where('product_id', $product_id);
+                            $this->db->update('product_information', $supplier_price);
+                            /////////////////////////////////////////////////////////////////
                         }
                         $store = array(
                             'transfer_id' => $this->auth->generator(15),
@@ -2685,9 +2777,9 @@ class Purchases extends CI_Model {
 
         //start for total discount
         //إجمالي الخصم على مستوى الفاتورة
-        $total_discount = $this->input->post('total_purchase_dis', TRUE);
+        $total_discount = floatval($this->input->post('total_purchase_dis', TRUE));
         //إجمالي الفاتورة بعد الخصم الخاص بكل منتج و قبل الضريبة
-        $sub_total = $this->input->post('sub_total_price', TRUE);
+        $sub_total = floatval($this->input->post('sub_total_price', TRUE));
         // توزيع الخصم على إجمالي الفاتورة لمعرفة نسبة الخصم
         $ratio = $total_discount / $sub_total;
         //End for total discount

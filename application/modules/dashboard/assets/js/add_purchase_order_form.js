@@ -68,7 +68,8 @@ function product_pur_or_list(sl) {
                 cache: false,
                 success: function (data) {
                     var obj = JSON.parse(data);
-                    $("#" + price_item).val(obj.supplier_price);
+                   // $("#" + price_item).val(obj.supplier_price);
+                     $("#" + price_item).val(0);
                     $("#" + avl_qntt).val(obj.total_product);
                     $("#" + variant_id).html(obj.variant);
                     $("#" + color_variant)
