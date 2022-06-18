@@ -297,6 +297,13 @@ class Purchases extends CI_Model {
 
                             $this->db->where('product_id', $product_id);
                             $this->db->update('product_information', $supplier_price);
+                            
+                            $supplier_price2 = array(
+                                'child_product_price' => $newrate,
+                            );
+                            $this->db->where('child_product_id', $product_id);
+                            $this->db->update('assembly_products', $supplier_price2);
+
                             /////////////////////////////////////////////////////////////////
                         }
                         $store = array(
@@ -976,7 +983,7 @@ class Purchases extends CI_Model {
                         //تحديد سعر المنتج الواحد بعد الزيادة
                         $rate3 = $total_price_after_exp / $product_quantity;
                         //End for total Expense & VAT
-                      
+
 
                         $i_vat_rate = $vat_rate[$key];
                         $i_vat = $vat[$key];
@@ -1004,7 +1011,7 @@ class Purchases extends CI_Model {
 
                         if (!empty($quantity)) {
                             $this->db->insert('product_purchase_details', $data1);
-                           //////////////////////////////////////////////////////////////
+                            //////////////////////////////////////////////////////////////
                             $purchaseData = $this->Products->product_purchase_info($product_id);
                             $totalPurchase = 0;
                             $totalPrcsAmnt = 0;
@@ -1024,6 +1031,12 @@ class Purchases extends CI_Model {
 
                             $this->db->where('product_id', $product_id);
                             $this->db->update('product_information', $supplier_price);
+                            
+                             $supplier_price2 = array(
+                                'child_product_price' => $newrate,
+                            );
+                            $this->db->where('child_product_id', $product_id);
+                            $this->db->update('assembly_products', $supplier_price2);
                             /////////////////////////////////////////////////////////////////
                         }
                         $store = array(
