@@ -63,7 +63,7 @@
                 <div class="panel panel-bd lobidrag">
                     <div class="panel-heading">
                         <div class="panel-title">
-                            <h4><?php echo display('add_purchase') ?></h4>
+                            <h4><?php echo display('add_purchase') ?> (<span style="color:blue" >Default  Currency </span><span style="color:red" >:<?php echo ($def_currency['currency_name']) ?> <?php echo ('-'.$def_currency['currency_icon']) ?></span >)</h4>
                         </div>
                     </div>
                     <div class="panel-body">
@@ -177,6 +177,31 @@
                                                name="supply_date" id="supply_date"
                                                placeholder="<?php echo display('enter_supply_date'); ?>" required
                                                autocomplete="off" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label for="currency"
+                                           class="col-sm-4 col-form-label"><?php echo display('currency') ?>
+                                        <i class="text-danger">*</i>
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <select name="currency_id" id="currency_id"   onchange="get_conversion_rate()" class="form-control " required="">
+                                            <option value=""><?php echo display('select_one') ?></option>
+                                            {all_currency}
+                                            <option value="{currency_id}">{currency_name}-({currency_icon})</option>
+                                            {/all_currency}
+                                        </select>
+                                    </div>
+                                      <label for="conversion"
+                                           class="col-sm-2 col-form-label"> <?php echo display('rate') ?>
+                                        <i class="text-danger">*</i>
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <input type="number" name="conversion" id="conversion"
+                                                   class="form-control text-right" placeholder="1" min="1"
+                                                   required="" />
                                     </div>
                                 </div>
                             </div>
@@ -305,6 +330,9 @@
                                                    class="price_item1 text-right form-control" placeholder="0.00"
                                                    onkeyup="calculate_add_purchase('1')"
                                                    onchange="calculate_add_purchase('1')" min="0" />
+                                            <input type="number" name="product_rate2[1]" id="price_item2_1"
+                                                class="price_item2 text-right form-control" placeholder="0.00"
+                                                min="0" readonly=""/>
                                         </td>
                                         <!-- Discount -->
                                         <td>

@@ -48,6 +48,27 @@ class Purchases extends CI_Model {
         return false;
     }
 
+    //Select All currency List
+    public function select_all_currency() {
+        $query = $this->db->select('*')
+                ->from('currency_info')
+                ->get();
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        }
+        return false;
+    }
+    
+    // Get default currency info
+	public function get_def_currency()
+	{
+		$this->db->select('*');
+		$this->db->from('currency_info');
+		$this->db->where('default_status', 1);
+		$result = $this->db->get()->row_array();
+		return $result;
+	}
+
     //Purchase Search  List
     public function purchase_by_search($supplier_id) {
         $this->db->select('a.*,b.supplier_name');
@@ -297,7 +318,7 @@ class Purchases extends CI_Model {
 
                             $this->db->where('product_id', $product_id);
                             $this->db->update('product_information', $supplier_price);
-                            
+
                             $supplier_price2 = array(
                                 'child_product_price' => $newrate,
                             );
@@ -1031,8 +1052,8 @@ class Purchases extends CI_Model {
 
                             $this->db->where('product_id', $product_id);
                             $this->db->update('product_information', $supplier_price);
-                            
-                             $supplier_price2 = array(
+
+                            $supplier_price2 = array(
                                 'child_product_price' => $newrate,
                             );
                             $this->db->where('child_product_id', $product_id);
@@ -2411,6 +2432,15 @@ class Purchases extends CI_Model {
             }
             return true;
         }
+    }
+
+    public function get_conversion_rate($currency_id) {
+        $this->db->select('*');
+        $this->db->from('currency_info');
+        $this->db->where('currency_id ', $currency_id);
+        $query = $this->db->get();
+        $result = $query->row_array();
+        return $result;
     }
 
     //Get total product
