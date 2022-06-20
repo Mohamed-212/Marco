@@ -385,7 +385,7 @@ function get_conversion_rate() {
                     // alert(rownumber);
                     var conversion_rate = $("#conversion").val();
                     var price_item = $("#price_item_" + rownumber).val();
-                    var price_item2 = Number(price_item) / Number(conversion_rate);
+                    var price_item2 = Number(price_item) * Number(conversion_rate);
                     $("#price_item2_" + rownumber).val(price_item2);
                 });
             }
