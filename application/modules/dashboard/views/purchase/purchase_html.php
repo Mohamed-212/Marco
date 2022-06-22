@@ -210,8 +210,8 @@
                                             </td>
 <!--                                            <td>
                                                 <?php
-                                                        $item_cost = ($purchase_all_data[0]['purchase_expences'] / $all_quantity);
-                                                        echo (($position == 0) ? $currency . " " . number_format($item_cost, 2, '.', '') : number_format($item_cost, 2, '.', '') . " " . $currency);
+                                                       // $item_cost = ($purchase_all_data[0]['purchase_expences'] / $all_quantity);
+                                                       // echo (($position == 0) ? $currency . " " . number_format($item_cost, 2, '.', '') : number_format($item_cost, 2, '.', '') . " " . $currency);
                                                         ?>
                                             </td>-->
                                             <td>

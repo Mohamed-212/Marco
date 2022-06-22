@@ -58,16 +58,15 @@ class Purchases extends CI_Model {
         }
         return false;
     }
-    
+
     // Get default currency info
-	public function get_def_currency()
-	{
-		$this->db->select('*');
-		$this->db->from('currency_info');
-		$this->db->where('default_status', 1);
-		$result = $this->db->get()->row_array();
-		return $result;
-	}
+    public function get_def_currency() {
+        $this->db->select('*');
+        $this->db->from('currency_info');
+        $this->db->where('default_status', 1);
+        $result = $this->db->get()->row_array();
+        return $result;
+    }
 
     //Purchase Search  List
     public function purchase_by_search($supplier_id) {
@@ -205,6 +204,9 @@ class Purchases extends CI_Model {
                     'pur_order_no' => $pur_order_no,
                     'supplier_id' => $this->input->post('supplier_id', TRUE),
                     'store_id' => $this->input->post('store_id', TRUE),
+                    'def_currency_id' => $this->input->post('def_currency_id', TRUE),
+                    'currency_id' => $this->input->post('currency_id', TRUE),
+                    'conversion_rate' => $this->input->post('conversion', TRUE),
                     'invoice' => 'Inv-' . $this->number_generator(),
                     'wearhouse_id' => '',
                     'sub_total_price' => $this->input->post('sub_total_price', TRUE),
@@ -940,6 +942,9 @@ class Purchases extends CI_Model {
                     'pur_order_no' => $pur_order_no,
                     'supplier_id' => $this->input->post('supplier_id', TRUE),
                     'store_id' => $this->input->post('store_id', TRUE),
+                    'def_currency_id' => $this->input->post('def_currency_id', TRUE),
+                    'currency_id' => $this->input->post('currency_id', TRUE),
+                    'conversion_rate' => $this->input->post('conversion_rate', TRUE),
                     'invoice' => 'Inv-' . $this->number_generator(),
                     'wearhouse_id' => '',
                     'sub_total_price' => $this->input->post('sub_total_price', TRUE),
@@ -2914,7 +2919,10 @@ class Purchases extends CI_Model {
             'user_id' => $this->session->userdata('user_id'),
             'purchase_vat' => $this->input->post('purchase_vat', TRUE),
             'total_purchase_vat' => $this->input->post('total_purchase_vat', TRUE),
-            'total_purchase_dis' => $total_discount
+            'total_purchase_dis' => $total_discount,
+            'def_currency_id' => $this->input->post('def_currency_id', TRUE),
+            'currency_id' => $this->input->post('currency_id', TRUE),
+            'conversion_rate' => $this->input->post('conversion', TRUE),
         );
         $this->db->insert('purchase_orders', $data);
 

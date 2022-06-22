@@ -709,6 +709,9 @@ class Cpurchase extends MX_Controller {
                 'purchase_details' => $purchase_detail[0]['purchase_details'],
                 'purchase_date' => $purchase_detail[0]['purchase_date'],
                 'store_id' => $purchase_detail[0]['store_id'],
+                'def_currency_id' => $purchase_detail[0]['def_currency_id'],
+                'currency_id' => $purchase_detail[0]['currency_id'],
+                'conversion_rate' => $purchase_detail[0]['conversion_rate'],
                 'variant_id' => $purchase_detail[0]['variant_id'],
                 'batch_no' => $batch_no,
                 'purchase_info' => $purchase_detail,
@@ -878,7 +881,8 @@ class Cpurchase extends MX_Controller {
                         <input type="text" class="text-right form-control purchase_expences" name="purchase_expences_title_' . $count . '" placeholder ="Please Provide expense name" />
                     </td>
                     <td class="text-left">
-                        <input type="text" onkeyup="calculate_add_purchase_cost(' . $count . ');"onchange="calculate_add_purchase_cost(' . $count . ');" id="purchase_expences_' . $count . '" class="text-right form-control purchase_expences" name="purchase_expences_' . $count . '" placeholder ="0.00" />
+                     <input type="text" onkeyup="calculate_add_purchase_cost(' . $count . ');"onchange="calculate_add_purchase_cost(' . $count . ');" id="purchase_expences2_' . $count . '" class="text-right form-control purchase_expences2" name="purchase_expences2_' . $count . '" placeholder ="0.00" />
+                        <input type="text" onkeyup="calculate_add_purchase_cost(' . $count . ');"onchange="calculate_add_purchase_cost(' . $count . ');" id="purchase_expences_' . $count . '" class="text-right form-control purchase_expences" name="purchase_expences_' . $count . '" placeholder ="0.00" readonly=""/>
                     </td>
                     <td>
                         <div class="form-group row guifooterpanel">
