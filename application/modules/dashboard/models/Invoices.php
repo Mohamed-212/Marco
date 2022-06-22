@@ -278,6 +278,7 @@ class Invoices extends CI_Model {
                 (($this->input->post('total_igst', true)) ? $total_igsti = $this->input->post('total_igst', true) : $total_igsti = 0);
 
                 $tota_vati = $total_cgsti + $total_sgsti + $total_igsti;
+                $installment_month_no = $this->input->post('month_no', true);
                 $data = array(
                     'invoice_id' => $invoice_id,
                     'customer_id' => $customer_id,
@@ -288,6 +289,9 @@ class Invoices extends CI_Model {
                     'total_vat' => $tota_vati,
                     'is_quotation'		=> ($this->input->post('is_quotation', True))?$this->input->post('is_quotation', True):0,
                     'employee_id' => $this->input->post('employee_id', true),
+                    'is_installment' => $this->input->post('is_installment', true),
+                    'month_no' => $installment_month_no,
+                    'due_day' => $this->input->post('due_day', true),
                     'invoice_discount' => $this->input->post('invoice_discount', TRUE),
                     'user_id' => $this->session->userdata('user_id'),
                     'store_id' => $this->input->post('store_id', TRUE),
@@ -301,6 +305,20 @@ class Invoices extends CI_Model {
                     'created_at' => date("Y-m-d H:i:s")
                 );
                 $this->db->insert('invoice', $data);
+
+                // insert installment
+                if($this->input->post('is_installment', true) == 1){
+                    $installment_amount = $this->input->post('amount', TRUE);
+                    $installment_due_date = $this->input->post('due_date', TRUE);
+                    for($i = 0; $i < $installment_month_no; $i++){
+                        $installment_data = array(
+                            'invoice_id' => $invoice_id,
+                            'amount' => $installment_amount[$i],
+                            'due_date' => $installment_due_date[$i],
+                        );
+                        $this->db->insert('invoice_installment', $installment_data);
+                    }
+                }
 
                 //Invoice details info
                 $rate = $this->input->post('product_rate', TRUE);

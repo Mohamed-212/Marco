@@ -364,34 +364,13 @@
         <!-- Customer menu end -->
 
         <!-- installment menu start -->
-        <?php //if ($this->permission->module('customer')->access()) { ?>
-            <li class="treeview <?php if ($this->uri->segment(2) == ("Cinstallment")) {
-                echo "active";
-            } else {
-                echo " ";
-            } ?>">
-                <a href="#">
-                    <i class="fa fa-handshake-o"></i><span><?php echo display('installment') ?></span>
-                    <span class="pull-right-container">
-                <i class="fa fa-angle-left pull-right"></i>
-            </span>
+        <?php if ($this->permission->check_label('Installment')->access()) { ?>
+            <li class="treeview <?php echo (($this->uri->segment(2) == 'cinstallment' ? 'active' : '')) ?>">
+                <a href="<?php echo base_url('dashboard/cinstallment/index') ?>">
+                    <i class="ti-money"></i><span><?php echo display('Installment') ?></span>
                 </a>
-                <ul class="treeview-menu">
-                    <?php if ($this->permission->check_label('add_installment')->access()) { ?>
-                        <li
-                                class="<?php echo (($this->uri->segment(2) == 'Cinstallment' && ($this->uri->segment(3) == '') ? 'active' : '')) ?>">
-                            <a href="<?php echo base_url('dashboard/Cinstallment') ?>"><?php echo display('add_installment') ?></a>
-                        </li>
-                    <?php }
-                    if ($this->permission->check_label('manage_installment')->access()) { ?>
-                        <li class="<?php echo (($this->uri->segment(3) == 'manage_installment' ? 'active' : '')) ?>">
-                            <a
-                                    href="<?php echo base_url('dashboard/Cinstallment/manage_installment') ?>"><?php echo display('manage_installment') ?></a>
-                        </li>
-                    <?php } ?>
-                </ul>
             </li>
-        <?php //} ?>
+        <?php } ?>
         <!-- installment menu end -->
 
         <!-- Supplier menu start -->
