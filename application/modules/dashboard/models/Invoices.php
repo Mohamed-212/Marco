@@ -4004,7 +4004,8 @@ class Invoices extends CI_Model {
         $this->db->from('product_information');
         if (!empty($product_name)) {
             $this->db->like('product_name', $product_name, 'both');
-            $this->db->or_like('product_model', $product_name, 'both');
+            //$this->db->or_like('product_model', $product_name, 'both');
+            $this->db->or_like('product_id', $product_name, 'both');
         }
 
         if (!empty($category_id)) {

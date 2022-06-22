@@ -83,12 +83,12 @@
                     <?php echo form_open_multipart('dashboard/Cinvoice/insert_invoice', array('class' => 'form-vertical', 'id' => 'validate', 'name' => 'insert_invoice')) ?>
                     <div class="panel-body">
                         <div class="row">
-                            <div class="col-sm-8" id="payment_from_1">
+                            <div class="col-sm-6" id="payment_from_1">
                                 <div class="form-group row">
                                     <label for="customer_name"
-                                           class="col-sm-3 col-form-label"><?php echo display('customer_name') ?> <i
+                                           class="col-sm-4 col-form-label"><?php echo display('customer_name') ?> <i
                                                 class="text-danger">*</i></label>
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-8">
                                         <input type="text" size="100"
                                                value="<?php echo html_escape($customer['customer_name']); ?>"
                                                name="customer_name" required class="customerSelection form-control"
@@ -98,50 +98,64 @@
                                                value="<?php echo html_escape($customer['customer_id']) ?>"
                                                class="customer_hidden_value" type="hidden" name="customer_id" required>
                                     </div>
-                                    <div class=" col-sm-3">
-                                        <input id="myRadioButton_1" type="button"
-                                               onClick="active_customer('payment_from_1')" id="myRadioButton_1"
-                                               class="btn btn-success checkbox_account" name="customer_confirm"
-                                               checked="checked" value="<?php echo display('new_customer') ?>">
-                                    </div>
+<!--                                    <div class=" col-sm-3">-->
+<!--                                        <input id="myRadioButton_1" type="button"-->
+<!--                                               onClick="active_customer('payment_from_1')" id="myRadioButton_1"-->
+<!--                                               class="btn btn-success checkbox_account" name="customer_confirm"-->
+<!--                                               checked="checked" value="--><?php //echo display('new_customer') ?><!--">-->
+<!--                                    </div>-->
                                 </div>
                             </div>
-                            <div class="col-sm-8" id="payment_from_2">
+                            <div class="col-sm-6">
                                 <div class="form-group row">
-                                    <label for="customer_name_others"
-                                           class="col-sm-3 col-form-label"><?php echo display('customer_name') ?> <i
+                                    <label for="date" class="col-sm-4 col-form-label"><?php echo display('date') ?> <i
                                                 class="text-danger">*</i></label>
-                                    <div class="col-sm-6">
-                                        <input autofill="off" type="text" size="100" name="customer_name_others"
-                                               placeholder='<?php echo display('customer_name') ?>'
-                                               id="customer_name_others" class="form-control" />
-                                    </div>
-
-                                    <div class="col-sm-3">
-                                        <input onClick="active_customer('payment_from_2')" type="button"
-                                               id="myRadioButton_2" class="checkbox_account btn btn-success"
-                                               name="customer_confirm_others"
-                                               value="<?php echo display('old_customer') ?>">
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="customer_name_others_address"
-                                           class="col-sm-3 col-form-label"><?php echo display('mobile') ?> </label>
-                                    <div class="col-sm-6">
-                                        <input type="number" size="100" name="customer_mobile_no" class=" form-control"
-                                               placeholder='<?php echo display('mobile') ?>' id="customer_mobile_no" />
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="customer_name_others_address"
-                                           class="col-sm-3 col-form-label"><?php echo display('address') ?> </label>
-                                    <div class="col-sm-6">
-                                        <input type="text" size="100" name="customer_name_others_address"
-                                               class=" form-control" placeholder='<?php echo display('address') ?>'
-                                               id="customer_name_others_address" />
+                                    <div class="col-sm-8">
+                                        <?php
+                                        date_default_timezone_set(DEF_TIMEZONE);
+                                        $date = date('m-d-Y');
+                                        ?>
+                                        <input class="form-control datepicker" type="text" size="50" name="invoice_date"
+                                               id="date" required value="<?php echo html_escape($date); ?>" />
                                     </div>
                                 </div>
                             </div>
+<!--                            <div class="col-sm-8" id="payment_from_2">-->
+<!--                                <div class="form-group row">-->
+<!--                                    <label for="customer_name_others"-->
+<!--                                           class="col-sm-3 col-form-label">--><?php //echo display('customer_name') ?><!-- <i-->
+<!--                                                class="text-danger">*</i></label>-->
+<!--                                    <div class="col-sm-6">-->
+<!--                                        <input autofill="off" type="text" size="100" name="customer_name_others"-->
+<!--                                               placeholder='--><?php //echo display('customer_name') ?><!--'-->
+<!--                                               id="customer_name_others" class="form-control" />-->
+<!--                                    </div>-->
+<!---->
+<!--                                    <div class="col-sm-3">-->
+<!--                                        <input onClick="active_customer('payment_from_2')" type="button"-->
+<!--                                               id="myRadioButton_2" class="checkbox_account btn btn-success"-->
+<!--                                               name="customer_confirm_others"-->
+<!--                                               value="--><?php //echo display('old_customer') ?><!--">-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="form-group row">-->
+<!--                                    <label for="customer_name_others_address"-->
+<!--                                           class="col-sm-3 col-form-label">--><?php //echo display('mobile') ?><!-- </label>-->
+<!--                                    <div class="col-sm-6">-->
+<!--                                        <input type="number" size="100" name="customer_mobile_no" class=" form-control"-->
+<!--                                               placeholder='--><?php //echo display('mobile') ?><!--' id="customer_mobile_no" />-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="form-group row">-->
+<!--                                    <label for="customer_name_others_address"-->
+<!--                                           class="col-sm-3 col-form-label">--><?php //echo display('address') ?><!-- </label>-->
+<!--                                    <div class="col-sm-6">-->
+<!--                                        <input type="text" size="100" name="customer_name_others_address"-->
+<!--                                               class=" form-control" placeholder='--><?php //echo display('address') ?><!--'-->
+<!--                                               id="customer_name_others_address" />-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
                         </div>
                         <div class="row">
                             <div class="col-sm-6">
@@ -171,20 +185,20 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
-                                <div class="form-group row">
-                                    <label for="date" class="col-sm-4 col-form-label"><?php echo display('date') ?> <i
-                                                class="text-danger">*</i></label>
-                                    <div class="col-sm-8">
-                                        <?php
-                                        date_default_timezone_set(DEF_TIMEZONE);
-                                        $date = date('m-d-Y');
-                                        ?>
-                                        <input class="form-control datepicker" type="text" size="50" name="invoice_date"
-                                               id="date" required value="<?php echo html_escape($date); ?>" />
-                                    </div>
-                                </div>
-                            </div>
+<!--                            <div class="col-sm-6">-->
+<!--                                <div class="form-group row">-->
+<!--                                    <label for="date" class="col-sm-4 col-form-label">--><?php //echo display('date') ?><!-- <i-->
+<!--                                                class="text-danger">*</i></label>-->
+<!--                                    <div class="col-sm-8">-->
+<!--                                        --><?php
+//                                        date_default_timezone_set(DEF_TIMEZONE);
+//                                        $date = date('m-d-Y');
+//                                        ?>
+<!--                                        <input class="form-control datepicker" type="text" size="50" name="invoice_date"-->
+<!--                                               id="date" required value="--><?php //echo html_escape($date); ?><!--" />-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
                             <div class="col-sm-6">
                                 <div class="form-group row">
                                     <label for="date" class="col-sm-4 col-form-label"><?php echo display('employee_name') ?> <i
