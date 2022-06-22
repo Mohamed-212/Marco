@@ -67,6 +67,9 @@
                     <div class="panel-body">
                         <?php echo form_open('dashboard/Cpurchase/manage_purorder/receive/' . $pur_order_id, array('class' => 'form-vertical', 'id' => 'validate', 'name' => 'insert_purchase')) ?>
                         <div class="row">
+                            <input type="hidden" name="def_currency_id" value="<?php echo html_escape($def_currency_id); ?>">
+                            <input type="hidden" name="currency_id" value="<?php echo html_escape($currency_id); ?>">
+                            <input type="hidden" name="conversion_rate" value="<?php echo html_escape($conversion_rate); ?>">
                             <div class="col-sm-6">
                                 <div class="form-group row">
                                     <label for="supplier_sss"
@@ -362,7 +365,7 @@
                                                 </td>
                                                 <td class="text-right">
                                                     <input type="text" id="expiry_date_<?php echo $sl ?>" name="expiry_date[<?php echo $sl ?>]"
-                                                             value="<?php echo html_escape($purchase['expiry_date']) ?>"
+                                                           value="<?php echo html_escape($purchase['expiry_date']) ?>"
                                                            class="form-control datepicker"
                                                            placeholder="<?php echo display('enter_expire_date') ?>" />
                                                 </td>
@@ -463,15 +466,15 @@
                                                    value="{total_purchase_vat}" name="total_purchase_vat"
                                                    placeholder="0.00" readonly="readonly" />
                                         </td>
-                                         <td class="text-right">
+                                        <td class="text-right">
                                             <b><?php echo display('total_dis') ?>:</b>
                                         </td>
                                         <td>
                                             <input type="number" id="total_dis"
                                                    value="<?php echo html_escape($purchase_info[0]['total_purchase_dis']) ?>"
                                                    class="text-right form-control"  name="total_purchase_dis"
-                                                    onkeyup="calculate_total();"
-                                                    onchange="calculate_total();"
+                                                   onkeyup="calculate_total();"
+                                                   onchange="calculate_total();"
                                                    placeholder="0.00"  />
                                         </td>
                                         <td class="text-right">

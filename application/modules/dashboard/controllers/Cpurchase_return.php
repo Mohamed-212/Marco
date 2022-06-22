@@ -229,7 +229,7 @@ class Cpurchase_return extends MX_Controller {
                         $total_discount = 0;
                         $total_without_discount = 0;
                         foreach ($products as $key => $product) {
-                            $purchase_quantity = $this->db->select('quantity')->from('product_purchase_details')->where('batch_no', $batch_no[$key])->get()->row();
+                            $purchase_quantity = $this->db->select('quantity,rate_after_discount')->from('product_purchase_details')->where('batch_no', $batch_no[$key])->get()->row();
                             $purchase_return_details = array(
                                 'return_id' => $return_id,
                                 'product_id' => $product,
@@ -240,11 +240,14 @@ class Cpurchase_return extends MX_Controller {
                                 'purchase_quantity' => $purchase_quantity->quantity,
                                 'rate' => $rate[$key],
                                 'discount' => $discount[$key],
-                                'total_return_amount' => $total_return_amount[$key]
+                                'total_return_amount' => $purchase_quantity->rate_after_discount * $quantity[$key]
                             );
-                            $sub_total += $total_return_amount[$key];
-                            $total_discount += (($rate[$key] * $discount[$key]) / 100) * $quantity[$key];
+                            // $sub_total += $total_return_amount[$key];
+                            $sub_total += $purchase_quantity->rate_after_discount * $quantity[$key];
                             $total_without_discount += $rate[$key] * $quantity[$key];
+                            $total_with_discount += $purchase_quantity->rate_after_discount * $quantity[$key];
+                            //  $total_discount += (($rate[$key] * $discount[$key]) / 100) * $quantity[$key];
+                            $total_discount += $total_without_discount - $total_with_discount;
                             $result2 = $this->db->insert('product_purchase_return_details', $purchase_return_details);
                             if ($result2) {
                                 $return_detail_id = $this->db->insert_id();
@@ -263,12 +266,12 @@ class Cpurchase_return extends MX_Controller {
                                     $this->db->where('variant_color', $variant_color[$key]);
                                 }
                                 $product_purchase_details_info = $this->db->get()->row();
-                                $product_cost = ($product_purchase_details_info->vat + $product_purchase_details_info->total_amount);
+                                $product_cost = ($product_purchase_details_info->vat + ($product_purchase_details_info->quantity * $product_purchase_details_info->rate_after_discount));
 
                                 $product_purchase_info = $this->db->select('total_items,sub_total_price,total_purchase_vat,grand_total_amount')->from('product_purchase')->where('purchase_id', $purchase_id)->get()->row();
                                 $new_product_purchase = array(
                                     'total_items' => ($product_purchase_info->total_items - $quantity[$key]),
-                                    'sub_total_price' => ($product_purchase_info->sub_total_price - $product_purchase_details_info->total_amount),
+                                    'sub_total_price' => ($product_purchase_info->sub_total_price - ($product_purchase_details_info->quantity * $product_purchase_details_info->rate_after_discount)),
                                     'total_purchase_vat' => ($product_purchase_info->total_purchase_vat - $product_purchase_details_info->vat),
                                     'grand_total_amount' => ($product_purchase_info->grand_total_amount - $product_cost),
                                 );
@@ -285,7 +288,7 @@ class Cpurchase_return extends MX_Controller {
                                 // reduce from product_purchase_details
                                 //reduce from product_purchase
                                 //////////////////////////////////////////////////////////////
-                                 $this->load->model('Wearhouses');
+                                $this->load->model('Wearhouses');
                                 $purchaseData = $this->Products->product_purchase_info($product);
                                 $totalPurchase = 0;
                                 $totalPrcsAmnt = 0;
@@ -297,20 +300,23 @@ class Cpurchase_return extends MX_Controller {
                                         $totalPrcsAmnt = ($totalPrcsAmnt + $newtotal);
                                         $totalPurchase = ($totalPurchase + $purchaseData[$k]['quantity']);
                                     }
+                                    if ($totalPurchase > 0) {
+                                        $newrate = $totalPrcsAmnt / $totalPurchase;
+                                        $supplier_price = array(
+                                            'supplier_price' => $newrate,
+                                        );
+
+                                        $this->db->where('product_id', $product);
+                                        $this->db->update('product_information', $supplier_price);
+
+                                        $supplier_price2 = array(
+                                            'child_product_price' => $newrate,
+                                        );
+                                        $this->db->where('child_product_id', $product);
+                                        $this->db->update('assembly_products', $supplier_price2);
+                                    }
                                 }
-                                $newrate = $totalPrcsAmnt / $totalPurchase;
-                                $supplier_price = array(
-                                    'supplier_price' => $newrate,
-                                );
 
-                                $this->db->where('product_id', $product);
-                                $this->db->update('product_information', $supplier_price);
-
-                                $supplier_price2 = array(
-                                    'child_product_price' => $newrate,
-                                );
-                                $this->db->where('child_product_id', $product);
-                                $this->db->update('assembly_products', $supplier_price2);
 
                                 /////////////////////////////////////////////////////////////////
                                 // transfer
