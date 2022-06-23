@@ -165,6 +165,9 @@
                                                         }
                                                         echo html_escape($pur_total_amount);
                                                         $grand_total += $pur_total_amount;
+                                                         $total_discount=$total_purchase_dis;
+                                                          $total_vat=$total_purchase_vat;
+                                                          $grand_total2=$grand_total-$total_discount+$total_vat;
                                                         ?></td>
                                         </tr>
                                         <?php }
@@ -173,10 +176,30 @@
                                             <td colspan="4">
                                                 <strong><?php echo htmlspecialchars_decode($purchase_details) ?></strong>
                                             </td>
+                                            <td class="grand_total"><strong><?php echo display('total_dis') ?>
+                                                    :</strong></td>
+                                            <td class="grand_total">
+                                                <?php echo (($position == 0) ? $currency . " " . $total_discount : $total_discount . " " . $currency) ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4">
+                                                <strong><?php echo htmlspecialchars_decode($purchase_details) ?></strong>
+                                            </td>
+                                            <td class="grand_total"><strong><?php echo display('vat_rate') ?>
+                                                    :</strong></td>
+                                            <td class="grand_total">
+                                                <?php echo (($position == 0) ? $currency . " " . $total_vat : $total_vat . " " . $currency) ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4">
+                                                <strong><?php echo htmlspecialchars_decode($purchase_details) ?></strong>
+                                            </td>
                                             <td class="grand_total"><strong><?php echo display('grand_total') ?>
                                                     :</strong></td>
                                             <td class="grand_total">
-                                                <?php echo (($position == 0) ? $currency . " " . $grand_total : $grand_total . " " . $currency) ?>
+                                                <?php echo (($position == 0) ? $currency . " " . $grand_total2 : $grand_total2 . " " . $currency) ?>
                                             </td>
                                         </tr>
                                     </tbody>

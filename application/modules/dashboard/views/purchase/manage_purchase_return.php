@@ -107,7 +107,11 @@
                                         <td>
                                             <center>
                                                 <?php echo form_open()?>
-                                                <a href="<?php echo base_url('dashboard/Cpurchase_return/edit_purchase_return/'.$purchase['purchase_return_id']);?>"
+                                                 <a href="<?php echo base_url('dashboard/Cpurchase_return/purchase_return_details_data/'.$purchase['purchase_return_id']);?>"
+                                                    class="btn btn-info btn-sm" data-toggle="tooltip"
+                                                    data-placement="left" title="<?php echo display('view_details') ?>"><i
+                                                        class="fa fa-eye" aria-hidden="true"></i></a>
+<!--                                                <a href="<?php echo base_url('dashboard/Cpurchase_return/edit_purchase_return/'.$purchase['purchase_return_id']);?>"
                                                     class="btn btn-info btn-sm" data-toggle="tooltip"
                                                     data-placement="left" title="<?php echo display('update') ?>"><i
                                                         class="fa fa-pencil" aria-hidden="true"></i></a>
@@ -116,7 +120,7 @@
                                                     onclick="return confirm('<?php echo display('are_you_sure_want_to_delete')?>');"
                                                     data-toggle="tooltip" data-placement="right" title=""
                                                     data-original-title="<?php echo display('delete') ?> "><i
-                                                        class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                                        class="fa fa-trash-o" aria-hidden="true"></i></a>-->
                                             </center>
                                             <?php echo form_close()?>
                                         </td>

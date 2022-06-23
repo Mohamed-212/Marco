@@ -160,7 +160,7 @@ class Cproduct extends MX_Controller {
                 $result2 = $this->db->insert_batch('product_translation', $data2);
             }
             $result = $this->Products->product_entry($data);
-            if($this->input->post('category_id', TRUE) == 'XJIMM9X3ZAWUYXQ'){
+            if ($this->input->post('category_id', TRUE) == 'XJIMM9X3ZAWUYXQ') {
                 $data = array(
                     't_p_s_id' => $this->auth->generator(15),
                     'product_id' => $product_id,
@@ -168,7 +168,7 @@ class Cproduct extends MX_Controller {
                     'tax_percentage' => '14',
                 );
 
-                $this->db->insert('tax_product_service',$data);
+                $this->db->insert('tax_product_service', $data);
             }
 
             // filter section start
@@ -1263,7 +1263,7 @@ class Cproduct extends MX_Controller {
                            <div class="col-sm-12">
                            <div class="form-group row">
                            <div class="input-group">
-                           <input type="number" class="form-control text-left" onkeyup=""  value="' . $value['product_price'] . '" id="pricepri' . $x . '" name="pricepri[' . $x . ']" placeholder="0.00" />';
+                           <input type="number" class="form-control text-left" onchange="check_price2(' . $x . ');"  value="' . $value['product_price'] . '" id="pricepri' . $x . '" name="pricepri[' . $x . ']" placeholder="0.00" />';
                     if ($x == 1) {
                         $table .= '<div class="input-group-addon btn btn-success" onclick="addpricerow()">
                                 <i class="ti-plus"></i>
@@ -1298,7 +1298,7 @@ class Cproduct extends MX_Controller {
                            <div class="col-sm-12">
                            <div class="form-group row">
                            <div class="input-group">
-                           <input type="number" class="form-control text-left" onkeyup=""  value="" id="pricepri' . $x . '" name="pricepri[' . $x . ']" placeholder="0.00" />';
+                           <input type="number" class="form-control text-left" onchange="check_price2(' . $x . ');"  value="" id="pricepri' . $x . '" name="pricepri[' . $x . ']" placeholder="0.00" />';
 
                 $table .= '<div class="input-group-addon btn btn-success" onclick="addpricerow()">
                                 <i class="ti-plus"></i>
@@ -1314,12 +1314,14 @@ class Cproduct extends MX_Controller {
         }
     }
 
-   ////////////////////////////////End ////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////End ////////////////////////////////////////////////////////////////////////
     public function get_assembly_products() {
         $product_id = $this->input->post('product_id', TRUE);
         if ($product_id) {
-            $assembly_products_data = $this->cfiltration_model->get_assembly_products($product_id);
-            $table = ' <table class="table" id="addassemblypro">
+            $check_assembly = $this->cfiltration_model->check_assembly($product_id);
+            if ($check_assembly['assembly'] == 1) {
+                $assembly_products_data = $this->cfiltration_model->get_assembly_products($product_id);
+                $table = ' <table class="table" id="addassemblypro">
                          <thead>
                            <tr>
                             <th class="col-sm-6 text-center">
@@ -1332,30 +1334,30 @@ class Cproduct extends MX_Controller {
                            </tr>
                          </thead>
                         <tbody>';
-            $x = 1;
+                $x = 1;
 
-            if (isset($assembly_products_data) && !empty($assembly_products_data)) {
-                foreach ($assembly_products_data as $key => $value) {
-                    $table .= '<tr id="pro' . $x . '" class="' . $x . '">'
-                            . '<td class="col-sm-6">'
-                            . '<div class="col-sm-12">'
-                            . '<div class="form-group row">'
-                            . '<div class="input-group">'
-                            . '<input type="text" class="form-control assemblyproductSelection"  value="' . $value['product_name'] . '" onkeyup="assembly_productList(' . $x . ');"  value="" id="assemblypro' . $x . '" name="assemblypro' . $x . '" placeholder="' . display('product_name') . '" />'
-                            . '<input type="hidden" class="autocomplete_hidden_value assembly_product_id_' . $x . '" value="' . $value['child_product_id'] . '" name="assembly_product_id[' . $x . ']" />';
-                    $table .= '<div class="input-group-addon btn btn-danger remove_filter_row" onclick="removeassemblyprorow(' . $x . ')">
+                if (isset($assembly_products_data) && !empty($assembly_products_data)) {
+                    foreach ($assembly_products_data as $key => $value) {
+                        $table .= '<tr id="pro' . $x . '" class="' . $x . '">'
+                                . '<td class="col-sm-6">'
+                                . '<div class="col-sm-12">'
+                                . '<div class="form-group row">'
+                                . '<div class="input-group">'
+                                . '<input type="text" class="form-control assemblyproductSelection"  value="' . $value['product_name'] . '" onkeyup="assembly_productList(' . $x . ');"  value="" id="assemblypro' . $x . '" name="assemblypro' . $x . '" placeholder="' . display('product_name') . '" />'
+                                . '<input type="hidden" class="autocomplete_hidden_value assembly_product_id_' . $x . '" value="' . $value['child_product_id'] . '" name="assembly_product_id[' . $x . ']" />';
+                        $table .= '<div class="input-group-addon btn btn-danger remove_filter_row" onclick="removeassemblyprorow(' . $x . ')">
                               <i class="ti-minus"></i>
                               </div>';
-                    $table .= '</div></div></div></td>'
-                            . '<td class="col-sm-6">'
-                            . '<div class="col-sm-12">'
-                            . '<div class="form-group row">'
-                            . '<input type="text" class="price_item' . $x . ' form-control" value="' . $value['child_product_price'] . '"  id="price_item_' . $x . '" name="product_rate[' . $x . ']" min="0" readonly="" />'
-                            . '</div></div></td></tr>';
-                    $x++;
-                } // /.foreach        
-            } else {
-                $table .= '<tr id="pro' . $x . '" class="' . $x . '">
+                        $table .= '</div></div></div></td>'
+                                . '<td class="col-sm-6">'
+                                . '<div class="col-sm-12">'
+                                . '<div class="form-group row">'
+                                . '<input type="text" class="price_item' . $x . ' form-control" value="' . $value['child_product_price'] . '"  id="price_item_' . $x . '" name="product_rate[' . $x . ']" min="0" readonly="" />'
+                                . '</div></div></td></tr>';
+                        $x++;
+                    } // /.foreach        
+                } else {
+                    $table .= '<tr id="pro' . $x . '" class="' . $x . '">
                         <td class="col-sm-6">
                         <div class="col-sm-12">
                         <div class="form-group row">
@@ -1365,16 +1367,23 @@ class Cproduct extends MX_Controller {
                         <div class="input-group-addon btn btn-danger remove_filter_row" onclick="removeassemblyprorow(' . $x . ')">
                               <i class="ti-minus"></i>
                               </div>';
-                $table .= '</div></div></div></td>'
-                        . '<td class="col-sm-6">'
-                        . '<div class="col-sm-12">'
-                        . '<div class="form-group row">'
-                        . '<input type="text" class="price_item' . $x . ' form-control" value=""  id="price_item_' . $x . '" name="product_rate[' . $x . ']" min="0" readonly="" />'
-                        . '</div></div></td></tr>';
-            }
-            $table .= '</tbody>
+                    $table .= '</div></div></div></td>'
+                            . '<td class="col-sm-6">'
+                            . '<div class="col-sm-12">'
+                            . '<div class="form-group row">'
+                            . '<input type="text" class="price_item' . $x . ' form-control" value=""  id="price_item_' . $x . '" name="product_rate[' . $x . ']" min="0" readonly="" />'
+                            . '</div></div></td></tr>';
+                }
+                $table .= '</tbody>
 	    </table></div></div>';
-            echo $table;
+                echo $table;
+            }else{
+                $table=' <div class="alert alert-warning" role="alert">
+               <p style="text-align: center;color: black;">This is not an assembly product</p>
+                <!-- Alert Message -->
+            </div>';
+                 echo $table;
+            }
         }
     }
 

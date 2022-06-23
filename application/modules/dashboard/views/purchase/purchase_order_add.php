@@ -63,12 +63,13 @@
                 <div class="panel panel-bd lobidrag">
                     <div class="panel-heading">
                         <div class="panel-title">
-                            <h4><?php echo display('add_purchase') ?></h4>
+                            <h4><?php echo display('add_purchase') ?> (<span style="color:blue" >Default  Currency </span><span style="color:red" >:<?php echo ($def_currency['currency_name']) ?> <?php echo ('-'.$def_currency['currency_icon']) ?></span >)</h4>
                         </div>
                     </div>
                     <div class="panel-body">
                         <?php echo form_open_multipart('dashboard/Cpurchase/add_purchase_order', array('class' => 'form-vertical', 'id' => 'validate', 'name' => 'insert_purchase')) ?>
                         <div class="row">
+                            <input type="hidden" name="def_currency_id" value="<?php echo ($def_currency['currency_id']) ?>">
                             <div class="col-sm-6">
                                 <div class="form-group row">
                                     <label for="supplier_sss"
@@ -180,6 +181,31 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label for="currency"
+                                           class="col-sm-4 col-form-label"><?php echo display('currency') ?>
+                                        <i class="text-danger">*</i>
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <select name="currency_id" id="currency_id"   onchange="get_conversion_rate()" class="form-control " required="">
+                                            <option value=""><?php echo display('select_one') ?></option>
+                                            {all_currency}
+                                            <option value="{currency_id}">{currency_name}-({currency_icon})</option>
+                                            {/all_currency}
+                                        </select>
+                                    </div>
+                                      <label for="conversion"
+                                           class="col-sm-2 col-form-label"> <?php echo display('rate') ?>
+                                        <i class="text-danger">*</i>
+                                    </label>
+                                    <div class="col-sm-3">
+                                        <input type="number" name="conversion" id="conversion" onchange="get_conversion_rate2()"
+                                                   class="form-control text-right" placeholder="1" min="1"
+                                                   required="" />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <?php if (check_module_status('woocommerce')) { ?>
                             <div id="store_stock_update"
@@ -263,7 +289,7 @@
                                             <input type="hidden" class="sl" value="1">
                                             <input type="hidden" name="colorv[1]" id="color1" value="">
                                             <input type="hidden" name="sizev[1]" id="size1" value="">
-                                            
+
                                         </td>
                                         <td class="text-center">
                                             <div id="color_variant_area_1">
@@ -301,29 +327,46 @@
                                                    required="" />
                                         </td>
                                         <td>
+                                            <input type="number" name="product_rate2[1]" id="price_item2_1"
+                                                class="price_item2 text-right form-control" placeholder="0.00"
+                                                onkeyup="calculate_add_purchase('1')"
+                                                   onchange="calculate_add_purchase('1')"  min="0"/>
                                             <input type="number" name="product_rate[1]" id="price_item_1"
                                                    class="price_item1 text-right form-control" placeholder="0.00"
                                                    onkeyup="calculate_add_purchase('1')"
-                                                   onchange="calculate_add_purchase('1')" min="0" />
+                                                   onchange="calculate_add_purchase('1')"
+                                                    readonly=""/>
                                         </td>
                                         <!-- Discount -->
                                         <td>
+                                            <input type="number" name="discount2[1]" onkeyup="calculate_add_purchase(1);"
+                                                   onchange="calculate_add_purchase(1);" id="discount2_1"
+                                                   class="form-control text-right" placeholder="0.00" min="0" />
                                             <input type="number" name="discount[1]" onkeyup="calculate_add_purchase(1);"
                                                    onchange="calculate_add_purchase(1);" id="discount_1"
-                                                   class="form-control text-right" placeholder="0.00" min="0" />
+                                                   class="form-control text-right" placeholder="0.00" min="0" readonly=""/>
                                         </td>
                                         <td>
+                                            <input type="number" name="vat_rate2[1]" onkeyup="calculate_add_purchase(1);"
+                                                   onchange="calculate_add_purchase(1);" id="item_vat_rate2_1"
+                                                   class="form-control text-right" placeholder="0.00" min="0" />
                                             <input type="number" name="vat_rate[1]" onkeyup="calculate_add_purchase(1);"
                                                    onchange="calculate_add_purchase(1);" id="item_vat_rate_1"
-                                                   class="form-control text-right" placeholder="0.00" min="0" />
+                                                   class="form-control text-right" placeholder="0.00" min="0" readonly=""/>
                                         </td>
                                         <td>
+                                            <input type="number" name="vat2[1]" id="item_vat2_1"
+                                                   class="form-control text-right item_vat2" placeholder="0.00" min="0"
+                                                   readonly />
                                             <input type="number" name="vat[1]" id="item_vat_1"
                                                    class="form-control text-right item_vat" placeholder="0.00" min="0"
                                                    readonly />
                                         </td>
                                         <td class="text-right">
-                                            <input class="total_price text-right form-control" type="text"
+                                            <input class="total_price2 text-right form-control" type="text"
+                                                   name="total_price2[1]" id="total_price2_1" placeholder="0.00"
+                                                   readonly="readonly" />
+                                             <input class="total_price text-right form-control" type="text"
                                                    name="total_price[1]" id="total_price_1" placeholder="0.00"
                                                    readonly="readonly" />
                                         </td>
@@ -349,6 +392,8 @@
                                             <b><?php echo display('sub_total') ?>:</b>
                                         </td>
                                         <td class="text-right">
+                                            <input type="text" id="subTotal2" class="text-right form-control"
+                                                   name="sub_total_price2" placeholder="0.00" readonly="readonly" />
                                             <input type="text" id="subTotal" class="text-right form-control"
                                                    name="sub_total_price" placeholder="0.00" readonly="readonly" />
                                         </td>
@@ -361,16 +406,34 @@
                                             <b><?php echo display('total_vat') ?>:</b>
                                         </td>
                                         <td>
+                                            <input type="text" id="total_vat2" class="text-right form-control" value=""
+                                                   name="total_purchase_vat2" placeholder="0.00" readonly="readonly" />
                                             <input type="text" id="total_vat" class="text-right form-control" value=""
                                                    name="total_purchase_vat" placeholder="0.00" readonly="readonly" />
+                                        </td>
+                                        <td class="text-right">
+                                            <b><?php echo display('total_dis') ?>:</b>
+                                        </td>
+                                        <td>
+                                            <input type="number" id="total_dis2" class="text-right form-control" value=""
+                                                   onkeyup="calculate_total();"
+                                                    onchange="calculate_total();"
+                                                   name="total_purchase_dis2" placeholder="0.00"  />
+                                              <input type="number" id="total_dis" class="text-right form-control" value=""
+                                                   onkeyup="calculate_total();"
+                                                    onchange="calculate_total();"
+                                                    name="total_purchase_dis" placeholder="0.00" readonly="" />
                                         </td>
                                         <td class="text-right">
                                             <b><?php echo display('grand_total') ?>:</b>
                                         </td>
                                         <td class="text-right">
-                                            <input type="text" id="grandTotal" class="text-right form-control"
+                                            <input type="text" id="grandTotal2" class="text-right form-control"
+                                                   name="grand_total_price2" placeholder="0.00" readonly="readonly" />
+                                             <input type="text" id="grandTotal" class="text-right form-control"
                                                    name="grand_total_price" placeholder="0.00" readonly="readonly" />
                                         </td>
+
                                     </tr>
                                 </tfoot>
                             </table>

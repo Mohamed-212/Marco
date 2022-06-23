@@ -124,7 +124,7 @@
 											<a href="<?php echo base_url().'dashboard/Cpurchase/manage_purorder/receive/'.$purchase['pur_order_id']; ?>" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="<?php echo display('receive_item') ?>"><i class="ti-plus"> </i></a>
 											<?php } ?>
 											<?php if($purchase['receive_status'] && !$purchase['return_status']){ ?>
-											<a href="<?php echo base_url().'dashboard/Cpurchase/manage_purorder/return/'.$purchase['pur_order_id']; ?>" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="<?php echo display('return_item') ?>"><i class="fa fa-undo" aria-hidden="true"></i></a>
+<!--											<a href="<?php echo base_url().'dashboard/Cpurchase/manage_purorder/return/'.$purchase['pur_order_id']; ?>" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="<?php echo display('return_item') ?>"><i class="fa fa-undo" aria-hidden="true"></i></a>-->
 											<?php } } ?>
 											</center>
 										</td>

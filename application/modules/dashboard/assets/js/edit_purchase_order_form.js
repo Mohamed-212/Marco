@@ -61,7 +61,7 @@ function product_pur_or_list(sl) {
             var price_item = "price_item_" + sl;
             var variant_id = "variant_id_" + sl;
             var color_variant = "color_variant_" + sl;
-             var color = "color" + sl;
+            var color = "color" + sl;
             var size = "size" + sl;
 
             $.ajax({
@@ -205,6 +205,12 @@ function addPurchaseOrderField(divName) {
     }
 }
 
+function calculate_total() {
+    var total_dis = Number($("#total_dis").val());
+    var sub_total = Number($("#subTotal").val());
+    var total_vat = Number($("#total_vat").val());
+    $("#grandTotal").val((sub_total + total_vat - total_dis).toFixed(2, 2));
+}
 //Calculate store product
 function calculate_add_purchase(sl) {
     var e = 0;
@@ -237,9 +243,10 @@ function calculate_add_purchase(sl) {
                 0 == this.value.length ||
                 (gr_tot += parseFloat(this.value));
     });
+    var total_dis = Number($("#total_dis").val());
     $("#total_vat").val(total_vat.toFixed(2, 2));
     $("#subTotal").val(gr_tot.toFixed(2, 2));
-    $("#grandTotal").val((gr_tot + total_vat).toFixed(2, 2));
+    $("#grandTotal").val((gr_tot + total_vat - total_dis).toFixed(2, 2));
 }
 
 //Select stock by product and variant id

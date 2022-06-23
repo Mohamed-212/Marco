@@ -363,6 +363,16 @@
         <?php } ?>
         <!-- Customer menu end -->
 
+        <!-- installment menu start -->
+        <?php if ($this->permission->check_label('Installment')->access()) { ?>
+            <li class="treeview <?php echo (($this->uri->segment(2) == 'cinstallment' ? 'active' : '')) ?>">
+                <a href="<?php echo base_url('dashboard/cinstallment/manage_installment') ?>">
+                    <i class="ti-money"></i><span><?php echo display('Installment') ?></span>
+                </a>
+            </li>
+        <?php } ?>
+        <!-- installment menu end -->
+
         <!-- Supplier menu start -->
         <?php if ($this->permission->module('supplier')->access()) { ?>
         <li class="treeview <?php if ($this->uri->segment(2) == ("Csupplier")) {

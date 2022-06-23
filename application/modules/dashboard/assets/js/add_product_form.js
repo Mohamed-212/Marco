@@ -249,7 +249,7 @@ $(document).ready(function () {
                                     '  <div class="col-sm-12">' +
                                     '  <div class="form-group row">' +
                                     ' <div class="input-group">' +
-                                    ' <input type="number" class="form-control text-left " onkeyup=""  id="pricepri' + count + '" name="pricepri[' + count + ']" placeholder="0.00" />' +
+                                    ' <input type="number" class="form-control text-left " onchange="check_price2(' + count + ')"  id="pricepri' + count + '" name="pricepri[' + count + ']" placeholder="0.00" />' +
                                     ' <div class="input-group-addon btn btn-danger remove_filter_row" onclick="removepricerow(' + count + ')"><i class="ti-minus"></i></div></div></div>' +
                                     '</td>' +
                                     '</tr>';
@@ -293,7 +293,7 @@ $(document).ready(function () {
         } else {
             // no table row
             count = 1;
-             noofrows++;
+            noofrows++;
         }
 
 
@@ -517,6 +517,19 @@ function  check_price() {
 
         }
     }
+
+}
+function  check_price2(row = null) {
+
+    let sell_price = Number($('#pricepri' + row).val());
+    let supplier_price = Number($("#supplier_price").val());
+    if (supplier_price > 0) {
+        if (sell_price < supplier_price) {
+            alert('Sell price is lower than supplier price');
+            $('#pricepri' + row).val(supplier_price);
+
+        }
+}
 
 }
 
