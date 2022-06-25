@@ -128,6 +128,20 @@ class Cinstallment extends MX_Controller
         echo Modules::run('template/layout', $data);
     }
 
+    //get payment info
+    public function payment_info() {
+        $store_id = $this->session->userdata('store_id');
+        if (empty($store_id)) {
+            return $this->db->select('HeadCode,HeadName')->from('acc_coa')->where_in('PHeadCode', array('111', '1121', '1122', '1123'))->get()->result();
+        } else {
+            //$cash_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('store_id', $store_id)->where('PHeadCode', '111')->get()->result();
+            $cash_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('PHeadCode', '111')->get()->result();
+            //$bank_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where_in('PHeadCode', array('1121', '1122', '1123'))->get()->result();
+            $bank_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where_in('PHeadCode', array('112'))->get()->result();
+            return array_merge($bank_head, $cash_head);
+        }
+    }
+
     //Installment Update Form
     public function installment_update_form($invoice_id)
     {
@@ -144,12 +158,18 @@ class Cinstallment extends MX_Controller
         $this->db->where('a.invoice_id', $invoice_id);
         $invoice = $this->db->get()->result_array();
 
+        $employee = $this->empdropdown();
+
+        $payment_info    = $this->payment_info();
+
         $this->load->model(array('dashboard/Soft_settings', 'dashboard/Customers'));
         $currency_details = $this->Soft_settings->retrieve_currency_info();
         $data = array(
             'title'         => display('edit_installment'),
             'installment_details' => $installment_details,
             'invoice' => $invoice[0],
+            'employee' => $employee,
+            'payment_info' => $payment_info,
             'currency'      => $currency_details[0]['currency_icon'],
             'position'      => $currency_details[0]['currency_position'],
         );
@@ -161,6 +181,7 @@ class Cinstallment extends MX_Controller
     // Installment Update
     public function installment_update()
     {
+        die('dsf');
         $this->permission->check_label('manage_sale')->update()->redirect();
 
         $invoice_id = $this->Invoices->update_invoice();
