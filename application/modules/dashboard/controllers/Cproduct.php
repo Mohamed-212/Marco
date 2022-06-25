@@ -1378,7 +1378,10 @@ class Cproduct extends MX_Controller {
 	    </table></div></div>';
                 echo $table;
             }else{
-                $table='<div class="col-sm-12"><div class="form-group row">This is not an assembly product</div></div>';
+                $table=' <div class="alert alert-warning" role="alert">
+               <p style="text-align: center;color: black;">This is not an assembly product</p>
+                <!-- Alert Message -->
+            </div>';
                  echo $table;
             }
         }

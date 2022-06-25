@@ -85,7 +85,7 @@ else {
                                             {/supplier_selected}
                                         </select>
                                     </div>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-3 hidden">
                                         <a
                                             href="<?php echo base_url('dashboard/Csupplier'); ?>"><?php echo display('add_supplier') ?></a>
                                     </div>

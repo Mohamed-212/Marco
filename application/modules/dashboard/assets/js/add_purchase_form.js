@@ -14,11 +14,18 @@ function bank_info_show(payment_type) {
 //Product purchase or list
 function product_pur_or_list(sl) {
     var supplier_id = $("#supplier_id").val();
+    var currency_id = $("#currency_id").val();
     var product_name = $("#product_name_" + sl).val();
 
     //Supplier id existing check
     if (supplier_id == 0) {
         alert(display("please_select_supplier"));
+        $("#product_name_" + sl).val("");
+        return false;
+    }
+
+    if (currency_id == 0) {
+        alert("Please Select Currency");
         $("#product_name_" + sl).val("");
         return false;
     }
@@ -57,6 +64,7 @@ function product_pur_or_list(sl) {
             var dataString = "csrf_test_name=" + csrf_test_name + "&product_id=" + id;
             var avl_qntt = "avl_qntt_" + sl;
             var price_item = "price_item_" + sl;
+            var price_item2 = "price_item2_" + sl;
             var variant_id = "variant_id_" + sl;
             var color_variant = "color_variant_" + sl;
             var color = "color" + sl;
@@ -68,13 +76,15 @@ function product_pur_or_list(sl) {
                 cache: false,
                 success: function (data) {
                     var obj = JSON.parse(data);
-                    $("#" + price_item).val(obj.supplier_price);
+                    // $("#" + price_item).val(obj.supplier_price);
+                    $("#" + price_item).val(0);
+                    $("#" + price_item2).val(0);
                     $("#" + avl_qntt).val(obj.total_product);
                     $("#" + variant_id).html(obj.variant);
                     $("#" + color_variant)
                             .empty()
                             .append(obj.variant_color);
-                     $("#" + size).val(obj.size);
+                    $("#" + size).val(obj.size);
                     $("#" + color).val(obj.color);
                 },
             });
@@ -155,7 +165,15 @@ function addPurchaseOrderField(divName) {
                 count +
                 ')" onchange="calculate_add_purchase(' +
                 count +
-                ')"  class="form-control text-right p_quantity" placeholder="0" min="0" required/></td><td><input type="number" name="product_rate[' +
+                ')"  class="form-control text-right p_quantity" placeholder="0" min="0" required/></td><td><input type="number" name="product_rate2[' +
+                count +
+                ']" id="price_item2_' +
+                count +
+                '" class="price_item2 text-right form-control" placeholder="0.00" min="0" onkeyup="calculate_add_purchase(' +
+                count +
+                ')" onchange="calculate_add_purchase(' +
+                count +
+                ')"/><input type="number" name="product_rate[' +
                 count +
                 ']" id="price_item_' +
                 count +
@@ -163,7 +181,15 @@ function addPurchaseOrderField(divName) {
                 count +
                 ')" onchange="calculate_add_purchase(' +
                 count +
-                ')"/></td><td><input type="number" name="discount[' +
+                ')" readonly/></td><td><input type="number" name="discount2[' +
+                count +
+                ']" onkeyup="calculate_add_purchase(' +
+                count +
+                ');"onchange="calculate_add_purchase(' +
+                count +
+                ');" id="discount2_' +
+                count +
+                '"class="form-control text-right" placeholder="0.00" min="0"/><input type="number" name="discount[' +
                 count +
                 ']" onkeyup="calculate_add_purchase(' +
                 count +
@@ -171,7 +197,15 @@ function addPurchaseOrderField(divName) {
                 count +
                 ');" id="discount_' +
                 count +
-                '"class="form-control text-right" placeholder="0.00" min="0"/></td><td><input type="number" name="vat_rate[' +
+                '"class="form-control text-right" placeholder="0.00" min="0" readonly/></td><td><input type="number" name="vat_rate2[' +
+                count +
+                ']" onkeyup="calculate_add_purchase(' +
+                count +
+                ');"onchange="calculate_add_purchase(' +
+                count +
+                ');" id="item_vat_rate2_' +
+                count +
+                '"class="form-control text-right" placeholder="0.00" min="0"/><input type="number" name="vat_rate[' +
                 count +
                 ']" onkeyup="calculate_add_purchase(' +
                 count +
@@ -179,11 +213,19 @@ function addPurchaseOrderField(divName) {
                 count +
                 ');" id="item_vat_rate_' +
                 count +
-                '"class="form-control text-right" placeholder="0.00" min="0"/></td><td><input type="number" name="vat[' +
+                '"class="form-control text-right" placeholder="0.00" min="0" readonly/></td><td><input type="number" name="vat2[' +
+                count +
+                ']" id="item_vat2_' +
+                count +
+                '"class="form-control text-right item_vat2" placeholder="0.00" min="0" readonly /><input type="number" name="vat[' +
                 count +
                 ']" id="item_vat_' +
                 count +
-                '"class="form-control text-right item_vat" placeholder="0.00" min="0" readonly /></td><td class="text-right"><input class="total_price text-right form-control" type="text" name="total_price[' +
+                '"class="form-control text-right item_vat" placeholder="0.00" min="0" readonly /></td><td class="text-right"><input class="total_price2 text-right form-control" type="text" name="total_price2[' +
+                count +
+                ']" id="total_price2_' +
+                count +
+                '" placeholder="0.00" readonly="readonly" /><input class="total_price text-right form-control" type="text" name="total_price[' +
                 count +
                 ']" id="total_price_' +
                 count +
@@ -206,7 +248,13 @@ function addPurchaseOrderField(divName) {
 }
 
 function calculate_total() {
-    var total_dis = Number($("#total_dis").val());
+    var conversion_rate = $("#conversion").val();
+    var total_dis2 = $("#total_dis2").val();
+    var sub_total2 = Number($("#subTotal2").val());
+    var total_vat2 = Number($("#total_vat2").val());
+    $("#grandTotal2").val((sub_total2 + total_vat2 - total_dis2).toFixed(2, 2));
+    var total_dis = Number(total_dis2 * conversion_rate);
+    $("#total_dis").val(total_dis.toFixed(2));
     var sub_total = Number($("#subTotal").val());
     var total_vat = Number($("#total_vat").val());
     $("#grandTotal").val((sub_total + total_vat - total_dis).toFixed(2, 2));
@@ -218,17 +266,29 @@ function calculate_add_purchase(sl) {
     var e = 0;
     var gr_tot = 0;
     var total_vat = 0;
-
+    var conversion_rate = $("#conversion").val();
     var total_qntt = $("#total_qntt_" + sl).val();
-    var price_item = $("#price_item_" + sl).val();
-    var item_discount = $("#discount_" + sl).val();
-    var item_vat_rate = $("#item_vat_rate_" + sl).val();
+
+    var price_item2 = $("#price_item2_" + sl).val();
+    var price_item = Number(price_item2 * conversion_rate);
+    $("#price_item_" + sl).val(price_item.toFixed(2));
+
+    var item_discount2 = $("#discount2_" + sl).val();
+    var item_discount = Number(item_discount2);
+    $("#discount_" + sl).val(item_discount.toFixed(2));
+
+    var item_vat_rate2 = $("#item_vat_rate2_" + sl).val();
+    var item_vat_rate = Number(item_vat_rate2);
+    $("#item_vat_rate_" + sl).val(item_vat_rate.toFixed(2));
+
     var total_price =
             total_qntt * price_item - (total_qntt * price_item * item_discount) / 100;
     var item_vat = (total_price * item_vat_rate) / 100;
     var Total_Quantity = 0;
 
     $("#item_vat_" + sl).val(item_vat);
+    $("#item_vat2_" + sl).val((item_vat / conversion_rate).toFixed(2));
+
     $(".item_vat").each(function () {
         isNaN(this.value) ||
                 0 == this.value.length ||
@@ -242,16 +302,23 @@ function calculate_add_purchase(sl) {
     $("#total_items").val(Total_Quantity);
     $("#total_items").trigger("change");
     $("#total_price_" + sl).val(total_price.toFixed(2));
+    $("#total_price2_" + sl).val((total_price / conversion_rate).toFixed(2));
     //Total Price
     $(".total_price").each(function () {
         isNaN(this.value) ||
                 0 == this.value.length ||
                 (gr_tot += parseFloat(this.value));
     });
-     var total_dis = Number($("#total_dis").val());
+    var total_dis2 = $("#total_dis2").val();
+    var total_dis = Number(total_dis2 * conversion_rate);
+    $("#total_dis").val(total_dis.toFixed(2));
+
     $("#total_vat").val(total_vat.toFixed(2, 2));
+    $("#total_vat2").val((total_vat / conversion_rate).toFixed(2, 2));
     $("#subTotal").val(gr_tot.toFixed(2, 2));
-    $("#grandTotal").val((gr_tot + total_vat-total_dis).toFixed(2, 2));
+    $("#subTotal2").val((gr_tot / conversion_rate).toFixed(2, 2));
+    $("#grandTotal").val((gr_tot + total_vat - total_dis).toFixed(2, 2));
+    $("#grandTotal2").val(((gr_tot + total_vat - total_dis) / conversion_rate).toFixed(2, 2));
 }
 
 //Select stock by product and variant id
@@ -349,7 +416,12 @@ function add_new_p_cost_row(divName) {
     p_cost_count++;
 }
 
-function calculate_add_purchase_cost(c) {
+function calculate_add_purchase_cost(sl) {
+    var conversion_rate = $("#conversion").val();
+    var purchase_expences2 = $("#purchase_expences2_" + sl).val();
+    var purchase_expences = Number(purchase_expences2 * conversion_rate);
+    $("#purchase_expences_" + sl).val(purchase_expences.toFixed(2));
+
     var total_cost = 0;
     $(".purchase_expences").each(function () {
         isNaN(this.value) ||
@@ -357,4 +429,77 @@ function calculate_add_purchase_cost(c) {
                 (total_cost += parseFloat(this.value));
     });
     $("#purchase_expences").val(total_cost);
+    
+     var total_cost2 = 0;
+    $(".purchase_expences2").each(function () {
+        isNaN(this.value) ||
+                0 == this.value.length ||
+                (total_cost2 += parseFloat(this.value));
+    });
+    $("#purchase_expences2").val(total_cost2);
+}
+function get_conversion_rate() {
+    var currency_id = $("#currency_id").val();
+    if (currency_id != 0) {
+        $.ajax({
+            url: base_url + "dashboard/Cpurchase/get_conversion_rate",
+            method: "post",
+            dataType: "json",
+            data: {
+                csrf_test_name: csrf_test_name,
+                currency_id: currency_id,
+            },
+            success: function (response) {
+                $("#conversion").val(response.convertion_rate);
+                //  var tableLength = $("#addPurchaseItem tr").length;
+
+                $("#addPurchaseItem tr").each(function (index, tr) {
+                    var rownumber = index + 1;
+                    // alert(rownumber);
+                    var conversion_rate = $("#conversion").val();
+                    var price_item2 = $("#price_item2_" + rownumber).val();
+                    var price_item = Number(price_item2) * Number(conversion_rate);
+                    $("#price_item_" + rownumber).val(price_item.toFixed(2));
+                    calculate_add_purchase(rownumber);
+                });
+            }
+        });
+    } else {
+        $("#conversion").val(1);
+        $("#addPurchaseItem tr").each(function (index, tr) {
+            var rownumber = index + 1;
+            // alert(rownumber);
+            var conversion_rate = $("#conversion").val();
+            var price_item2 = $("#price_item2_" + rownumber).val();
+            var price_item = Number(price_item2) * Number(conversion_rate);
+            $("#price_item_" + rownumber).val(price_item.toFixed(2));
+            calculate_add_purchase(rownumber);
+        });
+    }
+}
+
+function get_conversion_rate2() {
+    var currency_id = $("#currency_id").val();
+    if (currency_id != 0) {
+        $("#addPurchaseItem tr").each(function (index, tr) {
+            var rownumber = index + 1;
+            // alert(rownumber);
+            var conversion_rate = $("#conversion").val();
+            var price_item2 = $("#price_item2_" + rownumber).val();
+            var price_item = Number(price_item2) * Number(conversion_rate);
+            $("#price_item_" + rownumber).val(price_item.toFixed(2));
+            calculate_add_purchase(rownumber);
+        });
+    } else {
+        $("#conversion").val(1);
+        $("#addPurchaseItem tr").each(function (index, tr) {
+            var rownumber = index + 1;
+            // alert(rownumber);
+            var conversion_rate = $("#conversion").val();
+            var price_item2 = $("#price_item2_" + rownumber).val();
+            var price_item = Number(price_item2) * Number(conversion_rate);
+            $("#price_item_" + rownumber).val(price_item.toFixed(2));
+            calculate_add_purchase(rownumber);
+        });
+    }
 }

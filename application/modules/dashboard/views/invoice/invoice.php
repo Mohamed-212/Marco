@@ -294,32 +294,32 @@
                                                         class="fa fa-window-restore" aria-hidden="true"></i></a>
                                                 <?php }
                                                         if ($this->permission->check_label('pos_sale')->read()->access()) { ?>
-                                                <a href="<?php echo base_url() . 'dashboard/Cinvoice/pos_invoice_inserted_data/' . $invoice['invoice_id']; ?>"
+                                                <!--<a href="<?php //echo base_url() . 'dashboard/Cinvoice/pos_invoice_inserted_data/' . $invoice['invoice_id']; ?>"
                                                     class="btn btn-warning btn-sm" data-toggle="tooltip"
                                                     data-placement="left"
-                                                    title="<?php echo display('pos_invoice') ?>"><i class="fa fa-fax"
-                                                        aria-hidden="true"></i></a>
+                                                    title="<?php //echo display('pos_invoice') ?>"><i class="fa fa-fax"
+                                                        aria-hidden="true"></i></a>-->
                                                 <?php } ?>
 
-                                                <a href="<?php echo base_url() . 'dashboard/Cinvoice/pad_invoice/' . $invoice['invoice_id']; ?>"
+                                                <!--<a href="<?php //echo base_url() . 'dashboard/Cinvoice/pad_invoice/' . $invoice['invoice_id']; ?>"
                                                     class="btn btn-primary btn-sm" data-toggle="tooltip"
                                                     data-placement="left"
-                                                    title="<?php echo display('pad_invoice') ?>"><i class="fa fa-fax"
-                                                        aria-hidden="true"></i></a>
+                                                    title="<?php //echo display('pad_invoice') ?>"><i class="fa fa-fax"
+                                                        aria-hidden="true"></i></a>-->
 
                                                 <?php if ($this->permission->check_label('manage_sale')->update()->access()) { ?>
-                                                <a href="<?php echo base_url() . 'dashboard/Cinvoice/invoice_update_form/' . $invoice['invoice_id']; ?>"
+                                                <!--<a href="<?php //echo base_url() . 'dashboard/Cinvoice/invoice_update_form/' . $invoice['invoice_id']; ?>"
                                                     class="btn btn-info btn-sm" data-toggle="tooltip"
-                                                    data-placement="left" title="<?php echo display('update') ?>"><i
-                                                        class="fa fa-pencil" aria-hidden="true"></i></a>
+                                                    data-placement="left" title="<?php //echo display('update') ?>"><i
+                                                        class="fa fa-pencil" aria-hidden="true"></i></a>-->
                                                 <?php }
                                                         if ($this->permission->check_label('manage_sale')->delete()->access()) { ?>
-                                                <a href="<?php echo base_url('dashboard/Cinvoice/invoice_delete/' . $invoice['invoice_id']) ?>"
+                                                <!--<a href="<?php //echo base_url('dashboard/Cinvoice/invoice_delete/' . $invoice['invoice_id']) ?>"
                                                     class="btn btn-danger btn-sm"
-                                                    onclick="return confirm('<?php echo display('are_you_sure_want_to_delete') ?>');"
+                                                    onclick="return confirm('<?php //echo display('are_you_sure_want_to_delete') ?>');"
                                                     data-toggle="tooltip" data-placement="right" title=""
-                                                    data-original-title="<?php echo display('delete') ?> "><i
-                                                        class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                                    data-original-title="<?php //echo display('delete') ?> "><i
+                                                        class="fa fa-trash-o" aria-hidden="true"></i></a>-->
                                                 <?php } ?>
                                             </center>
                                         </td>

@@ -142,9 +142,6 @@ function calculateSumQuotation(){
     var shipping_charge=0;
     var sum            =0;
 
-    if($("#is_quotation").val() == 0){
-
-    }
     //Total CGST
     $(".total_cgst").each(function() {
         isNaN(this.value) || 0 == this.value.length || (cgst += parseFloat(this.value))
@@ -209,9 +206,6 @@ function calculateSum() {
     var shipping_charge=0;
     var sum            =0;
 
-    if($("#is_quotation").val() == 0){
-
-    }
     //Total CGST
     $(".total_cgst").each(function() {
         isNaN(this.value) || 0 == this.value.length || (cgst += parseFloat(this.value))
@@ -268,7 +262,9 @@ function invoice_paidamount() {
         a = $("#paidAmount").val(),
         e = t - a;
     var test = e.toFixed(2);
-    $("#dueAmmount").val(test)
+    $("#dueAmmount").val(test);
+    $('.installment_setup').hide();
+    $("#is_installment").val(0);
 }
 
 //Stock limit check
@@ -313,6 +309,69 @@ function stockLimitAjax(t) {
     })
 }
 
+//Invoice installment
+function installment() {
+    $('#installment_details').html('');
+    $('#installment_header').html('');
+    $('#pay_day').val('');
+    $('#month_no').val('');
+    if($(".installment_setup").css('display') != 'none'){
+        $("#is_installment").val(0);
+        $('#pay_day').prop('required',false);
+        $('#pay_day').attr('aria-required',false);
+        $('#month_no').prop('required',false);
+        $('#month_no').attr('aria-required',false);
+    }else{
+        $("#is_installment").val(1);
+        $('#pay_day').prop('required',true);
+        $('#pay_day').attr('aria-required',true);
+        $('#month_no').prop('required',true);
+        $('#month_no').attr('aria-required',true);
+    }
+    $('.installment_setup').toggle();
+}
+
+function add_month(){
+    $('#installment_details').html('');
+    var month_no = Math.ceil($('#month_no').val());
+    var due_amount = $('#dueAmmount').val();
+    var amount_per_month = (due_amount/month_no).toFixed(2);
+    var date = new Date();
+    var year = date.getFullYear();
+    var month = date.getMonth();
+    var day = Math.ceil($('#pay_day').val());
+    if(month_no > 0 && day > 0 && due_amount > 0) {
+        var content = '';
+        $('#installment_header').show();
+        for (let i = 1; i <= month_no; i++){
+            var d = new Date(year, month + i, day);
+            var m = d.getMonth()+1;
+            if(m < 10){
+                m = '0' + m;
+            }
+            var da = d.getDate();
+            if(da < 10){
+                da = '0' + da;
+            }
+            var y = d.getFullYear();
+            var date = y + '-' + m + '-' + da;
+            content += '<div class="row" style="display: flex;justify-content: space-around;">' +
+                '<div class="col-sm-4" style="float: none">' +
+                '<div class="form-group">' +
+                '<input class="form-control" style="text-align: center;" type="number" name="amount[]" value="' + amount_per_month + '" readonly>' +
+                '</div>' +
+                '</div>' +
+                '<div class="col-sm-4" style="float: none">' +
+                '<div class="form-group">' +
+                '<input class="form-control" style="text-align: center;" type="date" value="'+ date +'" name="due_date[]" readonly>' +
+                '</div>' +
+                '</div>' +
+                '</div>';
+        }
+        $('#installment_details').html(content);
+    }
+}
+
 //Invoice full paid
 function full_paid() {
     var elem = $("#is_quotation");
@@ -325,6 +384,9 @@ function full_paid() {
     var grandTotal = $("#grandTotal").val();
     $("#paidAmount").val(grandTotal);
     invoice_paidamount();
+    $('.installment_setup').hide();
+    $('#installment_id').hide();
+    $("#is_installment").val(0);
 }
 
 //Delete a row from invoice table
