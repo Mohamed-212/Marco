@@ -12,23 +12,25 @@ class Cinstallment extends MX_Controller
         $this->load->library('dashboard/occational');
     }
 
-    public function empdropdown(){
+    public function empdropdown()
+    {
         $this->db->select('*');
         $this->db->from('employee_history');
         $query = $this->db->get();
         $data = $query->result();
 
         $list = array('' => 'Select One...');
-        if (!empty($data) ) {
+        if (!empty($data)) {
             foreach ($data as $value) {
-                $list[$value->id] = $value->first_name." ".$value->last_name;
+                $list[$value->id] = $value->first_name . " " . $value->last_name;
             }
         }
         return $list;
     }
 
     //Invoice List count
-    public function count_invoice_list($filter = []) {
+    public function count_invoice_list($filter = [])
+    {
         $this->db->select('a.invoice_id');
         $this->db->from('invoice a');
         $this->db->where('a.is_installment', 1);
@@ -46,7 +48,8 @@ class Cinstallment extends MX_Controller
     }
 
     //Invoice List
-    public function get_invoice_list($filter, $start, $limit) {
+    public function get_invoice_list($filter, $start, $limit)
+    {
         $this->db->select('a.*,b.*,c.order');
         $this->db->from('invoice a');
         $this->db->join('customer_information b', 'b.customer_id = a.customer_id');
@@ -73,31 +76,31 @@ class Cinstallment extends MX_Controller
 
     public function manage_installment()
     {
-        $this->permission->check_label('manage_sale')->read()->redirect();
+        $this->permission->check_label('manage_installment')->read()->redirect();
         $filter = array(
-            'invoice_no'    => $this->input->get('invoice_no', TRUE),
-            'customer_id'   => $this->input->get('customer_id', TRUE),
-            'date'          => $this->input->get('date', TRUE),
+            'invoice_no' => $this->input->get('invoice_no', TRUE),
+            'customer_id' => $this->input->get('customer_id', TRUE),
+            'date' => $this->input->get('date', TRUE),
         );
-        $config["base_url"]   = base_url('dashboard/Cinstallment/manage_installment');
+        $config["base_url"] = base_url('dashboard/Cinstallment/manage_installment');
         $config["total_rows"] = $this->count_invoice_list($filter);
-        $config["per_page"]   = 20;
+        $config["per_page"] = 20;
         $config["uri_segment"] = 4;
-        $config["num_links"]  = 5;
+        $config["num_links"] = 5;
         /* This Application Must Be Used With BootStrap 3 * */
-        $config['full_tag_open']   = "<ul class='pagination'>";
-        $config['full_tag_close']  = "</ul>";
-        $config['num_tag_open']    = '<li>';
-        $config['num_tag_close']   = '</li>';
-        $config['cur_tag_open']    = "<li class='disabled'><li class='active'><a href='#'>";
-        $config['cur_tag_close']   = "<span class='sr-only'></span></a></li>";
-        $config['next_tag_open']   = "<li>";
-        $config['next_tag_close']  = "</li>";
-        $config['prev_tag_open']   = "<li>";
+        $config['full_tag_open'] = "<ul class='pagination'>";
+        $config['full_tag_close'] = "</ul>";
+        $config['num_tag_open'] = '<li>';
+        $config['num_tag_close'] = '</li>';
+        $config['cur_tag_open'] = "<li class='disabled'><li class='active'><a href='#'>";
+        $config['cur_tag_close'] = "<span class='sr-only'></span></a></li>";
+        $config['next_tag_open'] = "<li>";
+        $config['next_tag_close'] = "</li>";
+        $config['prev_tag_open'] = "<li>";
         $config['prev_tagl_close'] = "</li>";
-        $config['first_tag_open']  = "<li>";
+        $config['first_tag_open'] = "<li>";
         $config['first_tagl_close'] = "</li>";
-        $config['last_tag_open']   = "<li>";
+        $config['last_tag_open'] = "<li>";
         $config['last_tagl_close'] = "</li>";
         /* ends of bootstrap */
         $this->pagination->initialize($config);
@@ -117,19 +120,20 @@ class Cinstallment extends MX_Controller
         $this->load->model(array('dashboard/Soft_settings', 'dashboard/Customers'));
         $currency_details = $this->Soft_settings->retrieve_currency_info();
         $data = array(
-            'title'         => display('manage_invoice'),
+            'title' => display('manage_invoice'),
             'invoices_list' => $invoices_list,
-            'currency'      => $currency_details[0]['currency_icon'],
-            'position'      => $currency_details[0]['currency_position'],
+            'currency' => $currency_details[0]['currency_icon'],
+            'position' => $currency_details[0]['currency_position'],
         );
 
         $data['module'] = "dashboard";
-        $data['page']   = "installment/index";
+        $data['page'] = "installment/index";
         echo Modules::run('template/layout', $data);
     }
 
     //get payment info
-    public function payment_info() {
+    public function payment_info()
+    {
         $store_id = $this->session->userdata('store_id');
         if (empty($store_id)) {
             return $this->db->select('HeadCode,HeadName')->from('acc_coa')->where_in('PHeadCode', array('111', '1121', '1122', '1123'))->get()->result();
@@ -160,74 +164,182 @@ class Cinstallment extends MX_Controller
 
         $employee = $this->empdropdown();
 
-        $payment_info    = $this->payment_info();
+        $payment_info = $this->payment_info();
 
         $this->load->model(array('dashboard/Soft_settings', 'dashboard/Customers'));
         $currency_details = $this->Soft_settings->retrieve_currency_info();
         $data = array(
-            'title'         => display('edit_installment'),
+            'title' => display('edit_installment'),
             'installment_details' => $installment_details,
             'invoice' => $invoice[0],
             'employee' => $employee,
             'payment_info' => $payment_info,
-            'currency'      => $currency_details[0]['currency_icon'],
-            'position'      => $currency_details[0]['currency_position'],
+            'currency' => $currency_details[0]['currency_icon'],
+            'position' => $currency_details[0]['currency_position'],
         );
 
         $data['module'] = "dashboard";
-        $data['page']   = "installment/edit_installment_form";
+        $data['page'] = "installment/edit_installment_form";
         echo Modules::run('template/layout', $data);
     }
+
     // Installment Update
     public function installment_update()
     {
-        die('dsf');
-        $this->permission->check_label('manage_sale')->update()->redirect();
+        $this->permission->check_label('manage_installment')->update()->redirect();
 
-        $invoice_id = $this->Invoices->update_invoice();
-        $this->session->set_userdata(array('message' => display('successfully_updated')));
-        redirect('dashboard/cinvoice/invoice_inserted_data/' . $invoice_id);
-    }
+        if (check_module_status('accounting') == 1) {
+            $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
+            if (!empty($find_active_fiscal_year)) {
+                //Invoice and customer info
+                $invoice_id = $this->input->post('invoice_id', TRUE);
+                $customer_id = $this->input->post('customer_id', TRUE);
+                $amount = $this->input->post('amount', TRUE);
+                $due_date = $this->input->post('due_date', TRUE);
+                $payment_amount = $this->input->post('payment_amount', TRUE);
+                $payment_date = $this->input->post('payment_date', TRUE);
+                $account = $this->input->post('account', TRUE);
+                $check_no = $this->input->post('check_no', TRUE);
+                $payment_type = $this->input->post('payment_type', TRUE);
+                $employee_id = $this->input->post('employee_id', TRUE);
+                $status = $this->input->post('status', TRUE);
+                $expiry_date = $this->input->post('expiry_date', TRUE);
 
+                $this->db->select('*');
+                $this->db->from('invoice_installment');
+                $this->db->where('invoice_id', $invoice_id);
+                $installment_details = $this->db->get()->result_array();
 
+                foreach ($installment_details as $index => $installment) {
+                    if ($installment['status'] == 1) {
+                        if ($payment_amount[$index] && $payment_date[$index]
+                            && $payment_type[$index] && $account[$index]
+                            && $employee_id[$index]) {
+                            if (($payment_type[$index] == '3' || $payment_type[$index] == '4') && empty($check_no[$index]) && empty($expiry_date[$index])) {
+                                $this->session->set_userdata(array('error_message' => display('enter_check_number_if_payment_type_is_check_or_wire_transfer')));
+                                redirect('dashboard/cinstallment/manage_installment');
+                            } else {
+                                //update installment with values
+                                $this->db->where('id', $installment['id']);
+                                $update_installment = array(
+                                    'payment_date' => $payment_date[$index],
+                                    'payment_amount' => $payment_amount[$index],
+                                    'status' => $status[$index],
+                                    'payment_type' => $payment_type[$index],
+                                    'account' => $account[$index],
+                                    'check_no' => $check_no[$index],
+                                    'expiry_date' => $expiry_date[$index],
+                                    'employee_id' => $employee_id[$index]
+                                );
+                                $this->db->update('invoice_installment', $update_installment);
 
+                                if($status[$index] == 2){
 
+                                    //create new installment if payed amount is less than amount
+                                    if ($payment_amount[$index] < $amount[$index]) {
+                                        //add new installment with the rest of amount
+                                        $installment_data = array(
+                                            'invoice_id' => $invoice_id,
+                                            'amount' => ($amount[$index] - $payment_amount[$index]),
+                                            'due_date' => date('Y-m-d', strtotime($due_date[$index] . ' + 1 months')),
+                                        );
+                                        $this->db->insert('invoice_installment', $installment_data);
+                                    }
 
+                                    $this->db->select('*');
+                                    $this->db->from('invoice');
+                                    $this->db->where('invoice_id', $invoice_id);
+                                    $invoice = $this->db->get()->result_array();
 
+                                    //update customer ledger
+                                    //Delete old customer ledger data
+                                    $this->db->where('invoice_no', $invoice_id);
+                                    $result = $this->db->delete('customer_ledger');
+                                    //Insert customer ledger data where amount > 0
+                                    if ($this->input->post('paid_amount', TRUE) > 0) {
+                                        //Insert to customer_ledger Table
+                                        $data1 = array(
+                                            'transaction_id' => $this->auth->generator(15),
+                                            'customer_id' => $customer_id,
+                                            'invoice_no' => $invoice_id,
+                                            'receipt_no' => $this->auth->generator(15),
+                                            'date' => $invoice[0]['invoice_date'],
+                                            'amount' => $invoice[0]['paid_amount'] + $payment_amount[$index],
+                                            'payment_type' => 1,
+                                            'description' => 'ITP',
+                                            'status' => 1
+                                        );
+                                        $this->db->insert('customer_ledger', $data1);
+                                    }
+                                    //Update to customer ledger Table
+                                    $data2 = array(
+                                        'transaction_id' => $this->auth->generator(15),
+                                        'customer_id' => $customer_id,
+                                        'invoice_no' => $invoice_id,
+                                        'date' => $invoice[0]['invoice_date'],
+                                        'amount' => $invoice[0]['total_amount'],
+                                        'status' => 1
+                                    );
+                                    $this->db->insert('customer_ledger', $data2);
 
+                                    //update invoice paid amount
+                                    $this->db->where('invoice_id', $invoice_id);
+                                    $new_paid_amount = array(
+                                        'paid_amount' => $invoice[0]['paid_amount'] + $payment_amount[$index],
+                                        'due_amount' => $invoice[0]['due_amount'] - $payment_amount[$index]
+                                    );
+                                    $this->db->update('invoice', $new_paid_amount);
 
-    //Insert new invoice
-    public function insert_invoice()
-    {
-        if($this->input->post('due_amount', TRUE) > 0 && $this->input->post('is_installment', TRUE) == 0){
-            $this->session->set_userdata(array('error_message' => display('choose_installment_if_invoice_not_full_paid')));
-            $this->index();
-        }
-        $this->load->library('form_validation');
-        $this->form_validation->set_rules('product_id[]', display('product_id'), 'required');
-        $this->form_validation->set_rules('variant_id[]', display('variant'), 'required');
-        $this->form_validation->set_rules('batch_no[]', display('batch_no'), 'required');
-        $this->form_validation->set_rules('employee_id', display('employee_id'), 'required');
-        if ($this->form_validation->run() == false) {
-            $this->session->set_userdata(array('error_message' => display('failed_try_again')));
-            $this->index();
-        } else {
-            $invoice_id = $this->Invoices->invoice_entry();
-            $this->session->set_userdata(array('message' => display('successfully_added')));
-            if ($this->input->post('pos', TRUE) === 'pos') {
-                redirect('dashboard/Cinvoice/pos_invoice_inserted_data_redirect/' . $invoice_id . '?place=pos');
+                                    //add customer credit
+                                    $customer_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('customer_id', $customer_id)->get()->row();
+                                    if (empty($customer_head)) {
+                                        $this->load->model('accounting/account_model');
+                                        $customer_name = $this->db->select('customer_name')->from('customer_information')->where('customer_id', $result->customer_id)->get()->row();
+                                        if ($customer_name) {
+                                            $customer_data = $data = array(
+                                                'customer_id' => $result->customer_id,
+                                                'customer_name' => $customer_name->customer_name,
+                                            );
+                                            $this->account_model->insert_customer_head($customer_data);
+                                        }
+                                        $customer_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('customer_id', $customer_id)->get()->row();
+                                    }
+                                    $customer_credit = array(
+                                        'fy_id' => $find_active_fiscal_year->id,
+                                        'VNo' => 'Inv-' . $invoice_id,
+                                        'Vtype' => 'Sales',
+                                        'VDate' => date('Y-m-d H:i:s'),
+                                        'COAID' => $customer_head->HeadCode,
+                                        'Narration' => 'Sales "paid_amount" Credit by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
+                                        'Debit' => 0,
+                                        'Credit' => $payment_amount[$index],
+                                        'IsPosted' => 1,
+                                        'CreateBy' => $this->session->userdata('user_id'),
+                                        'CreateDate' => date('Y-m-d H:i:s'),
+                                        //'IsAppove' => 0
+                                        'IsAppove' => 1
+                                    );
+                                    $this->db->insert('acc_transaction', $customer_credit);
+                                }
+                            }
+                        } else {
+                            $this->session->set_userdata(array('error_message' => display('you_must_complete_the_information')));
+                            redirect('dashboard/cinstallment/manage_installment');
+                        }
+                    }
+                }
             } else {
-                redirect('dashboard/Cinvoice/invoice_inserted_data/' . $invoice_id);
+                $this->session->set_userdata(array('error_message' => display('no_active_fiscal_year_found')));
+                redirect(base_url('Admin_dashboard'));
             }
         }
+
+
+        $this->session->set_userdata(array('message' => display('successfully_updated')));
+        redirect('dashboard/cinstallment/manage_installment');
+
     }
 
-    //Retrive right now inserted data to cretae html
-    public function invoice_inserted_data($invoice_id)
-    {
-        $content = $this->linvoice->invoice_html_data($invoice_id);
-        $this->template_lib->full_admin_html_view($content);
-    }
 
     //Email testing for email
     public function test_input($data)
@@ -268,7 +380,7 @@ class Cinstallment extends MX_Controller
     public function convert_number($number)
     {
         if ($number < 0) {
-            $number = - ($number);
+            $number = -($number);
         }
         if (($number < 0) || ($number > 9999999999999)) {
             throw new Exception("Number is out of range");
@@ -288,7 +400,7 @@ class Cinstallment extends MX_Controller
         /* Ones */
         $res = "";
         if ($Gn) {
-            $res .= $this->convert_number($Gn) .  "Million";
+            $res .= $this->convert_number($Gn) . "Million";
         }
         if ($kn) {
             $res .= (empty($res) ? "" : " ") . $this->convert_number($kn) . " Thousand";

@@ -3,8 +3,12 @@
 <script src="<?php echo base_url() ?>my-assets/js/admin_js/json/customer.js.php"></script>
 
 <style>
-    .select2 {
+    .payment_type + .select2, .account + .select2 {
         margin-top: 10px;
+        width: 180px!important;
+    }
+    .account_no{
+        width: 180px;
     }
 </style>
 
@@ -46,6 +50,8 @@
                                     <div class="col-sm-8">
                                         <input type="text" value="<?php echo html_escape($invoice['customer_name']); ?>"
                                                class="form-control customerSelection" disabled>
+                                        <input type="hidden" value="<?php echo html_escape($invoice['customer_id']); ?>"
+                                               name="customer_id">
                                     </div>
                                 </div>
                             </div>
@@ -78,14 +84,14 @@
                                 <tbody>
                                 <?php
                                 $status = array(
-                                    'pending' => display('pending'),
-                                    'collected' => display('collected'),
+                                    '1' => display('pending'),
+                                    '2' => display('collected'),
                                 );
                                 $payment_type = array(
-                                    'cash' => display('cash'),
-                                    'pos' => display('pos'),
-                                    'wire transfer' => display('wire transfer'),
-                                    'check' => display('check'),
+                                    '1' => display('cash'),
+                                    '2' => display('pos'),
+                                    '3' => display('wire transfer'),
+                                    '4' => display('check'),
                                 );
 
 
@@ -103,27 +109,23 @@
                                                        value="<?php echo html_escape($value['amount']) ?>">
                                             </td>
                                             <td class="text-center">
-                                                <input type="text" class="form-control datepicker"
-                                                       value="<?php echo html_escape($value['due_date']) ?>" disabled>
-                                                <input type="hidden" class="form-control datepicker" name="due_date[]"
-                                                       value="<?php echo html_escape($value['due_date']) ?>">
+                                                <input type="text" class="form-control datepicker" name="due_date[]"
+                                                       value="<?php echo html_escape($value['due_date']) ?>" readonly>
                                             </td>
                                             <td class="text-center">
                                                 <input type="number" name="payment_amount[]"
-                                                       class="form-control" value=""
+                                                       class="form-control" value="" placeholder="0.00"
                                                        max="<?php echo html_escape($value['payment_amount']) ?>" <?php echo html_escape($readonly) ?>>
                                             </td>
                                             <td class="text-center">
-                                                <input type="text" class="form-control datepicker"
-                                                       value="<?php echo set_value('date', date("Y-m-d")) ?>" disabled>
-                                                <input type="hidden" class="form-control datepicker" name="payment_date[]"
-                                                       value="<?php echo set_value('date', date("Y-m-d")) ?>">
+                                                <input type="text" class="form-control datepicker" name="payment_date[]"
+                                                       value="<?php if($value['status']){ echo html_escape($value['due_date']);}else{ echo set_value('date', date("Y-m-d"));} ?>" <?php echo html_escape($readonly) ?>>
                                             </td>
                                             <td class="text-center">
                                                 <div style="display: flex;flex-direction: column">
                                                     <?php echo form_dropdown('payment_type[]', $payment_type, $value['payment_type'], "onchange='changPaymentType(this);' class='form-control payment_type' $readonly ") ?>
                                                     <select class="form-control account" style="margin-top: 10px;"
-                                                            name="account[]">
+                                                            name="account[]" <?php echo html_escape($readonly) ?>>
                                                         <option value=""></option>
                                                         <?php
                                                         if ($payment_info) {
@@ -144,27 +146,28 @@
                                                         }
                                                         ?>
                                                     </select>
-                                                    <input class="form-control text-center account_no" style="margin-top: 10px;"
-                                                           type="text" name="account_no[]"
-                                                           placeholder="<?php echo display('account_no') ?>"
-                                                           value="<?php echo html_escape($value['account_no']) ?>">
                                                     <?php if ($value['status']) { ?>
                                                         <input class="form-control text-center"
-                                                               style="margin-top: 10px;" type="text" name="check_no"
+                                                               style="margin-top: 10px;" type="text" name="check_no[]"
                                                                placeholder="<?php echo display('check_no') ?>"
                                                                value="<?php echo html_escape($value['check_no']) ?>">
+                                                        <input type="text" class="form-control datepicker expiry_date" name="expiry_date[]"
+                                                               value="<?php echo html_escape($value['expiry_date']) ?>">
                                                     <?php }else{ ?>
                                                         <input class="form-control text-center check_no"
                                                                style="margin-top: 10px; display: none;" type="text" name="check_no[]"
                                                                placeholder="<?php echo display('check_no') ?>">
+                                                        <input type="text" class="form-control datepicker expiry_date" name="expiry_date[]"
+                                                               style="margin-top: 10px; display: none;"
+                                                               placeholder="<?php echo display('expiry_date') ?>">
                                                     <?php } ?>
                                                 </div>
                                             </td>
                                             <td class="text-center">
-                                                <?php echo form_dropdown('employee_id', $employee, $value['employee_id'], "class='form-control employee_id' $readonly ") ?>
+                                                <?php echo form_dropdown('employee_id[]', $employee, $value['employee_id'], "class='form-control employee_id' $readonly ") ?>
                                             </td>
                                             <td class="text-center">
-                                                <?php echo form_dropdown('status', $status, $value['status'], "class='form-control status' $readonly ") ?>
+                                                <?php echo form_dropdown('status[]', $status, $value['status'], "class='form-control status' $readonly ") ?>
                                             </td>
                                         </tr>
                                         <?php
