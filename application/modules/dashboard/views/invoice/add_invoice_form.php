@@ -217,7 +217,7 @@
                                                 class="text-danger">*</i></th>
                                     <th class="text-center" width="130"><?php echo display('variant') ?> <i
                                                 class="text-danger">*</i></th>
-                                    <th class="text-center" width="130"><?php echo display('pricing') ?> </th>
+<!--                                    <th class="text-center" width="130"><?php echo display('pricing') ?> </th>-->
                                     <th class="text-center" width="130"><?php echo display('batch_no') ?> <i
                                                 class="text-danger">*</i></th>
                                     <th class="text-center"><?php echo display('available_quantity') ?></th>
@@ -248,27 +248,28 @@
                                         <input type="hidden" class="baseUrl" value="<?php echo base_url(); ?>" />
                                     </td>
                                     <td class="text-center">
-                                        <div class="variant_id_div">
-                                            <select name="variant_id[]" id="variant_id_1"
-                                                    class="form-control variant_id width_100p" required="">
-                                                <option value=""></option>
-                                            </select>
-                                        </div>
                                         <div>
                                             <select name="color_variant[]" id="variant_color_id_1"
                                                     class="form-control color_variant width_100p">
                                                 <option value=""></option>
                                             </select>
                                         </div>
+                                        <div class="variant_id_div">
+                                            <select name="variant_id[]" id="variant_id_1"
+                                                    class="form-control variant_id width_100p">
+                                                <option value=""></option>
+                                            </select>
+                                        </div>
+                                        
                                     </td>
-                                    <td class="text-center">
+<!--                                    <td class="text-center">
                                         <div>
                                             <select name="pricing[]" id="pricing_1"
                                                     class="form-control pricing width_100p" >
                                                 <option value=""></option>
                                             </select>
                                         </div>
-                                    </td>
+                                    </td>-->
                                     <td class="text-center">
                                         <div>
                                             <select name="batch_no[]" id="batch_no_1"

@@ -287,7 +287,7 @@ class Invoices extends CI_Model {
                     'invoice' => 'Inv-' . $this->number_generator(),
                     'total_discount' => $this->input->post('total_discount', TRUE),
                     'total_vat' => $tota_vati,
-                    'is_quotation'		=> ($this->input->post('is_quotation', True))?$this->input->post('is_quotation', True):0,
+                    'is_quotation' => ($this->input->post('is_quotation', True)) ? $this->input->post('is_quotation', True) : 0,
                     'employee_id' => $this->input->post('employee_id', true),
                     'is_installment' => $this->input->post('is_installment', true),
                     'month_no' => $installment_month_no,
@@ -307,10 +307,10 @@ class Invoices extends CI_Model {
                 $this->db->insert('invoice', $data);
 
                 // insert installment
-                if($this->input->post('is_installment', true) == 1){
+                if ($this->input->post('is_installment', true) == 1) {
                     $installment_amount = $this->input->post('amount', TRUE);
                     $installment_due_date = $this->input->post('due_date', TRUE);
-                    for($i = 0; $i < $installment_month_no; $i++){
+                    for ($i = 0; $i < $installment_month_no; $i++) {
                         $installment_data = array(
                             'invoice_id' => $invoice_id,
                             'amount' => $installment_amount[$i],
@@ -326,7 +326,7 @@ class Invoices extends CI_Model {
                 $total_amount = $this->input->post('total_price', TRUE);
                 $discount = $this->input->post('discount', TRUE);
                 $variants = $this->input->post('variant_id', TRUE);
-                $pricing = $this->input->post('pricing', TRUE);
+                // $pricing = $this->input->post('pricing', TRUE);
                 $color_variants = $this->input->post('color_variant', TRUE);
                 $batch_no = $this->input->post('batch_no', TRUE);
                 $cogs_price = 0;
@@ -339,7 +339,7 @@ class Invoices extends CI_Model {
                     $discount_rate = $discount[$i];
                     $total_price = $total_amount[$i];
                     $variant_id = $variants[$i];
-                    $pricing_id = $pricing[$i];
+                    //   $pricing_id = $pricing[$i];
                     $variant_color = $color_variants[$i];
                     $batch = $batch_no[$i];
                     $supplier_rate = $this->supplier_rate($product_id);
@@ -350,7 +350,7 @@ class Invoices extends CI_Model {
                         'invoice_id' => $invoice_id,
                         'product_id' => $product_id,
                         'variant_id' => $variant_id,
-                        'pricing_id' => $pricing_id,
+                        //  'pricing_id' => $pricing_id,
                         'variant_color' => $variant_color,
                         'batch_no' => $batch,
                         'store_id' => $this->input->post('store_id', TRUE),
@@ -570,7 +570,7 @@ class Invoices extends CI_Model {
                     'CreateDate' => $createdate,
                     'IsAppove' => 0
                 );
-                 //7th paid_amount Credit
+                //7th paid_amount Credit
                 if ($this->input->post('paid_amount', TRUE) > 0) {
                     $paid_amount = $this->input->post('paid_amount', TRUE);
                     $customer_credit = array(
@@ -960,7 +960,7 @@ class Invoices extends CI_Model {
             $total_amount = $this->input->post('total_price', TRUE);
             $discount = $this->input->post('discount', TRUE);
             $variants = $this->input->post('variant_id', TRUE);
-            $pricing = $this->input->post('pricing', TRUE);
+            // $pricing = $this->input->post('pricing', TRUE);
             $color_variants = $this->input->post('color_variant', TRUE);
             $batch_no = $this->input->post('batch_no', TRUE);
             $cogs_price = 0;
@@ -972,7 +972,7 @@ class Invoices extends CI_Model {
                 $product_id = $p_id[$i];
                 $discount_rate = $discount[$i];
                 $total_price = $total_amount[$i];
-                $pricing_id = $pricing[$i];
+                //  $pricing_id = $pricing[$i];
                 $variant_id = $variants[$i];
                 $variant_color = $color_variants[$i];
                 $batch = $batch_no[$i];
@@ -983,7 +983,7 @@ class Invoices extends CI_Model {
                     'invoice_details_id' => generator(15),
                     'invoice_id' => $invoice_id,
                     'product_id' => $product_id,
-                    'pricing_id' => $pricing_id,
+                    //  'pricing_id' => $pricing_id,
                     'variant_id' => $variant_id,
                     'variant_color' => $variant_color,
                     'batch_no' => $batch,
@@ -2485,7 +2485,7 @@ class Invoices extends CI_Model {
                 $total_amount = $this->input->post('total_price', TRUE);
                 $discount = $this->input->post('discount', TRUE);
                 $variants = $this->input->post('variant_id', TRUE);
-                $pricing = $this->input->post('pricing', TRUE);
+                // $pricing = $this->input->post('pricing', TRUE);
                 $color_variants = $this->input->post('color_variant', TRUE);
                 $batch_no = $this->input->post('batch_no', TRUE);
                 $cogs_price = 0;
@@ -2498,7 +2498,7 @@ class Invoices extends CI_Model {
                         $discount_rate = $discount[$i];
                         $total_price = $total_amount[$i];
                         $variant_id = $variants[$i];
-                        $pricing_id = $pricing[$i];
+                        //  $pricing_id = $pricing[$i];
                         $variant_color = (!empty($color_variants[$i]) ? $color_variants[$i] : NULL);
                         $invoice_detail_id = (!empty($invoice_d_id[$i]) ? $invoice_d_id[$i] : null);
                         $supplier_rate = $this->supplier_rate($product_id);
@@ -2510,7 +2510,7 @@ class Invoices extends CI_Model {
                             'invoice_id' => $invoice_id,
                             'product_id' => $product_id,
                             'variant_id' => $variant_id,
-                            'pricing_id' => $pricing_id,
+                            // 'pricing_id' => $pricing_id,
                             'variant_color' => $variant_color,
                             'batch_no' => $batch,
                             'store_id' => $this->input->post('store_id', TRUE),
@@ -2628,7 +2628,7 @@ class Invoices extends CI_Model {
 //                        );
 //                    }
 //                    $reverse = $this->db->insert_batch('acc_transaction', $transection_reverse);
-                    
+
                     $this->db->where('VNo', 'Inv-' . $invoice_id);
                     $this->db->delete('acc_transaction');
                 }
@@ -3163,7 +3163,7 @@ class Invoices extends CI_Model {
             $total_amount = $this->input->post('total_price', TRUE);
             $discount = $this->input->post('discount', TRUE);
             $variants = $this->input->post('variant_id', TRUE);
-            $pricing = $this->input->post('pricing', TRUE);
+            //$pricing = $this->input->post('pricing', TRUE);
             $color_variants = $this->input->post('color_variant', TRUE);
             $batch_no = $this->input->post('batch_no', TRUE);
             //Invoice details for invoice
@@ -3175,7 +3175,7 @@ class Invoices extends CI_Model {
                     $discount_rate = $discount[$i];
                     $total_price = $total_amount[$i];
                     $variant_id = $variants[$i];
-                    $pricing_id = $pricing[$i];
+                    // $pricing_id = $pricing[$i];
                     $variant_color = (!empty($color_variants[$i]) ? $color_variants[$i] : NULL);
                     $invoice_detail_id = (!empty($invoice_d_id[$i]) ? $invoice_d_id[$i] : null);
                     $supplier_rate = $this->supplier_rate($product_id);
@@ -3186,7 +3186,7 @@ class Invoices extends CI_Model {
                         'invoice_id' => $invoice_id,
                         'product_id' => $product_id,
                         'variant_id' => $variant_id,
-                        'pricing_id' => $pricing_id,
+                        // 'pricing_id' => $pricing_id,
                         'variant_color' => $variant_color,
                         'batch_no' => $batch,
                         'store_id' => $this->input->post('store_id', TRUE),
@@ -3799,12 +3799,21 @@ class Invoices extends CI_Model {
 
     //Get total product
     public function get_total_product($product_id) {
-
-        $this->db->select('pricing,product_name,product_id,supplier_price,price,supplier_id,unit,variants,default_variant,product_model,onsale,onsale_price,unit.unit_short_name');
+        $this->db->select('assembly,pricing,product_name,product_id,supplier_price,price,supplier_id,unit,variants,default_variant,product_model,onsale,onsale_price,unit.unit_short_name');
         $this->db->from('product_information');
         $this->db->join('unit', 'unit.unit_id = product_information.unit', 'left');
         $this->db->where(array('product_id' => $product_id, 'status' => 1));
         $product_information = $this->db->get()->row();
+
+        $assembly_product_information = array();
+        if ($product_information->assembly == 1) {
+            $this->db->select('child_product_id,child_product_price,assembly,pricing,product_name,product_id,supplier_price,price,supplier_id,unit,variants,default_variant,product_model,onsale,onsale_price,unit.unit_short_name');
+            $this->db->from('assembly_products');
+            $this->db->join('product_information', 'assembly_products.parent_product_id = product_information.product_id');
+             $this->db->join('unit', 'unit.unit_id = product_information.unit', 'left');
+            $this->db->where(array('parent_product_id' => $product_id, 'status' => 1));
+            $assembly_product_information = $this->db->get()->result_array();
+        }
 
         $html = $colorhtml = "";
         if (!empty($product_information->variants)) {
@@ -3817,7 +3826,7 @@ class Invoices extends CI_Model {
             $variant_list = $this->db->get()->result();
             $var_types = array_column($variant_list, 'variant_type');
 
-            $html .= '<option value=""></option>';
+            $html .= '';
             foreach ($variant_list as $varitem) {
                 if ($varitem->variant_type == 'size') {
                     $html .= "<option value=" . $varitem->variant_id . ">" . $varitem->variant_name . "</option>";
@@ -3825,7 +3834,7 @@ class Invoices extends CI_Model {
             }
 
             if (in_array('color', $var_types)) {
-                $colorhtml .= "<option value=''></option>";
+                $colorhtml .= "";
                 foreach ($variant_list as $varitem2) {
                     if ($varitem2->variant_type == 'color') {
                         $colorhtml .= "<option value=" . $varitem2->variant_id . ">" . $varitem2->variant_name . "</option>";
@@ -3834,19 +3843,19 @@ class Invoices extends CI_Model {
             }
         }
 
-        $pricinghtml = "";
-        if ($product_information->pricing == 1) {
-            $this->db->select('pricing_types.pri_type_id as pri_type_id,pricing_types.pri_type_name as pri_type_name');
-            $this->db->from('pricing_types_product');
-            $this->db->join('pricing_types', 'pricing_types.pri_type_id = pricing_types_product.pri_type_id');
-            $this->db->where('pricing_types_product.product_id', $product_id);
-            $this->db->order_by('pricing_types.pri_type_name', 'asc');
-            $pricing_list = $this->db->get()->result();
-            $pricinghtml .= '<option value=""></option>';
-            foreach ($pricing_list as $pricitem) {
-                $pricinghtml .= "<option value=" . $pricitem->pri_type_id . ">" . $pricitem->pri_type_name . "</option>";
-            }
-        }
+//        $pricinghtml = "";
+//        if ($product_information->pricing == 1) {
+//            $this->db->select('pricing_types.pri_type_id as pri_type_id,pricing_types.pri_type_name as pri_type_name');
+//            $this->db->from('pricing_types_product');
+//            $this->db->join('pricing_types', 'pricing_types.pri_type_id = pricing_types_product.pri_type_id');
+//            $this->db->where('pricing_types_product.product_id', $product_id);
+//            $this->db->order_by('pricing_types.pri_type_name', 'asc');
+//            $pricing_list = $this->db->get()->result();
+//            $pricinghtml .= '<option value=""></option>';
+//            foreach ($pricing_list as $pricitem) {
+//                $pricinghtml .= "<option value=" . $pricitem->pri_type_id . ">" . $pricitem->pri_type_name . "</option>";
+//            }
+//        }
 
         $this->db->select('tax.*,tax_product_service.product_id,tax_percentage');
         $this->db->from('tax_product_service');
@@ -3901,7 +3910,7 @@ class Invoices extends CI_Model {
             'product_id' => @$product_information->product_id,
             'variant' => @$html,
             'colorhtml' => @$colorhtml,
-            'pricinghtml' => @$pricinghtml,
+            //'pricinghtml' => @$pricinghtml,
             'discount' => @$discount,
             'sgst_tax' => (!empty($tax['sgst_tax']) ? $tax['sgst_tax'] : null),
             'cgst_tax' => (!empty($tax['cgst_tax']) ? $tax['cgst_tax'] : null),
@@ -3910,6 +3919,8 @@ class Invoices extends CI_Model {
             'sgst_id' => (!empty($tax['sgst_id']) ? $tax['sgst_id'] : null),
             'igst_id' => (!empty($tax['igst_id']) ? $tax['igst_id'] : null),
             'unit' => @$product_information->unit_short_name,
+            'assembly' => @$product_information->assembly,
+            'assembly_info' => @$assembly_product_information,
         );
         return $data2;
     }

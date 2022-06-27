@@ -24,7 +24,7 @@ var sgst_id			='sgst_id_'+cName;
 var igst_id			='igst_id_'+cName;
 var variant_id  	='variant_id_'+cName;
 var variant_color   ='variant_color_id_'+cName;
-var pricing   ='pricing_'+cName;
+//var pricing   ='pricing_'+cName;
 var discount  		='discount_'+cName;
 
 $( ".productSelection" ).autocomplete(
@@ -67,11 +67,19 @@ $('#'+igst_id).val(obj.igst_id);
 $('#'+variant_id).html(obj.variant);
 $('#'+variant_id).html(obj.variant);
 $('#'+variant_color).html(obj.colorhtml);
-$('#'+pricing).html(obj.pricinghtml);
+//$('#'+pricing).html(obj.pricinghtml);
 $('#'+discount).val(obj.discount);
 
 //This Function Stay on others.js page
 quantity_calculate(cName);
+stock_by_product_variant_id(cName);
+stock_by_product_variant_color(cName);
+var assembly=obj.assembly;
+var assembly_info=obj.assembly_info;
+if(assembly==1 && assembly_info.length>0 ){
+
+addInputField_assembly('addinvoiceItem',assembly_info);
+}
 
 }
 });
