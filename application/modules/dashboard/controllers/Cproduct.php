@@ -602,13 +602,15 @@ class Cproduct extends MX_Controller {
 
             $price_types = $this->input->post('pricetype[]', TRUE);
             $pricepri = $this->input->post('pricepri[]', TRUE);
-            foreach ($price_types as $key => $value) {
-                if (!empty($price_types[$key]) && !empty($pricepri[$key])) {
-                    $price_types_list[] = array(
-                        'product_id' => $product_id,
-                        'pri_type_id' => $price_types[$key],
-                        'product_price' => $pricepri[$key]
-                    );
+            if (!empty($price_types)) {
+                foreach ($price_types as $key => $value) {
+                    if (!empty($price_types[$key]) && !empty($pricepri[$key])) {
+                        $price_types_list[] = array(
+                            'product_id' => $product_id,
+                            'pri_type_id' => $price_types[$key],
+                            'product_price' => $pricepri[$key]
+                        );
+                    }
                 }
             }
             if (!empty($price_types_list)) {
@@ -632,13 +634,15 @@ class Cproduct extends MX_Controller {
 
             $assembly_products = $this->input->post('assembly_product_id[]', TRUE);
             $assembly_products_price = $this->input->post('product_rate[]', TRUE);
-            foreach ($assembly_products as $key => $value) {
-                if (!empty($assembly_products[$key])) {
-                    $assembly_products_list[] = array(
-                        'parent_product_id' => $product_id,
-                        'child_product_id' => $assembly_products[$key],
-                        'child_product_price' => $assembly_products_price[$key],
-                    );
+            if (!empty($assembly_products)) {
+                foreach ($assembly_products as $key => $value) {
+                    if (!empty($assembly_products[$key])) {
+                        $assembly_products_list[] = array(
+                            'parent_product_id' => $product_id,
+                            'child_product_id' => $assembly_products[$key],
+                            'child_product_price' => $assembly_products_price[$key],
+                        );
+                    }
                 }
             }
             if (!empty($assembly_products_list)) {
@@ -1377,12 +1381,12 @@ class Cproduct extends MX_Controller {
                 $table .= '</tbody>
 	    </table></div></div>';
                 echo $table;
-            }else{
-                $table=' <div class="alert alert-warning" role="alert">
+            } else {
+                $table = ' <div class="alert alert-warning" role="alert">
                <p style="text-align: center;color: black;">This is not an assembly product</p>
                 <!-- Alert Message -->
             </div>';
-                 echo $table;
+                echo $table;
             }
         }
     }
