@@ -256,8 +256,8 @@ class Cinstallment extends MX_Controller
                                     //Delete old customer ledger data
                                     $this->db->where('invoice_no', $invoice_id);
                                     $result = $this->db->delete('customer_ledger');
-                                    //Insert customer ledger data where amount > 0
-                                    if ($this->input->post('paid_amount', TRUE) > 0) {
+                                    //Insert customer ledger data where payment_amount > 0
+                                    if ($payment_amount[$index] > 0) {
                                         //Insert to customer_ledger Table
                                         $data1 = array(
                                             'transaction_id' => $this->auth->generator(15),
