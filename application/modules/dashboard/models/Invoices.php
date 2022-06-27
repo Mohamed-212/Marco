@@ -472,7 +472,8 @@ class Invoices extends CI_Model {
                         'IsPosted' => 1,
                         'CreateBy' => $receive_by,
                         'CreateDate' => $createdate,
-                        'IsAppove' => 0
+                        //'IsAppove' => 0
+                        'IsAppove' => 1
                     );
                     $this->db->insert('acc_transaction', $bank_debit);
                 } else {
@@ -489,7 +490,8 @@ class Invoices extends CI_Model {
                         'IsPosted' => 1,
                         'CreateBy' => $receive_by,
                         'CreateDate' => $createdate,
-                        'IsAppove' => 0
+                        //'IsAppove' => 0
+                        'IsAppove' => 1
                     );
                     $this->db->insert('acc_transaction', $customer_debit);
                 }
@@ -507,7 +509,8 @@ class Invoices extends CI_Model {
                     'IsPosted' => 1,
                     'CreateBy' => $receive_by,
                     'CreateDate' => $createdate,
-                    'IsAppove' => 0
+                    //'IsAppove' => 0
+                    'IsAppove' => 1
                 );
                 //3rd Showroom Sales credit
                 $showroom_sales_credit = array(
@@ -522,7 +525,8 @@ class Invoices extends CI_Model {
                     'IsPosted' => 1,
                     'CreateBy' => $receive_by,
                     'CreateDate' => $createdate,
-                    'IsAppove' => 0
+                    //'IsAppove' => 0
+                    'IsAppove' => 1
                 );
                 //4th VAT on Sales
                 $vat_credit = array(
@@ -537,7 +541,8 @@ class Invoices extends CI_Model {
                     'IsPosted' => 1,
                     'CreateBy' => $receive_by,
                     'CreateDate' => $createdate,
-                    'IsAppove' => 0
+                    //'IsAppove' => 0
+                    'IsAppove' => 1
                 );
 
                 //5th cost of goods sold debit
@@ -553,7 +558,8 @@ class Invoices extends CI_Model {
                     'IsPosted' => 1,
                     'CreateBy' => $receive_by,
                     'CreateDate' => $createdate,
-                    'IsAppove' => 0
+                    //'IsAppove' => 0
+                    'IsAppove' => 1
                 );
                 //6th cost of goods sold Main warehouse Credit
                 $cogs_main_warehouse_credit = array(
@@ -568,7 +574,8 @@ class Invoices extends CI_Model {
                     'IsPosted' => 1,
                     'CreateBy' => $receive_by,
                     'CreateDate' => $createdate,
-                    'IsAppove' => 0
+                    //'IsAppove' => 0
+                    'IsAppove' => 1
                 );
                 //7th paid_amount Credit
                 if ($this->input->post('paid_amount', TRUE) > 0) {
@@ -585,7 +592,8 @@ class Invoices extends CI_Model {
                         'IsPosted' => 1,
                         'CreateBy' => $receive_by,
                         'CreateDate' => $createdate,
-                        'IsAppove' => 0
+                        //'IsAppove' => 0
+                        'IsAppove' => 1
                     );
 
                     $this->db->insert('acc_transaction', $customer_credit);
@@ -3031,7 +3039,8 @@ class Invoices extends CI_Model {
                 $this->session->set_userdata(array('error_message' => display('no_active_fiscal_year_found')));
                 redirect(base_url('Admin_dashboard'));
             }
-        } else {
+        }
+        else {
             //Invoice and customer info
             $invoice_id = $this->input->post('invoice_id', TRUE);
             $customer_id = $this->input->post('customer_id', TRUE);
@@ -4106,7 +4115,8 @@ class Invoices extends CI_Model {
         if (empty($store_id)) {
             return $this->db->select('HeadCode,HeadName')->from('acc_coa')->where_in('PHeadCode', array('111', '1121', '1122', '1123'))->get()->result();
         } else {
-            $cash_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('store_id', $store_id)->where('PHeadCode', '111')->get()->result();
+            //$cash_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('store_id', $store_id)->where('PHeadCode', '111')->get()->result();
+            $cash_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('PHeadCode', '111')->get()->result();
             //$bank_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where_in('PHeadCode', array('1121', '1122', '1123'))->get()->result();
             $bank_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where_in('PHeadCode', array('112'))->get()->result();
             return array_merge($bank_head, $cash_head);

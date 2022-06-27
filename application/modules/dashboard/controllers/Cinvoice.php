@@ -159,21 +159,23 @@ class Cinvoice extends MX_Controller
             $this->session->set_userdata(array('error_message' => display('choose_installment_if_invoice_not_full_paid')));
             $this->index();
         }
-        $this->load->library('form_validation');
-        $this->form_validation->set_rules('product_id[]', display('product_id'), 'required');
-        $this->form_validation->set_rules('variant_id[]', display('variant'), 'required');
-        $this->form_validation->set_rules('batch_no[]', display('batch_no'), 'required');
-        $this->form_validation->set_rules('employee_id', display('employee_id'), 'required');
-        if ($this->form_validation->run() == false) {
-            $this->session->set_userdata(array('error_message' => display('failed_try_again')));
-            $this->index();
-        } else {
-            $invoice_id = $this->Invoices->invoice_entry();
-            $this->session->set_userdata(array('message' => display('successfully_added')));
-            if ($this->input->post('pos', TRUE) === 'pos') {
-                redirect('dashboard/Cinvoice/pos_invoice_inserted_data_redirect/' . $invoice_id . '?place=pos');
+        else{
+            $this->load->library('form_validation');
+            $this->form_validation->set_rules('product_id[]', display('product_id'), 'required');
+            $this->form_validation->set_rules('variant_id[]', display('variant'), 'required');
+            $this->form_validation->set_rules('batch_no[]', display('batch_no'), 'required');
+            $this->form_validation->set_rules('employee_id', display('employee_id'), 'required');
+            if ($this->form_validation->run() == false) {
+                $this->session->set_userdata(array('error_message' => display('failed_try_again')));
+                $this->index();
             } else {
-                redirect('dashboard/Cinvoice/invoice_inserted_data/' . $invoice_id);
+                $invoice_id = $this->Invoices->invoice_entry();
+                $this->session->set_userdata(array('message' => display('successfully_added')));
+                if ($this->input->post('pos', TRUE) === 'pos') {
+                    redirect('dashboard/Cinvoice/pos_invoice_inserted_data_redirect/' . $invoice_id . '?place=pos');
+                } else {
+                    redirect('dashboard/Cinvoice/invoice_inserted_data/' . $invoice_id);
+                }
             }
         }
     }
