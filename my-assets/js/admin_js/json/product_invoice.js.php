@@ -71,15 +71,10 @@ $('#'+variant_color).html(obj.colorhtml);
 $('#'+discount).val(obj.discount);
 
 //This Function Stay on others.js page
-quantity_calculate(cName);
+
 stock_by_product_variant_id(cName);
 stock_by_product_variant_color(cName);
-var assembly=obj.assembly;
-var assembly_info=obj.assembly_info;
-if(assembly==1 && assembly_info.length>0 ){
-
-addInputField_assembly('addinvoiceItem',assembly_info);
-}
+quantity_calculate(cName);
 
 }
 });

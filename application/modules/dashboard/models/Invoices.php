@@ -3814,15 +3814,7 @@ class Invoices extends CI_Model {
         $this->db->where(array('product_id' => $product_id, 'status' => 1));
         $product_information = $this->db->get()->row();
 
-        $assembly_product_information = array();
-        if ($product_information->assembly == 1) {
-            $this->db->select('child_product_id,child_product_price,assembly,pricing,product_name,product_id,supplier_price,price,supplier_id,unit,variants,default_variant,product_model,onsale,onsale_price,unit.unit_short_name');
-            $this->db->from('assembly_products');
-            $this->db->join('product_information', 'assembly_products.parent_product_id = product_information.product_id');
-             $this->db->join('unit', 'unit.unit_id = product_information.unit', 'left');
-            $this->db->where(array('parent_product_id' => $product_id, 'status' => 1));
-            $assembly_product_information = $this->db->get()->result_array();
-        }
+       
 
         $html = $colorhtml = "";
         if (!empty($product_information->variants)) {
@@ -3929,7 +3921,6 @@ class Invoices extends CI_Model {
             'igst_id' => (!empty($tax['igst_id']) ? $tax['igst_id'] : null),
             'unit' => @$product_information->unit_short_name,
             'assembly' => @$product_information->assembly,
-            'assembly_info' => @$assembly_product_information,
         );
         return $data2;
     }
