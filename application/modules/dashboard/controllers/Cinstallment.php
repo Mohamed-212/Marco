@@ -211,7 +211,7 @@ class Cinstallment extends MX_Controller
                 $installment_details = $this->db->get()->result_array();
 
                 foreach ($installment_details as $index => $installment) {
-                    if ($installment['status'] == 1) {
+                    if ($installment['status'] != 2) {
                         if ($payment_amount[$index] && $payment_date[$index]
                             && $payment_type[$index] && $account[$index]
                             && $employee_id[$index]) {
@@ -227,12 +227,13 @@ class Cinstallment extends MX_Controller
                                     'status' => $status[$index],
                                     'payment_type' => $payment_type[$index],
                                     'account' => $account[$index],
-                                    'check_no' => $check_no[$index],
-                                    'expiry_date' => $expiry_date[$index],
+                                    'check_no' => ($check_no[$index])? $check_no[$index] : null,
+                                    'expiry_date' => ($expiry_date[$index])? $expiry_date[$index] : null,
                                     'employee_id' => $employee_id[$index]
                                 );
                                 $this->db->update('invoice_installment', $update_installment);
 
+                                // if status complete
                                 if($status[$index] == 2){
 
                                     //create new installment if payed amount is less than amount
@@ -322,9 +323,6 @@ class Cinstallment extends MX_Controller
                                     $this->db->insert('acc_transaction', $customer_credit);
                                 }
                             }
-                        } else {
-                            $this->session->set_userdata(array('error_message' => display('you_must_complete_the_information')));
-                            redirect('dashboard/cinstallment/manage_installment');
                         }
                     }
                 }

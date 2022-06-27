@@ -62,7 +62,7 @@
                                     <div class="col-sm-8">
                                         <input type="text" value="<?php echo html_escape($invoice['invoice']); ?>"
                                                class="form-control customerSelection" disabled>
-                                        <input type="hidden" value="<?php echo html_escape($invoice['invoice']); ?>"
+                                        <input type="hidden" value="<?php echo html_escape($invoice['invoice_id']); ?>"
                                                name="invoice_id">
                                     </div>
                                 </div>
@@ -114,12 +114,12 @@
                                             </td>
                                             <td class="text-center">
                                                 <input type="number" name="payment_amount[]"
-                                                       class="form-control" value="" placeholder="0.00"
-                                                       max="<?php echo html_escape($value['payment_amount']) ?>" <?php echo html_escape($readonly) ?>>
+                                                       class="form-control" value="<?php echo html_escape($value['payment_amount']) ?>" placeholder="0.00"
+                                                       max="<?php echo html_escape($value['amount']) ?>" <?php echo html_escape($readonly) ?>>
                                             </td>
                                             <td class="text-center">
-                                                <input type="text" class="form-control datepicker" name="payment_date[]"
-                                                       value="<?php if($value['status']){ echo html_escape($value['due_date']);}else{ echo set_value('date', date("Y-m-d"));} ?>" <?php echo html_escape($readonly) ?>>
+                                                <input type="text" class="form-control datepicker" name="payment_date[]" readonly
+                                                       value="<?php if($value['status']){ echo html_escape($value['payment_date']);}else{ echo set_value('date', date("Y-m-d"));} ?>" >
                                             </td>
                                             <td class="text-center">
                                                 <div style="display: flex;flex-direction: column">
@@ -146,21 +146,14 @@
                                                         }
                                                         ?>
                                                     </select>
-                                                    <?php if ($value['status']) { ?>
-                                                        <input class="form-control text-center"
-                                                               style="margin-top: 10px;" type="text" name="check_no[]"
-                                                               placeholder="<?php echo display('check_no') ?>"
-                                                               value="<?php echo html_escape($value['check_no']) ?>">
-                                                        <input type="text" class="form-control datepicker expiry_date" name="expiry_date[]"
-                                                               value="<?php echo html_escape($value['expiry_date']) ?>">
-                                                    <?php }else{ ?>
-                                                        <input class="form-control text-center check_no"
-                                                               style="margin-top: 10px; display: none;" type="text" name="check_no[]"
-                                                               placeholder="<?php echo display('check_no') ?>">
-                                                        <input type="text" class="form-control datepicker expiry_date" name="expiry_date[]"
-                                                               style="margin-top: 10px; display: none;"
-                                                               placeholder="<?php echo display('expiry_date') ?>">
-                                                    <?php } ?>
+
+                                                    <input class="form-control text-center"
+                                                           style="margin-top: 10px;display: none;" type="text" name="check_no[]"
+                                                           placeholder="<?php echo display('check_no') ?>"
+                                                           value="<?php echo html_escape($value['check_no']) ?>">
+                                                    <input type="text" style="margin-top: 10px;display: none;"
+                                                           class="form-control datepicker expiry_date" name="expiry_date[]"
+                                                           value="<?php echo html_escape($value['expiry_date']) ?>">
                                                 </div>
                                             </td>
                                             <td class="text-center">
