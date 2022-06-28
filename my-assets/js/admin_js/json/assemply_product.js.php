@@ -25,7 +25,9 @@ var id=ui.item.value;
 var dataString = 'csrf_test_name='+csrf_test_name+'&product_id='+ id;
 var base_url = $('.baseUrl').val();
 var priceClass = 'price_item'+cName;
+var priceClass2 = 'product_price'+cName;
 var supplier_price = Number( $('#supplier_price').val());
+var sell_price = Number( $('#sell_price').val());
 $.ajax
 ({
 type: "POST",
@@ -40,6 +42,9 @@ $('.'+priceClass).val(obj.supplier_price);
 supplier_price+=Number(obj.supplier_price);
 $('#supplier_price').val(supplier_price);
 
+$('.'+priceClass2).val(obj.price);
+sell_price+=Number(obj.price);
+$('#sell_price').val(sell_price);
 }
 });
 

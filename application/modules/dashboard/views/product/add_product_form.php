@@ -156,10 +156,10 @@
                             </div>
                         </div>
                     </div>
-                    <button class="btn btn-success md-trigger m-b-5 m-r-2" data-modal="modal-1">
+<!--                    <button class="btn btn-success md-trigger m-b-5 m-r-2" data-modal="modal-1">
                         <i class="ti-plus"></i><span> <?php echo display('add_supplier') ?></span></button>
                     <button class="btn btn-info color4 color5 md-trigger m-b-5 m-r-2" data-modal="modal-2"><i
-                            class="ti-plus"></i> <?php echo display('add_category') ?></button>
+                            class="ti-plus"></i> <?php echo display('add_category') ?></button>-->
                         <?php if ($this->permission->check_label('manage_product')->read()->access()) { ?>
                         <a href="<?php echo base_url('dashboard/Cproduct/manage_product') ?>"
                            class="btn btn-primary m-b-5 m-r-2"><i class="ti-align-justify"></i>
@@ -168,9 +168,9 @@
                     }
                     if ($this->permission->check_label('import_product_csv')->create()->access()) {
                         ?>
-                        <a href="<?php echo base_url('dashboard/Cproduct/add_product_csv') ?>"
+<!--                        <a href="<?php echo base_url('dashboard/Cproduct/add_product_csv') ?>"
                            class="btn btn-success m-b-5 m-r-2"><i class="ti-align-justify"></i>
-                            <?php echo display('import_product_csv') ?></a>
+                            <?php echo display('import_product_csv') ?></a>-->
                         <?php
                     }
                     if ($this->permission->check_label('manage_product')->read()->access()) {
@@ -265,7 +265,7 @@
                                                        class="col-sm-3 col-form-label"><?php echo display('item_code') ?> <span
                                                         class="color-red">*</span></label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" tabindex="5" class="form-control" name="model"
+                                                    <input type="text" class="form-control" name="model"
                                                            placeholder="<?php echo display('item_code') ?>"
                                                            value="<?php echo set_value('model') ?>" required id="model" />
                                                 </div>
@@ -282,10 +282,10 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-6">
+                                         <div class="col-sm-6">
                                             <div class="form-group row">
                                                 <label for="variant"
-                                                       class="col-sm-3 col-form-label"><?php echo display('color') ?> <span
+                                                       class="col-sm-3 col-form-label"><?php echo display('size') ?> <span
                                                         class="color-red">*</span></label>
                                                 <div class="col-sm-9 custom_select">
                                                     <select name="variant[]" class="form-control select2"  required=""
@@ -294,7 +294,7 @@
                                                         <?php
                                                         if ($variant_list) {
                                                             foreach ($variant_list as $variant) {
-                                                                if ($variant['variant_type'] == 'color') {
+                                                                if ($variant['variant_type'] == 'size') {
                                                                     ?>
                                                                     <option value="<?php echo html_escape($variant['variant_id']) ?>">
                                                                         <?php echo html_escape($variant['variant_name']); ?></option>
@@ -317,10 +317,107 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        
+                                          <div class="col-sm-6">
+                                            <div class="form-group row">
+                                                <label for="category_id"
+                                                       class="col-sm-3 col-form-label"><?php echo display('category') ?>
+                                                    <span class="color-red">*</span></label>
+                                                <div class="col-sm-9">
+                                                    <select class="form-control select2 width_100p find_filter"
+                                                            id="category_id" name="category_id" required="">
+                                                        <option value=""><?php echo display('select_one') ?></option>
+                                                        <?php
+                                                        if ($category_list) {
+                                                            foreach ($category_list as $category) {
+                                                                ?>
+                                                                <option
+                                                                    value="<?php echo html_escape($category['category_id']) ?>">
+                                                                        <?php echo html_escape($category['category_name']); ?>
+                                                                </option>
+                                                                <?php
+                                                            }
+                                                        }
+                                                        ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                     
+                                       
+                                    </div>
+                                      <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="row" id="filter_type_main_row">
+                                                <div class="col-sm-6">
+                                                    <div class="form-group row">
+                                                        <label for="filter_type"
+                                                               class="col-sm-3 col-form-label"><?php echo display('filter_type') ?></label>
+                                                        <div class="col-sm-9">
+                                                            <select
+                                                                class="form-control filter-control width_100p filter_type"
+                                                                name="filter_type[]">
+                                                                <option value=""><?php echo display('select_one') ?>
+                                                                </option>
+                                                                <?php foreach ($filter_types as $filter_type) { ?>
+                                                                    <option
+                                                                        value="<?php echo $filter_type['fil_type_id']; ?>">
+                                                                            <?php echo html_escape($filter_type['fil_type_name']); ?>
+                                                                    </option>
+                                                                <?php } ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="form-group row">
+                                                        <label for="filter_name"
+                                                               class="col-sm-3 col-form-label"><?php echo display('filter_names') ?></label>
+                                                        <div class="col-sm-9">
+                                                            <div class="input-group">
+                                                                <select
+                                                                    class="form-control filter-control width_100p filter_name"
+                                                                    name="filter_name[]">
+                                                                    <option value=""><?php echo display('select_one') ?>
+                                                                    </option>
+                                                                </select>
+                                                                <div class="input-group-addon btn btn-success"
+                                                                     id="add_filter_row">
+                                                                    <i class="ti-plus"></i>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row filter_type_row">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                      
+
                                         <div class="col-sm-6">
                                             <div class="form-group row">
+                                                <label for="brand"
+                                                       class="col-sm-3 col-form-label"><?php echo display('brand') ?></label>
+                                                <div class="col-sm-9">
+                                                    <select class="form-control select2 width_100p" id="brand"
+                                                            name="brand">
+                                                        <option value=""><?php echo display('select_one') ?></option>
+                                                        <?php foreach ($brand_list as $brand) { ?>
+                                                            <option value="<?php echo html_escape($brand['brand_id']); ?>">
+                                                                <?php echo html_escape($brand['brand_name']); ?></option>
+                                                        <?php } ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                           <div class="col-sm-6">
+                                            <div class="form-group row">
                                                 <label for="variant_colors"
-                                                       class="col-sm-3 col-form-label"><?php echo display('size') ?></label>
+                                                       class="col-sm-3 col-form-label"><?php echo display('color') ?></label>
                                                 <div class="col-sm-9 custom_select">
                                                     <select name="variant_colors[]" class="form-control select2" 
                                                             id="variant_colors">
@@ -328,7 +425,7 @@
                                                         <?php
                                                         if ($variant_list) {
                                                             foreach ($variant_list as $variant) {
-                                                                if ($variant['variant_type'] == 'size') {
+                                                                if ($variant['variant_type'] == 'color') {
                                                                     ?>
                                                                     <option value="<?php echo html_escape($variant['variant_id']) ?>">
                                                                         <?php echo html_escape($variant['variant_name']); ?></option>
@@ -402,59 +499,14 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-6">
-                                            <div class="form-group row">
-                                                <label for="category_id"
-                                                       class="col-sm-3 col-form-label"><?php echo display('category') ?>
-                                                    <span class="color-red">*</span></label>
-                                                <div class="col-sm-9">
-                                                    <select class="form-control select2 width_100p find_filter"
-                                                            id="category_id" name="category_id" required="">
-                                                        <option value=""><?php echo display('select_one') ?></option>
-                                                        <?php
-                                                        if ($category_list) {
-                                                            foreach ($category_list as $category) {
-                                                                ?>
-                                                                <option
-                                                                    value="<?php echo html_escape($category['category_id']) ?>">
-                                                                        <?php echo html_escape($category['category_name']); ?>
-                                                                </option>
-                                                                <?php
-                                                            }
-                                                        }
-                                                        ?>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-sm-6">
-                                            <div class="form-group row">
-                                                <label for="brand"
-                                                       class="col-sm-3 col-form-label"><?php echo display('brand') ?></label>
-                                                <div class="col-sm-9">
-                                                    <select class="form-control select2 width_100p" id="brand"
-                                                            name="brand">
-                                                        <option value=""><?php echo display('select_one') ?></option>
-                                                        <?php foreach ($brand_list as $brand) { ?>
-                                                            <option value="<?php echo html_escape($brand['brand_id']); ?>">
-                                                                <?php echo html_escape($brand['brand_name']); ?></option>
-                                                        <?php } ?>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
                                         <div class="col-sm-12">
                                             <div class="row">
                                                 <div class="col-sm-6">
                                                     <div class="form-group row">
                                                         <label for="supplier"
-                                                               class="col-sm-3 col-form-label"><?php echo display('supplier') ?> <span
-                                                                class="color-red">*</span></label>
+                                                               class="col-sm-3 col-form-label"><?php echo display('supplier') ?> </label>
                                                         <div class="col-sm-9 custom_select">
-                                                            <select name="supplier_id" class="form-control select2" required=""
+                                                            <select name="supplier_id" class="form-control select2" 
                                                                     id="supplier">
                                                                 <option value=""><?php echo display('select_supplier') ?></option>
                                                                 <?php if ($supplier) { ?>
@@ -481,54 +533,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <div class="row" id="filter_type_main_row">
-                                                <div class="col-sm-6">
-                                                    <div class="form-group row">
-                                                        <label for="filter_type"
-                                                               class="col-sm-3 col-form-label"><?php echo display('filter_type') ?></label>
-                                                        <div class="col-sm-9">
-                                                            <select
-                                                                class="form-control filter-control width_100p filter_type"
-                                                                name="filter_type[]">
-                                                                <option value=""><?php echo display('select_one') ?>
-                                                                </option>
-                                                                <?php foreach ($filter_types as $filter_type) { ?>
-                                                                    <option
-                                                                        value="<?php echo $filter_type['fil_type_id']; ?>">
-                                                                            <?php echo html_escape($filter_type['fil_type_name']); ?>
-                                                                    </option>
-                                                                <?php } ?>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <div class="form-group row">
-                                                        <label for="filter_name"
-                                                               class="col-sm-3 col-form-label"><?php echo display('filter_names') ?></label>
-                                                        <div class="col-sm-9">
-                                                            <div class="input-group">
-                                                                <select
-                                                                    class="form-control filter-control width_100p filter_name"
-                                                                    name="filter_name[]">
-                                                                    <option value=""><?php echo display('select_one') ?>
-                                                                    </option>
-                                                                </select>
-                                                                <div class="input-group-addon btn btn-success"
-                                                                     id="add_filter_row">
-                                                                    <i class="ti-plus"></i>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row filter_type_row">
-                                            </div>
-                                        </div>
-                                    </div>
+                                  
 
 
                                 </div>
@@ -543,9 +548,11 @@
                                                         <div class="btn btn-success" id="addassemblyprorow">
                                                             Add <i class="ti-plus"></i>
                                                         </div>
-                                                        Product Name
+                                                        <?php echo display('product_name') ?>
                                                     </th>
-                                                    <th class="col-sm-6 text-center">Supplier Price</th>
+                                                    <th class="col-sm-3 text-center"><?php echo display('supplier_price') ?></th>
+                                                    <th class="col-sm-3 text-center"><?php echo display('sell_price') ?></th>
+                                                    
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -571,11 +578,19 @@
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                        <td class="col-sm-6">
+                                                        <td class="col-sm-3">
                                                             <div class="col-sm-12">
                                                                 <div class="form-group row">
                                                                     <input type="text" name="product_rate[<?php echo $x; ?>]"  id="price_item_<?php echo $x; ?>"
                                                                            class="price_item<?php echo $x; ?> form-control"  min="0" readonly="" />
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td class="col-sm-3">
+                                                            <div class="col-sm-12">
+                                                                <div class="form-group row">
+                                                                    <input type="text" name="product_price[<?php echo $x; ?>]"  id="product_price_<?php echo $x; ?>"
+                                                                           class="product_price<?php echo $x; ?> form-control"  min="0" readonly="" />
                                                                 </div>
                                                             </div>
                                                         </td>

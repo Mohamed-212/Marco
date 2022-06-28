@@ -208,6 +208,7 @@ class Products extends CI_Model {
         $this->db->from('product_information');
         $this->db->where('status', 1);
         $this->db->where('product_model', $data['product_model']);
+        $this->db->where('product_name', $data['product_name']);
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
             return FALSE;

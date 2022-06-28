@@ -326,10 +326,15 @@ $(document).ready(function () {
                     '<input type="hidden" class="autocomplete_hidden_value assembly_product_id_' + count + '" value=""  name="assembly_product_id[' + count + ']"  />' +
                     '<div class="input-group-addon btn btn-danger remove_assembly_row" onclick="removeassemblyrow(' + count + ')"><i class="ti-minus"></i></div></div></div>' +
                     '</td>' +
-                    '<td class="col-sm-6">' +
+                    '<td class="col-sm-3">' +
                     '<div class="col-sm-12">' +
                     '<div class="form-group row">' +
                     '<input type="text" class="price_item' + count + ' form-control" id="price_item_' + count + '" value=""  name="product_rate[' + count + ']" min="0" readonly=""  />' +
+                    '</div></div></td>' +
+                    '<td class="col-sm-3">' +
+                    '<div class="col-sm-12">' +
+                    '<div class="form-group row">' +
+                    '<input type="text" class="product_price' + count + ' form-control" id="product_price_' + count + '" value=""  name="product_price[' + count + ']" min="0" readonly=""  />' +
                     '</div></div></td>' +
                     '</tr>';
             if (tableLength > 0) {
@@ -500,7 +505,12 @@ function removeassemblyrow(row = null) {
     if (row) {
         var price = Number($('#price_item_' + row).val());
         var supplier_price = Number($('#supplier_price').val());
-        $('#supplier_price').val(supplier_price - price)
+        $('#supplier_price').val(supplier_price - price);
+
+        var price2 = Number($('#product_price_' + row).val());
+        var sell_price = Number($('#sell_price').val());
+        $('#sell_price').val(sell_price - price2);
+        
         $("#pro" + row).remove();
     } else {
         alert('error! Refresh the page again');
