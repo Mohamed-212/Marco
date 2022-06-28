@@ -1340,7 +1340,7 @@ class Cproduct extends MX_Controller {
                          </thead>
                         <tbody>';
                 $x = 1;
-                
+
                 if (isset($assembly_products_data) && !empty($assembly_products_data)) {
                     foreach ($assembly_products_data as $key => $value) {
                         $table .= '<tr id="pro' . $x . '" class="' . $x . '">'
@@ -1348,7 +1348,7 @@ class Cproduct extends MX_Controller {
                                 . '<div class="col-sm-12">'
                                 . '<div class="form-group row">'
                                 . '<div class="input-group">'
-                                . '<input type="text" class="form-control assemblyproductSelection"  value="' . $value['product_name'] . '-('. $value['product_model'] .')" onkeyup="assembly_productList(' . $x . ');"  value="" id="assemblypro' . $x . '" name="assemblypro' . $x . '" placeholder="' . display('product_name') . '" />'
+                                . '<input type="text" class="form-control assemblyproductSelection"  value="' . $value['product_name'] . '-(' . $value['product_model'] . ')" onkeyup="assembly_productList(' . $x . ');"  value="" id="assemblypro' . $x . '" name="assemblypro' . $x . '" placeholder="' . display('product_name') . '" />'
                                 . '<input type="hidden" class="autocomplete_hidden_value assembly_product_id_' . $x . '" value="' . $value['child_product_id'] . '" name="assembly_product_id[' . $x . ']" />';
                         $table .= '<div class="input-group-addon btn btn-danger remove_filter_row" onclick="removeassemblyprorow(' . $x . ')">
                               <i class="ti-minus"></i>
@@ -1776,6 +1776,55 @@ class Cproduct extends MX_Controller {
             $this->session->set_userdata(array('message' => display('successfully_added')));
             redirect('dashboard/Cproduct/manage_product');
         }
+    }
+
+    public function viewpro() {
+        $product_id = $this->input->post('proid');
+        $viewdata = $this->cfiltration_model->get_assembly_products($product_id);
+        $tabledata = '';
+        $tabledata .= '
+ <table  class="table table-striped table-bordered text-inputs-table">
+                        <thead>
+                            <tr>
+                             <th class="col-sm-6 text-center">' . display('product_name') . '  </th>
+                             <th class="col-sm-3 text-center">' . display('supplier_price') . ' </th>
+                             <th class="col-sm-3 text-center"> ' . display('sell_price') . ' </th>
+                            </tr>
+                        </thead>
+                        <tbody >';
+
+        if (isset($viewdata) && !empty($viewdata)) {
+            foreach ($viewdata as $key => $value) {
+                $tabledata .= '
+                        <tr>
+                        <td class="col-sm-6">
+                        <div class="col-sm-12">
+                        <div class="form-group row">
+                        <div class="input-group">
+                        <input type="text" name="" value="' . $value['product_name'] . '-(' . $value['product_model'] . ')" id="" class="form-control"  min="0" readonly="" />
+                        </div>
+                        </div>
+                        </div>
+                        </td>
+                        <td class="col-sm-3">
+                        <div class="col-sm-12">
+                        <div class="form-group row">
+                        <input type="text" name="" value="' . $value['supplier_price'] . '" id="" class="form-control"  min="0" readonly="" />
+                        </div>
+                        </div>
+                        </td>
+                        <td class="col-sm-3">
+                        <div class="col-sm-12">
+                        <div class="form-group row">
+                        <input type="text" name="" value="' . $value['price'] . '" id="" class="form-control"  min="0" readonly="" />
+                        </div>
+                        </div>
+                        </td>         
+                        </tr>';
+            }
+        }
+        $tabledata .= '</tbody> </table>';
+        echo json_encode($tabledata);
     }
 
 }

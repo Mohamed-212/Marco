@@ -51,6 +51,7 @@ class Products extends CI_Model {
 			supplier_information.supplier_name,
 			product_information.product_id,
             product_information.product_name,
+             product_information.assembly,
             product_information.product_model,
             product_information.unit,
             product_information.price,
