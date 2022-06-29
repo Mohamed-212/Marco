@@ -58,6 +58,7 @@ class Purchases extends CI_Model {
         }
         return false;
     }
+    
 
     // Get default currency info
     public function get_def_currency() {

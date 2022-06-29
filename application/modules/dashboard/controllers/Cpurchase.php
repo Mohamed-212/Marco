@@ -692,6 +692,7 @@ class Cpurchase extends MX_Controller {
                 }
             }
             $all_supplier = $this->Suppliers->supplier_list();
+            $all_currency = $this->Purchases->select_all_currency();
             $store_list = $this->Stores->store_list();
             $batch_no = $this->generator(7);
             $bank_list = $this->db->select('bank_id,bank_name')->from('bank_list')->get()->result();
@@ -716,6 +717,7 @@ class Cpurchase extends MX_Controller {
                 'batch_no' => $batch_no,
                 'purchase_info' => $purchase_detail,
                 'all_supplier' => $all_supplier,
+                'all_currency' => $all_currency,
                 'store_list' => $store_list,
                 'param2' => $param2,
                 'bank_list' => $bank_list
