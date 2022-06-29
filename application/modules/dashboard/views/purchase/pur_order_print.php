@@ -111,7 +111,7 @@
                                         <tr>
                                             <th><?php echo display('sl') ?></th>
                                             <th><?php echo display('product_name') ?></th>
-                                            <th><?php echo display('variant') ?></th>
+                                            <th><?php echo display('size') ?></th>
                                             <th><?php echo display('quantity') ?></th>
                                             <th><?php echo display('rate') ?></th>
                                             <th><?php echo display('ammount') ?></th>
@@ -182,7 +182,7 @@
                                                 <?php echo (($position == 0) ? $currency . " " . $total_discount : $total_discount . " " . $currency) ?>
                                             </td>
                                         </tr>
-                                        <tr>
+<!--                                        <tr>
                                             <td colspan="4">
                                                 <strong><?php echo htmlspecialchars_decode($purchase_details) ?></strong>
                                             </td>
@@ -191,7 +191,7 @@
                                             <td class="grand_total">
                                                 <?php echo (($position == 0) ? $currency . " " . $total_vat : $total_vat . " " . $currency) ?>
                                             </td>
-                                        </tr>
+                                        </tr>-->
                                         <tr>
                                             <td colspan="4">
                                                 <strong><?php echo htmlspecialchars_decode($purchase_details) ?></strong>

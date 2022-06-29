@@ -134,7 +134,7 @@ function addPurchaseOrderField(divName) {
                 count +
                 ']" id="size' +
                 count +
-                '" value=""></td><td class="text-center"><div><select name="color_variant[' +
+                '" value=""></td><td class="text-center"><div hidden=""><select name="color_variant[' +
                 count +
                 ']" id="color_variant_' +
                 count +
@@ -174,7 +174,7 @@ function addPurchaseOrderField(divName) {
                 count +
                 ')" onchange="calculate_add_purchase(' +
                 count +
-                ')" readonly/></td><td><input type="number" name="discount2[' +
+                ')" readonly/></td><td hidden=""><input type="number" name="discount2[' +
                 count +
                 ']" onkeyup="calculate_add_purchase(' +
                 count +
@@ -190,7 +190,7 @@ function addPurchaseOrderField(divName) {
                 count +
                 ');" id="discount_' +
                 count +
-                '"class="form-control text-right" placeholder="0.00" min="0" readonly/></td><td><input type="number" name="vat_rate2[' +
+                '"class="form-control text-right" placeholder="0.00" min="0" readonly/></td><td hidden=""><input type="number" name="vat_rate2[' +
                 count +
                 ']" onkeyup="calculate_add_purchase(' +
                 count +
@@ -206,7 +206,7 @@ function addPurchaseOrderField(divName) {
                 count +
                 ');" id="item_vat_rate_' +
                 count +
-                '"class="form-control text-right" placeholder="0.00" min="0" readonly/></td><td><input type="number" name="vat2[' +
+                '"class="form-control text-right" placeholder="0.00" min="0" readonly/></td><td hidden=""><input type="number" name="vat2[' +
                 count +
                 ']" id="item_vat2_' +
                 count +
@@ -251,6 +251,19 @@ function calculate_total() {
      $("#total_dis").val(total_dis.toFixed(2));
     var sub_total = Number($("#subTotal").val());
     var total_vat = Number($("#total_vat").val());
+    $("#grandTotal").val((sub_total + total_vat - total_dis).toFixed(2, 2));
+
+}
+function calculate_total_receive() {
+   // var conversion_rate = $("#conversion").val();
+    var total_dis = Number($("#total_dis").val());
+  //  var sub_total2 = Number($("#subTotal2").val());
+    var total_vat = Number($("#total_vat").val());
+   // $("#grandTotal2").val((sub_total2 + total_vat2 - total_dis2).toFixed(2, 2));
+  //  var total_dis = Number(total_dis2 * conversion_rate);
+    // $("#total_dis").val(total_dis.toFixed(2));
+    var sub_total = Number($("#subTotal").val());
+   
     $("#grandTotal").val((sub_total + total_vat - total_dis).toFixed(2, 2));
 
 }
@@ -318,6 +331,68 @@ function calculate_add_purchase(sl) {
 
 }
 
+function calculate_add_purchase_receive(sl) {
+    var e = 0;
+    var gr_tot = 0;
+    var total_vat = 0;
+   // var conversion_rate = $("#conversion").val();
+    var total_qntt = $("#total_qntt_" + sl).val();
+
+    var price_item = $("#price_item_" + sl).val();
+   // var price_item = Number(price_item2 * conversion_rate);
+   // $("#price_item_" + sl).val(price_item.toFixed(2));
+
+    var item_discount = $("#discount_" + sl).val();
+  //  var item_discount = Number(item_discount2);
+  //  $("#discount_" + sl).val(item_discount.toFixed(2));
+
+    var item_vat_rate = $("#item_vat_rate_" + sl).val();
+    //var item_vat_rate = Number(item_vat_rate2);
+   // $("#item_vat_rate_" + sl).val(item_vat_rate.toFixed(2));
+
+
+
+    var total_price =
+            total_qntt * price_item - (total_qntt * price_item * item_discount) / 100;
+    var item_vat = (total_price * item_vat_rate) / 100;
+    var Total_Quantity = 0;
+
+    $("#item_vat_" + sl).val(item_vat);
+   // $("#item_vat2_" + sl).val((item_vat / conversion_rate).toFixed(2));
+
+    $(".item_vat").each(function () {
+        isNaN(this.value) ||
+                0 == this.value.length ||
+                (total_vat += parseFloat(this.value));
+    });
+    $(".p_quantity").each(function () {
+        isNaN(this.value) ||
+                0 == this.value.length ||
+                (Total_Quantity += parseFloat(this.value));
+    });
+    $("#total_items").val(Total_Quantity);
+    $("#total_price_" + sl).val(total_price.toFixed(2));
+   // $("#total_price2_" + sl).val((total_price / conversion_rate).toFixed(2));
+    //Total Price
+    $(".total_price").each(function () {
+        isNaN(this.value) ||
+                0 == this.value.length ||
+                (gr_tot += parseFloat(this.value));
+    });
+
+    var total_dis = $("#total_dis").val();
+  //  var total_dis = Number(total_dis2 * conversion_rate);
+   // $("#total_dis").val(total_dis.toFixed(2));
+
+
+    $("#total_vat").val(total_vat.toFixed(2, 2));
+   // $("#total_vat2").val((total_vat / conversion_rate).toFixed(2, 2));
+    $("#subTotal").val(gr_tot.toFixed(2, 2));
+   // $("#subTotal2").val((gr_tot / conversion_rate).toFixed(2, 2));
+    $("#grandTotal").val((gr_tot + total_vat - total_dis).toFixed(2, 2));
+   // $("#grandTotal2").val(((gr_tot + total_vat - total_dis) / conversion_rate).toFixed(2, 2));
+
+}
 //Select stock by product and variant id
 $("body").on("change", ".variant_id, .color_variant", function () {
     var sl = $(this).parent().parent().parent().find(".sl").val();
@@ -385,6 +460,26 @@ function deleteRow(t) {
         $(".item_bill").html(i + 1);
     });
 }
+
+
+function deleteRow_receive(t) {
+    var a = $("#purchaseTable > tbody > tr").length;
+    if (1 == a) {
+        alert("There only one row you can't delete.");
+        return false;
+    } else {
+        var e = t.parentNode.parentNode;
+        e.parentNode.removeChild(e);
+        calculate_add_purchase_receive();
+    }
+    calculate_add_purchase_receive();
+    $("#item-number").html("0");
+    $(".itemNumber>tr").each(function (i) {
+        $("#item-number").html(i + 1);
+        $(".item_bill").html(i + 1);
+    });
+}
+
 
 function calculate_purchase_vat() {
     var subTotal = $("#subTotal").val();

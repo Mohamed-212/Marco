@@ -135,18 +135,20 @@
                                 <table class="table table-striped">
                                     <thead>
                                         <tr>
+                                            
                                             <th><?php echo display('sl') ?></th>
+                                             <th><?php echo display('product_name') ?></th>
                                             <th><?php echo display('item_code') ?></th>
                                             <th><?php echo display('item_picture') ?></th>
-                                            <th><?php echo display('product_name') ?></th>
-                                            <th><?php echo display('variant') ?></th>
-                                            <th><?php echo display('unit') ?></th>
-                                            <th><?php echo display('batch_no') ?></th>
+                                           
+                                            <th><?php echo display('size') ?></th>
+<!--                                            <th><?php echo display('unit') ?></th>-->
+<!--                                            <th><?php echo display('batch_no') ?></th>-->
                                             <th><?php echo display('quantity') ?></th>
-                                            <th><?php echo display('unit_price_before_VAT') ?></th>
-                                            <th><?php echo display('discount') ?></th>
+                                            <th><?php echo display('price') ?></th>
+<!--                                            <th><?php echo display('discount') ?></th>
                                             <th><?php echo display('vat_rate') ?></th>
-                                            <th><?php echo display('vat_value') ?></th>
+                                            <th><?php echo display('vat_value') ?></th>-->
                                             <th><?php echo display('total_value') ?></th>
                                         </tr>
                                     </thead>
@@ -160,11 +162,12 @@
                                         ?>
                                         <tr>
                                             <td><?php echo $i++; ?></td>
-                                            <td><?php echo html_escape($invoice['product_id']); ?></td>
+                                              <td><strong><?php echo html_escape($invoice['product_name']); ?></strong>
+                                            </td>
+                                            <td><?php echo html_escape($invoice['product_model']); ?></td>
                                             <td><img src="<?php echo  base_url() . (!empty(html_escape($invoice['image_thumb'])) ? $invoice['image_thumb'] : 'assets/img/icons/default.jpg') ?>"
                                                     width="50" height="50"></td>
-                                            <td><strong><?php echo html_escape($invoice['product_name']); ?></strong>
-                                            </td>
+                                          
                                             <td>
                                                 <?php
                                                         echo html_escape($invoice['variant_name']);
@@ -176,15 +179,15 @@
                                                         }
                                                         ?>
                                             </td>
-                                            <td><?php echo html_escape($invoice['product_id']); ?></td>
-                                            <td><?php echo html_escape($invoice['batch_no']); ?></td>
+<!--                                            <td><?php echo html_escape($invoice['unit_name']); ?></td>-->
+<!--                                            <td><?php echo html_escape($invoice['batch_no']); ?></td>-->
                                             <td><?php $total_quantity += $invoice['quantity'];
                                                         echo html_escape($invoice['quantity']); ?>
                                             </td>
                                             <td><?php $total_without_discount += ($invoice['quantity'] * $invoice['rate']);
                                                         echo (($position == 0) ? $currency . " " . $invoice['rate'] : $invoice['rate'] . " " . $currency); ?>
                                             </td>
-                                            <td><?php $item_total_discount = (($invoice['quantity'] * $invoice['rate'] * $invoice['discount']) / 100);
+<!--                                            <td><?php $item_total_discount = (($invoice['quantity'] * $invoice['rate'] * $invoice['discount']) / 100);
                                                         echo html_escape($invoice['discount']) . ' %'; ?>
                                             </td>
                                             <td><?php echo html_escape($invoice['vat_rate']) . '%'; ?></td>
@@ -197,7 +200,7 @@
                                                         }
                                                         echo (($position == 0) ? $currency . " " . $vat_value : $vat_value . " " . $currency);
                                                         ?>
-                                            </td>
+                                            </td>-->
                                             <td>
                                                 <?php
                                                         $pur_total_amount = $vat_value + $invoice['total_amount'];
@@ -234,12 +237,12 @@
                                                     <?php echo (($position == 0) ? $currency . " " . $grand_total_without_discount : $grand_total_without_discount . " " . $currency); ?>
                                                 </td>
                                             </tr>
-                                            <tr>
+<!--                                            <tr>
                                                 <th class="grand_total"> Discount For Items: </th>
                                                 <td>
                                                     <?php echo (($position == 0) ? $currency . " " . $total_discount : $total_discount . " " . $currency); ?>
                                                 </td>
-                                            </tr>
+                                            </tr>-->
                                             <tr>
                                                 <th class="grand_total"> Discount For Purchase : </th>
                                                 <td>
@@ -253,14 +256,14 @@
                                                     echo (($position == 0) ? $currency . " " . $after_discount : $after_discount . " " . $currency) ?>
                                                 </td>
                                             </tr>
-                                            <tr>
+<!--                                            <tr>
                                                 <th class="total_cgst">The total VAT Value :</th>
                                                 <td class="total_cgst">
                                                     <?php echo (($position == 0) ? $currency . " " . $total_vat : $total_vat . " " . $currency); ?>
                                                 </td>
-                                            </tr>
+                                            </tr>-->
                                             <tr>
-                                                <th class="grand_total">Total with VAT :</th>
+                                                <th class="grand_total">Total:</th>
                                                 <td class="grand_total">
                                                     <?php echo (($position == 0) ? $currency . " " . ($after_discount + $total_vat) : ($after_discount + $total_vat) . " " . $currency) ?>
                                                 </td>

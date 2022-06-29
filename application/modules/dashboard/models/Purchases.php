@@ -2928,7 +2928,13 @@ class Purchases extends CI_Model {
 
         if (!empty($data2)) {
             $this->db->insert_batch('purchase_order_details', $data2);
+            $data4 = array(
+                'convertion_rate' => $this->input->post('conversion', TRUE),
+            );
+            $this->db->update('currency_info', $data4, array('currency_id' => $this->input->post('currency_id', TRUE)));
         }
+
+
         $this->db->trans_complete();
         if ($this->db->trans_status() == TRUE) {
             return TRUE;

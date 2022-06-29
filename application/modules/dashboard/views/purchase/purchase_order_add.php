@@ -84,10 +84,10 @@
                                             {/all_supplier}
                                         </select>
                                     </div>
-                                    <div class="col-sm-3">
+<!--                                    <div class="col-sm-3">
                                         <a
                                             href="<?php echo base_url('dashboard/Csupplier'); ?>"><?php echo display('add_supplier') ?></a>
-                                    </div>
+                                    </div>-->
                                 </div>
                             </div>
                             <div class="col-sm-6">
@@ -155,12 +155,12 @@
                                 <div class="form-group row">
                                     <label for="date"
                                            class="col-sm-4 col-form-label"><?php echo display('expire_date') ?>
-                                        <i class="text-danger">*</i>
+                                       
                                     </label>
                                     <div class="col-sm-8">
                                         <input type="text" tabindex="3" class="form-control datepicker"
                                                name="expire_date" id="expire_date"
-                                               placeholder="<?php echo display('enter_expire_date'); ?>" required
+                                               placeholder="<?php echo display('enter_expire_date'); ?>" 
                                                autocomplete="off" />
                                     </div>
                                 </div>
@@ -258,7 +258,7 @@
                                     <tr>
                                         <th class="text-center"><?php echo display('item_information') ?> <i
                                                 class="text-danger">*</i></th>
-                                        <th class="text-center" width="130"><?php echo display('variant') ?> <i
+                                        <th class="text-center" width="130"><?php echo display('size') ?> <i
                                                 class="text-danger">*</i></th>
                                         <th class="text-center" width="130"><?php echo display('expire_date') ?></th>
                                         <th class="text-center"><?php echo display('available_quantity') ?> </th>
@@ -266,9 +266,9 @@
                                                 class="text-danger">*</i></th>
                                         <th class="text-center"><?php echo display('rate') ?> <i
                                                 class="text-danger">*</i></th>
-                                        <th class="text-center"><?php echo display('discount') . ' (%)' ?> </th>
+<!--                                        <th class="text-center"><?php echo display('discount') . ' (%)' ?> </th>
                                         <th class="text-center"><?php echo display('vat') . ' (%)' ?> </th>
-                                        <th class="text-center"><?php echo display('product_vat') ?> </th>
+                                        <th class="text-center"><?php echo display('product_vat') ?> </th>-->
                                         <th class="text-center"><?php echo display('total') ?> <i
                                                 class="text-danger">*</i></th>
                                         <th class="text-center"><?php echo display('delete') ?> </th>
@@ -292,7 +292,7 @@
 
                                         </td>
                                         <td class="text-center">
-                                            <div id="color_variant_area_1">
+                                            <div id="color_variant_area_1" hidden="">
                                                 <select name="color_variant[1]" id="color_variant_1"
                                                         class="form-control color_variant width_100p" disabled="">
                                                 </select>
@@ -338,7 +338,7 @@
                                                     readonly=""/>
                                         </td>
                                         <!-- Discount -->
-                                        <td>
+                                        <td hidden="">
                                             <input type="number" name="discount2[1]" onkeyup="calculate_add_purchase(1);"
                                                    onchange="calculate_add_purchase(1);" id="discount2_1"
                                                    class="form-control text-right" placeholder="0.00" min="0" />
@@ -346,7 +346,7 @@
                                                    onchange="calculate_add_purchase(1);" id="discount_1"
                                                    class="form-control text-right" placeholder="0.00" min="0" readonly=""/>
                                         </td>
-                                        <td>
+                                        <td hidden="">
                                             <input type="number" name="vat_rate2[1]" onkeyup="calculate_add_purchase(1);"
                                                    onchange="calculate_add_purchase(1);" id="item_vat_rate2_1"
                                                    class="form-control text-right" placeholder="0.00" min="0" />
@@ -354,7 +354,7 @@
                                                    onchange="calculate_add_purchase(1);" id="item_vat_rate_1"
                                                    class="form-control text-right" placeholder="0.00" min="0" readonly=""/>
                                         </td>
-                                        <td>
+                                        <td hidden="">
                                             <input type="number" name="vat2[1]" id="item_vat2_1"
                                                    class="form-control text-right item_vat2" placeholder="0.00" min="0"
                                                    readonly />
@@ -379,14 +379,8 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td>
-                                            <input type="button" id="add-invoice-item"
-                                                   class="btn -btn-info color4 color5" name="add-invoice-item"
-                                                   onClick="addPurchaseOrderField('addPurchaseItem');"
-                                                   value="<?php echo display('add_new_item') ?>" />
-
-                                            <input type="hidden" name="baseUrl" class="baseUrl"
-                                                   value="<?php echo base_url(); ?>" />
+                                        <td hidden="">
+                                            
                                         </td>
                                         <td class="text-right">
                                             <b><?php echo display('sub_total') ?>:</b>
@@ -402,10 +396,10 @@
                                                    onchange="calculate_add_purchase_cost(1);"
                                                    class="text-right form-control" name="total_number_of_items"
                                                    placeholder="0.00" readonly="readonly" /></td>
-                                        <td class="text-right">
+                                        <td class="text-right" hidden="">
                                             <b><?php echo display('total_vat') ?>:</b>
                                         </td>
-                                        <td>
+                                        <td hidden="">
                                             <input type="text" id="total_vat2" class="text-right form-control" value=""
                                                    name="total_purchase_vat2" placeholder="0.00" readonly="readonly" />
                                             <input type="text" id="total_vat" class="text-right form-control" value=""
@@ -441,6 +435,14 @@
 
                         <div class="form-group row">
                             <div class="col-sm-6">
+                                <input type="button" id="add-invoice-item" style="background-color:orange;color: white"
+                                                   class="btn -btn-info" name="add-invoice-item"
+                                                   onClick="addPurchaseOrderField('addPurchaseItem');"
+                                                   value="<?php echo display('add_new_item') ?>" />
+
+                                            <input type="hidden" name="baseUrl" class="baseUrl"
+                                                   value="<?php echo base_url(); ?>" />
+                                            <br><br>
                                 <input type="submit" id="add-purchase" class="btn btn-primary btn-large"
                                        name="add-purchase" value="<?php echo display('submit') ?>" />
                                 <input type="submit" value="<?php echo display('submit_and_add_another') ?>"

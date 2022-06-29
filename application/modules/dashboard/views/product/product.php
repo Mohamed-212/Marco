@@ -193,11 +193,11 @@
                                                     <?php echo html_escape($v_product_list['product_id']) ?>
                                                     <?php if ($v_product_list['assembly'] == 1) { ?>
                                                         <br>
-                                                        <a  data-toggle="modal" data-target="#viewprom" onclick="viewpro(<?php echo html_escape($v_product_list['product_id']) ?>)">view products  </a>
+                                                        <a  style="color: blue" href="" data-toggle="modal" data-target="#viewprom" onclick="viewpro(<?php echo html_escape($v_product_list['product_id']) ?>)">view products  </a>
                                                     <?php } ?>
                                                 </td>
                                                 <td class="text-center">
-                                                    <a
+                                                    <a 
                                                         href="<?php echo base_url() . 'dashboard/Cproduct/product_details/' . urlencode($v_product_list['product_id']); ?>">
                                                         <?php echo html_escape($v_product_list['product_name']) ?>-(<?php echo html_escape($v_product_list['product_model']) ?>)
                                                         <i class="fa fa-shopping-bag pull-right" aria-hidden="true"></i></a>

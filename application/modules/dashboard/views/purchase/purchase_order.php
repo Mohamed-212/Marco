@@ -122,7 +122,7 @@
 											<?php if($this->permission->check_label('purchase_order')->update()->access()){ 
 												if($purchase['receive_status'] != '1'){
 											?>
-												<a href="<?php echo base_url().'dashboard/Cpurchase/edit_purchase_order/'.$purchase['pur_order_id']; ?>" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="<?php echo display('update') ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+<!--												<a href="<?php echo base_url().'dashboard/Cpurchase/edit_purchase_order/'.$purchase['pur_order_id']; ?>" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="<?php echo display('update') ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a>-->
 											<?php } } ?>
 											<?php if($this->permission->check_label('purchase_order')->delete()->access()){
 													if($purchase['receive_status'] != '1'){

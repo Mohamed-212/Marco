@@ -376,8 +376,8 @@
                                                 </td>
                                                 <td class="text-right">
                                                     <input type="number" name="product_quantity[<?php echo $sl ?>]"
-                                                           onkeyup="calculate_add_purchase(<?php echo $sl ?>);"
-                                                           onchange="calculate_add_purchase(<?php echo $sl ?>);"
+                                                           onkeyup="calculate_add_purchase_receive(<?php echo $sl ?>);"
+                                                           onchange="calculate_add_purchase_receive(<?php echo $sl ?>);"
                                                            id="total_qntt_<?php echo $sl ?>"
                                                            class="p_quantity form-control text-right" placeholder="0"
                                                            value="<?php echo html_escape($purchase['quantity']) ?>" min="0"
@@ -388,24 +388,24 @@
                                                            value="<?php echo html_escape($purchase['rate']) ?>"
                                                            id="price_item_<?php echo $sl ?>"
                                                            class="price_item<?php echo $sl ?> text-right form-control"
-                                                           onkeyup="calculate_add_purchase(<?php echo $sl ?>);"
-                                                           onchange="calculate_add_purchase(<?php echo $sl ?>);" placeholder="0.00"
+                                                           onkeyup="calculate_add_purchase_receive(<?php echo $sl ?>);"
+                                                           onchange="calculate_add_purchase_receive(<?php echo $sl ?>);" placeholder="0.00"
                                                            min="0" required readonly />
                                                 </td>
                                                 <!-- Discount -->
                                                 <td>
                                                     <input type="number" name="discount[<?php echo $sl ?>]"
                                                            value="<?php echo html_escape($purchase['discount']) ?>"
-                                                           onkeyup="calculate_add_purchase(<?php echo $sl ?>);"
-                                                           onchange="calculate_add_purchase(<?php echo $sl ?>);"
+                                                           onkeyup="calculate_add_purchase_receive(<?php echo $sl ?>);"
+                                                           onchange="calculate_add_purchase_receive(<?php echo $sl ?>);"
                                                            id="discount_<?php echo $sl ?>" class="form-control text-right"
                                                            placeholder="0.00" min="0" />
                                                 </td>
                                                 <td>
                                                     <input type="number" name="vat_rate[<?php echo $sl ?>]"
                                                            value="<?php echo html_escape($purchase['vat_rate']) ?>"
-                                                           onkeyup="calculate_add_purchase(<?php echo $sl ?>);"
-                                                           onchange="calculate_add_purchase(<?php echo $sl ?>);"
+                                                           onkeyup="calculate_add_purchase_receive(<?php echo $sl ?>);"
+                                                           onchange="calculate_add_purchase_receive(<?php echo $sl ?>);"
                                                            id="item_vat_rate_<?php echo $sl ?>" class="form-control text-right"
                                                            placeholder="0.00" min="0" readonly />
                                                 </td>
@@ -425,7 +425,7 @@
                                                 </td>
                                                 <td>
                                                     <button class="btn btn-danger text-right" type="button"
-                                                            value="<?php echo display('delete') ?>" onclick="deleteRow(this)">
+                                                            value="<?php echo display('delete') ?>" onclick="deleteRow_receive(this)">
                                                                 <?php echo display('delete') ?>
                                                     </button>
                                                 </td>
@@ -473,8 +473,8 @@
                                             <input type="number" id="total_dis"
                                                    value="<?php echo html_escape($purchase_info[0]['total_purchase_dis']) ?>"
                                                    class="text-right form-control"  name="total_purchase_dis"
-                                                   onkeyup="calculate_total();"
-                                                   onchange="calculate_total();"
+                                                   onkeyup="calculate_total_receive();"
+                                                   onchange="calculate_total_receive();"
                                                    placeholder="0.00"  />
                                         </td>
                                         <td class="text-right">
