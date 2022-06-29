@@ -290,6 +290,7 @@ class Cpurchase extends MX_Controller {
             'sub_total_amount' => $purchase_detail[0]['grand_total_amount'],
             'invoice_no' => $purchase_detail[0]['invoice_no'],
             'purchase_all_data' => $purchase_detail,
+            'total_purchase_dis' => $purchase_detail[0]['total_purchase_dis'],
             'company_info' => $company_info,
             'currency' => $currency_details[0]['currency_icon'],
             'position' => $currency_details[0]['currency_position'],
