@@ -785,6 +785,44 @@ class Cpurchase extends MX_Controller {
             $data['module'] = "dashboard";
             $data['page'] = 'purchase/pur_order_return';
             $this->parser->parse('template/layout', $data);
+        } else if ($param == 'view2') {
+            $purchase_detail = $this->Purchases->get_po_shortinfo_by_id($pur_order_id);
+            $po_details = $this->Purchases->get_purchase_order_details($pur_order_id);
+            $all_supplier = $this->Suppliers->supplier_list();
+            $store_list = $this->Stores->store_list();
+            $currency_details = $this->Soft_settings->retrieve_currency_info();
+            $company_info = $this->Purchases->retrieve_company();
+            $Soft_settings = $this->Soft_settings->retrieve_setting_editdata();
+
+            $data = array(
+                'title' => display('purchase_order'),
+                'pur_order_id' => $pur_order_id,
+                'pur_order_no' => $purchase_detail[0]['pur_order_no'],
+                'supplier_id' => $purchase_detail[0]['supplier_id'],
+                'total_amount' => $purchase_detail[0]['grand_total_amount'],
+                'purchase_details' => $purchase_detail[0]['purchase_details'],
+                'purchase_date' => $purchase_detail[0]['purchase_date'],
+                'store_id' => $purchase_detail[0]['store_id'],
+                'approve_status' => $purchase_detail[0]['approve_status'],
+                'receive_status' => $purchase_detail[0]['receive_status'],
+                'return_status' => $purchase_detail[0]['return_status'],
+                'purchase_info' => $purchase_detail,
+                'po_details' => $po_details,
+                'all_supplier' => $all_supplier,
+                'store_list' => $store_list,
+                'company_info' => $company_info,
+                'currency' => $currency_details[0]['currency_icon'],
+                'position' => $currency_details[0]['currency_position'],
+                'Soft_settings' => $Soft_settings,
+                'total_purchase_dis' => $purchase_detail[0]['total_purchase_dis'],
+                'total_purchase_vat' => $purchase_detail[0]['total_purchase_vat']
+            );
+
+
+            $data['setting'] = $this->Template_model->setting();
+            $data['module'] = "dashboard";
+            $data['page'] = 'purchase/pur_order_print_2';
+            $this->parser->parse('template/layout', $data);
         } else {
             $purchase_detail = $this->Purchases->get_po_shortinfo_by_id($pur_order_id);
             $po_details = $this->Purchases->get_purchase_order_details($pur_order_id);
