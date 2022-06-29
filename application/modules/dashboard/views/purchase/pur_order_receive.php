@@ -582,11 +582,16 @@
                                                                    placeholder="<?php echo display('please_Provide_expense_name') ?>" />
                                                         </td>
                                                         <td class="text-left">
+                                                              <input type="text" onkeyup="calculate_add_purchase_cost(1);"
+                                                                   onchange="calculate_add_purchase_cost(1);"
+                                                                   id="purchase_expences2_1"
+                                                                   class="text-right form-control purchase_expences2"
+                                                                   name="purchase_expences2_1" placeholder="0.00" />
                                                             <input type="text" onkeyup="calculate_add_purchase_cost(1);"
                                                                    onchange="calculate_add_purchase_cost(1);"
                                                                    id="purchase_expences_1"
                                                                    class="text-right form-control purchase_expences"
-                                                                   name="purchase_expences_1" placeholder="0.00" />
+                                                                   name="purchase_expences_1" placeholder="0.00" readonly="" />
                                                         </td>
                                                         <td>
                                                             <select class="form-control dont-select-me"
@@ -618,6 +623,9 @@
                                                         <th class="text-left"></th>
                                                         <th class="text-left"><?php echo display('total') ?></th>
                                                         <td class="text-left">
+                                                              <input type="text" id="purchase_expences2"
+                                                                   class="text-right form-control" name="purchase_expences2"
+                                                                   placeholder="0.00" readonly />
                                                             <input type="text" id="purchase_expences"
                                                                    class="text-right form-control" name="purchase_expences"
                                                                    placeholder="0.00" readonly />

@@ -248,22 +248,22 @@ function calculate_total() {
     var total_vat2 = Number($("#total_vat2").val());
     $("#grandTotal2").val((sub_total2 + total_vat2 - total_dis2).toFixed(2, 2));
     var total_dis = Number(total_dis2 * conversion_rate);
-     $("#total_dis").val(total_dis.toFixed(2));
+    $("#total_dis").val(total_dis.toFixed(2));
     var sub_total = Number($("#subTotal").val());
     var total_vat = Number($("#total_vat").val());
     $("#grandTotal").val((sub_total + total_vat - total_dis).toFixed(2, 2));
 
 }
 function calculate_total_receive() {
-   // var conversion_rate = $("#conversion").val();
+    // var conversion_rate = $("#conversion").val();
     var total_dis = Number($("#total_dis").val());
-  //  var sub_total2 = Number($("#subTotal2").val());
+    //  var sub_total2 = Number($("#subTotal2").val());
     var total_vat = Number($("#total_vat").val());
-   // $("#grandTotal2").val((sub_total2 + total_vat2 - total_dis2).toFixed(2, 2));
-  //  var total_dis = Number(total_dis2 * conversion_rate);
+    // $("#grandTotal2").val((sub_total2 + total_vat2 - total_dis2).toFixed(2, 2));
+    //  var total_dis = Number(total_dis2 * conversion_rate);
     // $("#total_dis").val(total_dis.toFixed(2));
     var sub_total = Number($("#subTotal").val());
-   
+
     $("#grandTotal").val((sub_total + total_vat - total_dis).toFixed(2, 2));
 
 }
@@ -335,20 +335,20 @@ function calculate_add_purchase_receive(sl) {
     var e = 0;
     var gr_tot = 0;
     var total_vat = 0;
-   // var conversion_rate = $("#conversion").val();
+    // var conversion_rate = $("#conversion").val();
     var total_qntt = $("#total_qntt_" + sl).val();
 
     var price_item = $("#price_item_" + sl).val();
-   // var price_item = Number(price_item2 * conversion_rate);
-   // $("#price_item_" + sl).val(price_item.toFixed(2));
+    // var price_item = Number(price_item2 * conversion_rate);
+    // $("#price_item_" + sl).val(price_item.toFixed(2));
 
     var item_discount = $("#discount_" + sl).val();
-  //  var item_discount = Number(item_discount2);
-  //  $("#discount_" + sl).val(item_discount.toFixed(2));
+    //  var item_discount = Number(item_discount2);
+    //  $("#discount_" + sl).val(item_discount.toFixed(2));
 
     var item_vat_rate = $("#item_vat_rate_" + sl).val();
     //var item_vat_rate = Number(item_vat_rate2);
-   // $("#item_vat_rate_" + sl).val(item_vat_rate.toFixed(2));
+    // $("#item_vat_rate_" + sl).val(item_vat_rate.toFixed(2));
 
 
 
@@ -358,7 +358,7 @@ function calculate_add_purchase_receive(sl) {
     var Total_Quantity = 0;
 
     $("#item_vat_" + sl).val(item_vat);
-   // $("#item_vat2_" + sl).val((item_vat / conversion_rate).toFixed(2));
+    // $("#item_vat2_" + sl).val((item_vat / conversion_rate).toFixed(2));
 
     $(".item_vat").each(function () {
         isNaN(this.value) ||
@@ -372,7 +372,7 @@ function calculate_add_purchase_receive(sl) {
     });
     $("#total_items").val(Total_Quantity);
     $("#total_price_" + sl).val(total_price.toFixed(2));
-   // $("#total_price2_" + sl).val((total_price / conversion_rate).toFixed(2));
+    // $("#total_price2_" + sl).val((total_price / conversion_rate).toFixed(2));
     //Total Price
     $(".total_price").each(function () {
         isNaN(this.value) ||
@@ -381,16 +381,16 @@ function calculate_add_purchase_receive(sl) {
     });
 
     var total_dis = $("#total_dis").val();
-  //  var total_dis = Number(total_dis2 * conversion_rate);
-   // $("#total_dis").val(total_dis.toFixed(2));
+    //  var total_dis = Number(total_dis2 * conversion_rate);
+    // $("#total_dis").val(total_dis.toFixed(2));
 
 
     $("#total_vat").val(total_vat.toFixed(2, 2));
-   // $("#total_vat2").val((total_vat / conversion_rate).toFixed(2, 2));
+    // $("#total_vat2").val((total_vat / conversion_rate).toFixed(2, 2));
     $("#subTotal").val(gr_tot.toFixed(2, 2));
-   // $("#subTotal2").val((gr_tot / conversion_rate).toFixed(2, 2));
+    // $("#subTotal2").val((gr_tot / conversion_rate).toFixed(2, 2));
     $("#grandTotal").val((gr_tot + total_vat - total_dis).toFixed(2, 2));
-   // $("#grandTotal2").val(((gr_tot + total_vat - total_dis) / conversion_rate).toFixed(2, 2));
+    // $("#grandTotal2").val(((gr_tot + total_vat - total_dis) / conversion_rate).toFixed(2, 2));
 
 }
 //Select stock by product and variant id
@@ -508,7 +508,13 @@ function add_new_p_cost_row(divName) {
     p_cost_count++;
 }
 
-function calculate_add_purchase_cost(c) {
+
+function calculate_add_purchase_cost(sl) {
+    var conversion_rate = $("#conversion").val();
+    var purchase_expences2 = $("#purchase_expences2_" + sl).val();
+    var purchase_expences = Number(purchase_expences2 * conversion_rate);
+    $("#purchase_expences_" + sl).val(purchase_expences.toFixed(2));
+
     var total_cost = 0;
     $(".purchase_expences").each(function () {
         isNaN(this.value) ||
@@ -516,7 +522,17 @@ function calculate_add_purchase_cost(c) {
                 (total_cost += parseFloat(this.value));
     });
     $("#purchase_expences").val(total_cost);
+
+    var total_cost2 = 0;
+    $(".purchase_expences2").each(function () {
+        isNaN(this.value) ||
+                0 == this.value.length ||
+                (total_cost2 += parseFloat(this.value));
+    });
+    $("#purchase_expences2").val(total_cost2);
 }
+
+
 
 function get_conversion_rate() {
     var currency_id = $("#currency_id").val();

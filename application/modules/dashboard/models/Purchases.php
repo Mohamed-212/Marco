@@ -58,7 +58,6 @@ class Purchases extends CI_Model {
         }
         return false;
     }
-    
 
     // Get default currency info
     public function get_def_currency() {
@@ -224,6 +223,10 @@ class Purchases extends CI_Model {
                     'created_at' => date('Y-m-d h:i:s')
                 );
                 $this->db->insert('product_purchase', $data);
+                 $datac4 = array(
+                    'convertion_rate' =>  $this->input->post('conversion', TRUE),
+                );
+                $this->db->update('currency_info', $datac4, array('currency_id' => $this->input->post('currency_id', TRUE)));
                 //Add Product To Supplier Ledger
                 $ledger = array(
                     'transaction_id' => $this->auth->generator(15),
@@ -962,6 +965,12 @@ class Purchases extends CI_Model {
                     'created_at' => date('Y-m-d h:i:s')
                 );
                 $this->db->insert('product_purchase', $data);
+
+                $datac4 = array(
+                    'convertion_rate' => $this->input->post('conversion_rate', TRUE),
+                );
+                $this->db->update('currency_info', $datac4, array('currency_id' => $this->input->post('currency_id', TRUE)));
+
                 //Add Product To Supplier Ledger
                 $ledger = array(
                     'transaction_id' => $this->auth->generator(15),

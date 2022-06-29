@@ -82,7 +82,7 @@
 									<tr>
 										<th><?php echo display('sl') ?></th>
 										<th><?php echo display('product_name') ?></th>
-										<th><?php echo display('variant') ?></th>
+										<th><?php echo display('size') ?></th>
 										<th><?php echo display('quantity') ?></th>
 										<th><?php echo display('batch_no') ?></th>
 										<th><?php echo display('expire_date') ?></th>
