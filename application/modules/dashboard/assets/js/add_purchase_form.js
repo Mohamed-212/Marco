@@ -87,7 +87,7 @@ function product_pur_or_list(sl) {
                             .append(obj.variant_color);
                     $("#" + size).val(obj.size);
                     $("#" + color).val(obj.color);
-                     $("#" + cat_id).val(obj.category_id);
+                    $("#" + cat_id).val(obj.category_id);
                 },
             });
 
@@ -435,8 +435,8 @@ function calculate_add_purchase_cost(sl) {
                 (total_cost += parseFloat(this.value));
     });
     $("#purchase_expences").val(total_cost);
-    
-     var total_cost2 = 0;
+
+    var total_cost2 = 0;
     $(".purchase_expences2").each(function () {
         isNaN(this.value) ||
                 0 == this.value.length ||

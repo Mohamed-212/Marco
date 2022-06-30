@@ -66,7 +66,7 @@
                     <div class="panel-body">
                         <?php echo form_open_multipart('dashboard/Cpurchase/insert_purchase', array('class' => 'form-vertical', 'id' => 'validate', 'name' => 'insert_purchase')) ?>
                         <div class="row">
-                               <input type="hidden" name="def_currency_id" value="<?php echo ($def_currency['currency_id']) ?>">
+                            <input type="hidden" name="def_currency_id" value="<?php echo ($def_currency['currency_id']) ?>">
                             <div class="col-sm-6">
                                 <div class="form-group row">
                                     <label for="supplier_sss"
@@ -82,8 +82,8 @@
                                         </select>
                                     </div>
                                     <div class="col-sm-3">
-<!--                                        <a
-                                            href="<?php echo base_url('dashboard/Csupplier'); ?>"><?php echo display('add_supplier') ?></a>-->
+                                        <!--                                        <a
+                                                                                    href="<?php echo base_url('dashboard/Csupplier'); ?>"><?php echo display('add_supplier') ?></a>-->
                                     </div>
                                 </div>
                             </div>
@@ -225,7 +225,7 @@
                                                 class="text-danger">*</i></th>
                                         <th class="text-center" width="130"><?php echo display('size') ?> <i
                                                 class="text-danger">*</i></th>
-                                                <th hidden="" class="text-center" width="130"><?php echo display('batch_no') ?><i
+                                        <th hidden="" class="text-center" width="130"><?php echo display('batch_no') ?><i
                                                 class="text-danger">*</i></th>
                                         <th class="text-center" width="130"><?php echo display('expire_date') ?></th>
                                         <th class="text-center"><?php echo display('available_quantity') ?> </th>
@@ -233,9 +233,9 @@
                                                 class="text-danger">*</i></th>
                                         <th class="text-center"><?php echo display('rate') ?> <i
                                                 class="text-danger">*</i></th>
-                                                <th hidden="" class="text-center"><?php echo display('discount') . ' (%)' ?> </th>
-                                                <th hidden="" class="text-center"><?php echo display('vat') . ' (%)' ?> </th>
-                                                <th hidden="" class="text-center"><?php echo display('product_vat') ?> </th>
+                                        <th hidden="" class="text-center"><?php echo display('discount') . ' (%)' ?> </th>
+                                        <th hidden="" class="text-center"><?php echo display('vat') . ' (%)' ?> </th>
+                                        <th hidden="" class="text-center"><?php echo display('product_vat') ?> </th>
                                         <th class="text-center"><?php echo display('total') ?> </th>
                                         <th class="text-center" colspan="2"><?php echo display('delete') ?> </th>
                                     </tr>
@@ -252,7 +252,7 @@
                                                    name="product_id[1]" id="SchoolHiddenId" />
                                             <input type="hidden" class="sl" value="1">
                                             <input type="hidden" name="category_id[1]" id="category_id1" value="">
-                                            <input type="hidden" name="sizev[1]" id="size1" value="">
+                                            <input type="hidden" name="colorv[1]" id="color1" value="">
                                             <input type="hidden" name="sizev[1]" id="size1" value="">
                                         </td>
                                         <td class="text-center">
@@ -368,7 +368,7 @@
                                             <input type="text" id="subTotal" class="text-right form-control"
                                                    name="sub_total_price" placeholder="0.00" readonly="readonly" />
                                         </td>
-                                        
+
                                         <th><?php echo display('total_number_of_items') ?></th>
                                         <td><input type="text" id="total_items"
                                                    onchange="calculate_add_purchase_cost(1);"
@@ -405,7 +405,7 @@
                                             <input type="text" id="grandTotal" class="text-right form-control"
                                                    name="grand_total_price" placeholder="0.00" readonly="readonly" />
                                         </td>
-                                       
+
                                     </tr>
                                     <tr>
                                         <td class="text-center" colspan="12">
@@ -432,7 +432,7 @@
                                                                    placeholder="<?php echo display('please_Provide_expense_name') ?>" />
                                                         </td>
                                                         <td class="text-left">
-                                                             <input type="text" onkeyup="calculate_add_purchase_cost(1);"
+                                                            <input type="text" onkeyup="calculate_add_purchase_cost(1);"
                                                                    onchange="calculate_add_purchase_cost(1);"
                                                                    id="purchase_expences2_1"
                                                                    class="text-right form-control purchase_expences2"
@@ -453,7 +453,7 @@
                                                                     foreach ($bank_list as $bank) {
                                                                         ?>
                                                                         <option value="<?php echo $bank->bank_id ?>">
-                                                                        <?php echo html_escape($bank->bank_name) ?></option>
+                                                                            <?php echo html_escape($bank->bank_name) ?></option>
                                                                         <?php
                                                                     }
                                                                 }
@@ -476,20 +476,20 @@
                                                             <input type="text" id="purchase_expences2"
                                                                    class="text-right form-control" name="purchase_expences2"
                                                                    placeholder="0.00" readonly />
-                                                             <input type="text" id="purchase_expences"
+                                                            <input type="text" id="purchase_expences"
                                                                    class="text-right form-control" name="purchase_expences"
                                                                    placeholder="0.00" readonly />
                                                         </td>
-                                                       
+
                                                     </tr>
-                                                     <tr>
+                                                    <tr>
                                                         <th class="text-center danger">Sunglasses VAT (%)</th>
-                                                       <th class="text-center danger">  <input type="number" id="sunglasses_vat"
-                                                                   class="text-right form-control " name="sunglasses_vat"
-                                                                   placeholder="0.00" value="0" />
+                                                        <th class="text-center danger">  <input type="number" id="sunglasses_vat"
+                                                                                                class="text-right form-control " name="sunglasses_vat"
+                                                                                                placeholder="0.00" value="0" />
                                                         </th>
-                                                         <th class="text-left"> </th>
-                                                          <th class="text-left"> </th>
+                                                        <th class="text-left"> </th>
+                                                        <th class="text-left"> </th>
                                                     </tr>
                                                 </tfoot>
                                             </table>
@@ -507,7 +507,7 @@
                                        id="add-purchase-another">
                             </div>
                         </div>
-<?php echo form_close() ?>
+                        <?php echo form_close() ?>
                     </div>
                 </div>
             </div>
