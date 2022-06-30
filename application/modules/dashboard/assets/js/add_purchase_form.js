@@ -69,6 +69,7 @@ function product_pur_or_list(sl) {
             var color_variant = "color_variant_" + sl;
             var color = "color" + sl;
             var size = "size" + sl;
+            var cat_id = "category_id" + sl;
             $.ajax({
                 type: "POST",
                 url: base_url + "dashboard/Cstore/retrieve_product_data",
@@ -86,6 +87,7 @@ function product_pur_or_list(sl) {
                             .append(obj.variant_color);
                     $("#" + size).val(obj.size);
                     $("#" + color).val(obj.color);
+                    $("#" + cat_id).val(obj.category_id);
                 },
             });
 
@@ -134,15 +136,19 @@ function addPurchaseOrderField(divName) {
                 count +
                 ']" id="size' +
                 count +
+                '" value=""><input type="hidden" name="category_id[' +
+                count +
+                ']" id="category_id' +
+                count +
                 '" value=""></td><td class="text-center"><div class="variant_id_div"><select name="variant_id[' +
                 count +
                 ']" id="variant_id_' +
                 count +
-                '" class="form-control variant_id width_100p" disabled=""><option value=""></option></select></div><div><select name="color_variant[' +
+                '" class="form-control variant_id width_100p" disabled=""><option value=""></option></select></div><div  hidden="" ><select name="color_variant[' +
                 count +
                 ']" id="color_variant_' +
                 count +
-                '" class="form-control color_variant width_100p" disabled="" ><option value=""></option></select></div></td><td class="text-right"><input type="text" id="batch_no_' +
+                '" class="form-control color_variant width_100p" disabled="" ><option value=""></option></select></div></td><td hidden="" class="text-right"><input type="text" id="batch_no_' +
                 count +
                 '" name="batch_no[' +
                 count +
@@ -181,7 +187,7 @@ function addPurchaseOrderField(divName) {
                 count +
                 ')" onchange="calculate_add_purchase(' +
                 count +
-                ')" readonly/></td><td><input type="number" name="discount2[' +
+                ')" readonly/></td><td hidden=""><input type="number" name="discount2[' +
                 count +
                 ']" onkeyup="calculate_add_purchase(' +
                 count +
@@ -197,7 +203,7 @@ function addPurchaseOrderField(divName) {
                 count +
                 ');" id="discount_' +
                 count +
-                '"class="form-control text-right" placeholder="0.00" min="0" readonly/></td><td><input type="number" name="vat_rate2[' +
+                '"class="form-control text-right" placeholder="0.00" min="0" readonly/></td><td hidden=""><input type="number" name="vat_rate2[' +
                 count +
                 ']" onkeyup="calculate_add_purchase(' +
                 count +
@@ -213,7 +219,7 @@ function addPurchaseOrderField(divName) {
                 count +
                 ');" id="item_vat_rate_' +
                 count +
-                '"class="form-control text-right" placeholder="0.00" min="0" readonly/></td><td><input type="number" name="vat2[' +
+                '"class="form-control text-right" placeholder="0.00" min="0" readonly/></td><td hidden=""><input type="number" name="vat2[' +
                 count +
                 ']" id="item_vat2_' +
                 count +
@@ -229,7 +235,7 @@ function addPurchaseOrderField(divName) {
                 count +
                 ']" id="total_price_' +
                 count +
-                '" placeholder="0.00" readonly="readonly" /> </td><td><button  class="btn btn-danger text-right" type="button" value="' +
+                '" placeholder="0.00" readonly="readonly" /> </td><td class="text-center" colspan="2"><button  class="btn btn-danger text-right" type="button" value="' +
                 display("delete") +
                 '" onclick="deleteRow(this)">' +
                 display("delete") +
@@ -429,8 +435,8 @@ function calculate_add_purchase_cost(sl) {
                 (total_cost += parseFloat(this.value));
     });
     $("#purchase_expences").val(total_cost);
-    
-     var total_cost2 = 0;
+
+    var total_cost2 = 0;
     $(".purchase_expences2").each(function () {
         isNaN(this.value) ||
                 0 == this.value.length ||

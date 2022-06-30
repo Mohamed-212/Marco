@@ -136,7 +136,7 @@ class Purchases extends CI_Model {
                 $vat = $this->input->post('vat', TRUE);
                 $color = $this->input->post('colorv', TRUE);
                 $size = $this->input->post('sizev', TRUE);
-
+                $cat_id = $this->input->post('category_id', TRUE);
                 //start for total discount
                 //إجمالي الخصم على مستوى الفاتورة
                 $total_discount = floatval($this->input->post('total_purchase_dis', TRUE));
@@ -157,6 +157,38 @@ class Purchases extends CI_Model {
                 // توزيع المصاريف على إجمالي الفاتورة لمعرفة نسبة الخصم
                 $ratio_expence = ($total_expence + $total_vat) / $grand_total_without_VAT;
                 //End for total Expense & VAT
+                //
+                ///// حساب ضريبة القيمة المضافة على النظارات الشمسية //////
+                //قيمة ضريبة النظارات الشمسية
+                $t_price = $this->input->post('total_price', TRUE);
+                $sunglasses_VAT = floatval($this->input->post('sunglasses_vat', TRUE));
+                //حساب إجمالي تكلفة النظارات الشمسية 
+                $total_sunglasses_price = 0;
+                foreach ($p_id as $key => $value) {
+                    if (!empty($p_id[$key]) && !empty($p_id[$key])) {
+
+                        if ($cat_id[$key] == 'XJIMM9X3ZAWUYXQ') {
+                            $total_price = $t_price[$key];
+                            $total_sunglasses_price = $total_sunglasses_price + $total_price;
+                        }
+                    }
+                }
+                ////////حساب قيمة الضريبة من إجمالي النظارات الشمسية
+                $value_vat_sunglasses = $total_sunglasses_price * ($sunglasses_VAT / 100);
+                ///// توزيع الضريبة على إجمالي النظارات لمعرفة نسبة الزيادة
+                $ratio_sunglasses = $value_vat_sunglasses / $total_sunglasses_price;
+                //
+                //insert sun vat to expense table
+                //
+                if ($sunglasses_VAT > 0) {
+                    $sun_vat = array(
+                        'purchase_id' => $purchase_id,
+                        'expense_title' => 'sunglasses-VAT',
+                        'purchase_expense' => $value_vat_sunglasses,
+                        'payment_method' => 'cash',
+                    );
+                    $this->db->insert('proof_of_purchase_expese', $sun_vat);
+                }
                 //
                 //
                 // Supplier & product id relation ship checker.
@@ -258,13 +290,27 @@ class Purchases extends CI_Model {
                         $variant_color = $color[$i];
                         $product_discount = $discount[$i];
                         $total_price_without_discount += ($rate[$i] * $quantity[$i]);
+                        $category_id = $cat_id[$i];
 
+                        if ($category_id == 'XJIMM9X3ZAWUYXQ') {
+                            //start for total sunglasses VAT
+                            //ضرب نسبة الضريبة في إجمالي الصنف بعد المصاريف لمعرفة مقدار الزيادة في  كل صنف
+                            $total_price_sunvat = $ratio_sunglasses * $total_price;
+                            //تحديد إجمالي سعر المنتج بعد الزيادة
+                            $total_price_after_sunvat = $total_price + $total_price_sunvat;
+                            //تحديد سعر المنتج الواحد بعد الزيادة
+                            $rate4 = $total_price_after_sunvat / $product_quantity;
+                            //End for total sunglasses VAT
+                        } else {
+                            $rate4 = $product_rate;
+                            $total_price_after_sunvat = $total_price;
+                        }
 
                         //start for total discount
                         //ضرب نسبة الخصم في إجمالي الصنف لمعرفة مقدار الخصم من كل صنف
-                        $total_price_dis = $ratio * $total_price;
+                        $total_price_dis = $ratio * $total_price_after_sunvat;
                         //تحديد إجمالي سعر المنتج بعد الخصم
-                        $total_price_after_dis = $total_price - $total_price_dis;
+                        $total_price_after_dis = $total_price_after_sunvat - $total_price_dis;
                         //تحديد سعر المنتج الواحد بعد الخصم
                         $rate2 = $total_price_after_dis / $product_quantity;
                         //End for total discount
@@ -292,6 +338,8 @@ class Purchases extends CI_Model {
                             'rate' => $product_rate,
                             'rate_after_discount' => $rate2,
                             'rate_after_exp' => $rate3,
+                            'rate_after_sunvat' => $rate4,
+                            'category_id' => $category_id,
                             'discount' => $product_discount,
                             'vat_rate' => $i_vat_rate,
                             'vat' => $i_vat,
@@ -588,6 +636,22 @@ class Purchases extends CI_Model {
                     );
                     $this->db->insert('acc_transaction', $credit_purchase_expences);
                 }
+                $credit_purchase_sunvat = array(
+                    'fy_id' => $find_active_fiscal_year->id,
+                    'VNo' => 'p-' . $purchase_id,
+                    'Vtype' => 'Purchase',
+                    'VDate' => $date,
+                    'COAID' => 1111,
+                    'Narration' => 'Purchase sunglasses VAT (Cash in box general administration) credit by supplier id: ' . $supplier_head->HeadName . '(' . $supplier_id . ')',
+                    'Debit' => 0,
+                    'Credit' => $value_vat_sunglasses,
+                    'IsPosted' => 1,
+                    'CreateBy' => $receive_by,
+                    'CreateDate' => $createdate,
+                    'store_id' => $store_id,
+                    'IsAppove' => 1
+                );
+                $this->db->insert('acc_transaction', $credit_purchase_sunvat);
 
                 $this->db->insert('acc_transaction', $main_warehouse_debit);
                 $this->db->insert('acc_transaction', $suppliercredit);
@@ -2578,6 +2642,7 @@ class Purchases extends CI_Model {
             'variant_color' => $colorhtml,
             'size' => $size,
             'color' => $color,
+            'category_id' => $product_information->category_id,
         );
 
         return $data2;
@@ -2678,7 +2743,7 @@ class Purchases extends CI_Model {
         $this->db->select('*');
         $this->db->from('product_information');
         $this->db->where('product_id', $product_id);
-        $this->db->where('supplier_id', $supplier_id);
+        // $this->db->where('supplier_id', $supplier_id);
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
             return true;
