@@ -242,7 +242,7 @@ class Cinstallment extends MX_Controller
                                         $installment_data = array(
                                             'invoice_id' => $invoice_id,
                                             'amount' => ($amount[$index] - $payment_amount[$index]),
-                                            'due_date' => date('Y-m-d', strtotime($due_date[$index] . ' + 1 months')),
+                                            'due_date' => date('Y-m-d', strtotime($due_date[count($due_date)-1] . ' + 1 months')),
                                         );
                                         $this->db->insert('invoice_installment', $installment_data);
                                     }
@@ -305,6 +305,7 @@ class Cinstallment extends MX_Controller
                                         }
                                         $customer_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('customer_id', $customer_id)->get()->row();
                                     }
+                                    // add paid_amount Credit
                                     $customer_credit = array(
                                         'fy_id' => $find_active_fiscal_year->id,
                                         'VNo' => 'Inv-' . $invoice_id,
@@ -321,6 +322,24 @@ class Cinstallment extends MX_Controller
                                         'IsAppove' => 1
                                     );
                                     $this->db->insert('acc_transaction', $customer_credit);
+                                    // add paid_amount Credit
+                                    $payment_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('HeadCode', $account[$index])->get()->row();
+                                    $bank_debit = array(
+                                        'fy_id' => $find_active_fiscal_year->id,
+                                        'VNo' => 'Inv-' . $invoice_id,
+                                        'Vtype' => 'Sales',
+                                        'VDate' => date('Y-m-d H:i:s'),
+                                        'COAID' => $payment_head->HeadCode,
+                                        'Narration' => 'Sales "paid_amount" debited by cash/bank id: ' . $payment_head->HeadName . '(' . $account[$index] . ')',
+                                        'Debit' => $payment_amount[$index],
+                                        'Credit' => 0,
+                                        'IsPosted' => 1,
+                                        'CreateBy' => $this->session->userdata('user_id'),
+                                        'CreateDate' => date('Y-m-d H:i:s'),
+                                        //'IsAppove' => 0
+                                        'IsAppove' => 1
+                                    );
+                                    $this->db->insert('acc_transaction', $bank_debit);
                                 }
                             }
                         }
@@ -331,11 +350,8 @@ class Cinstallment extends MX_Controller
                 redirect(base_url('Admin_dashboard'));
             }
         }
-
-
         $this->session->set_userdata(array('message' => display('successfully_updated')));
         redirect('dashboard/cinstallment/manage_installment');
-
     }
 
 

@@ -146,14 +146,13 @@
                                                         }
                                                         ?>
                                                     </select>
-
                                                     <input class="form-control text-center"
-                                                           style="margin-top: 10px;display: none;" type="text" name="check_no[]"
+                                                           style="margin-top: 10px; <?php if(!$value['check_no']){ ?> display: none; <?php } ?> " type="text" name="check_no[]"
                                                            placeholder="<?php echo display('check_no') ?>"
                                                            value="<?php echo html_escape($value['check_no']) ?>">
-                                                    <input type="text" style="margin-top: 10px;display: none;"
-                                                           class="form-control datepicker expiry_date" name="expiry_date[]"
-                                                           value="<?php echo html_escape($value['expiry_date']) ?>">
+                                                    <input type="text" style="margin-top: 10px; <?php if(!$value['expiry_date']){ ?> display: none; <?php } ?> "
+                                                           class="form-control datepicker expiry_date text-center" name="expiry_date[]"
+                                                           value="<?php echo html_escape($value['expiry_date']) ?>" placeholder="<?php echo display('expiry_date') ?>">
                                                 </div>
                                             </td>
                                             <td class="text-center">

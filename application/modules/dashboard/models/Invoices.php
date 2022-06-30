@@ -457,44 +457,23 @@ class Invoices extends CI_Model {
                 $payment_id = $this->input->post('payment_id', TRUE);
                 $account_no = $this->input->post('account_no', TRUE);
 
-                if (!empty($payment_id)) {
-                    $payment_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('HeadCode', $payment_id)->get()->row();
-                    //1st bank debit total_with_vat
-                    $bank_debit = array(
-                        'fy_id' => $find_active_fiscal_year->id,
-                        'VNo' => 'Inv-' . $invoice_id,
-                        'Vtype' => 'Sales',
-                        'VDate' => $date,
-                        'COAID' => $payment_head->HeadCode,
-                        'Narration' => 'Sales "total with vat" debited by cash/bank id: ' . $payment_head->HeadName . '(' . $bank_id . ')',
-                        'Debit' => $total_with_vat,
-                        'Credit' => 0,
-                        'IsPosted' => 1,
-                        'CreateBy' => $receive_by,
-                        'CreateDate' => $createdate,
-                        //'IsAppove' => 0
-                        'IsAppove' => 1
-                    );
-                    $this->db->insert('acc_transaction', $bank_debit);
-                } else {
-                    //1st customer debit total_with_vat
-                    $customer_debit = array(
-                        'fy_id' => $find_active_fiscal_year->id,
-                        'VNo' => 'Inv-' . $invoice_id,
-                        'Vtype' => 'Sales',
-                        'VDate' => $date,
-                        'COAID' => $customer_head->HeadCode,
-                        'Narration' => 'Sales "total with vat" debited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
-                        'Debit' => $total_with_vat,
-                        'Credit' => 0,
-                        'IsPosted' => 1,
-                        'CreateBy' => $receive_by,
-                        'CreateDate' => $createdate,
-                        //'IsAppove' => 0
-                        'IsAppove' => 1
-                    );
-                    $this->db->insert('acc_transaction', $customer_debit);
-                }
+                //1st customer debit total_with_vat
+                $customer_debit = array(
+                    'fy_id' => $find_active_fiscal_year->id,
+                    'VNo' => 'Inv-' . $invoice_id,
+                    'Vtype' => 'Sales',
+                    'VDate' => $date,
+                    'COAID' => $customer_head->HeadCode,
+                    'Narration' => 'Sales "total with vat" debited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
+                    'Debit' => $total_with_vat,
+                    'Credit' => 0,
+                    'IsPosted' => 1,
+                    'CreateBy' => $receive_by,
+                    'CreateDate' => $createdate,
+                    //'IsAppove' => 0
+                    'IsAppove' => 1
+                );
+                $this->db->insert('acc_transaction', $customer_debit);
 
                 //2nd Allowed Discount Debit
                 $allowed_discount_debit = array(
@@ -595,8 +574,26 @@ class Invoices extends CI_Model {
                         //'IsAppove' => 0
                         'IsAppove' => 1
                     );
-
                     $this->db->insert('acc_transaction', $customer_credit);
+                    if (!empty($payment_id)) {
+                        $payment_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('HeadCode', $payment_id)->get()->row();
+                        $bank_debit = array(
+                            'fy_id' => $find_active_fiscal_year->id,
+                            'VNo' => 'Inv-' . $invoice_id,
+                            'Vtype' => 'Sales',
+                            'VDate' => $date,
+                            'COAID' => $payment_head->HeadCode,
+                            'Narration' => 'Sales "paid_amount" debited by cash/bank id: ' . $payment_head->HeadName . '(' . $payment_id . ')',
+                            'Debit' => $paid_amount,
+                            'Credit' => 0,
+                            'IsPosted' => 1,
+                            'CreateBy' => $receive_by,
+                            'CreateDate' => $createdate,
+                            //'IsAppove' => 0
+                            'IsAppove' => 1
+                        );
+                        $this->db->insert('acc_transaction', $bank_debit);
+                    }
                 }
                 $this->db->insert('acc_transaction', $allowed_discount_debit);
                 $this->db->insert('acc_transaction', $showroom_sales_credit);
