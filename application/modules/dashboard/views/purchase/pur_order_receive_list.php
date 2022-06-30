@@ -120,14 +120,19 @@
                                                 <td>
                                         <center>
                                             <?php if ($this->permission->check_label('receive_item')->update()->access()) { ?>
-                                                <a href="<?php echo base_url() . 'dashboard/Cpurchase/manage_purorder/view/' . $purchase['pur_order_id']; ?>" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="left" title="<?php echo display('view_details') ?>"><i class="fa fa-eye" aria-hidden="true"></i></a>
-                                                 <a href="<?php echo base_url() . 'dashboard/Cpurchase/manage_purorder/view2/' . $purchase['pur_order_id']; ?>" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="left" title="<?php echo display('view_details') ?>"><i class="fa fa-eye" aria-hidden="true"></i></a>
                                                 <?php if (!$purchase['receive_status']) { ?>
+                                                    <a href="<?php echo base_url() . 'dashboard/Cpurchase/manage_purorder/view/' . $purchase['pur_order_id']; ?>" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="left" title="<?php echo display('view_details') ?>"><i class="fa fa-eye" aria-hidden="true"></i></a>
+
                                                     <a href="<?php echo base_url() . 'dashboard/Cpurchase/manage_purorder/receive/' . $purchase['pur_order_id']; ?>" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="<?php echo display('receive_item') ?>"><i class="ti-plus"> </i></a>
                                                 <?php } ?>
                                                 <?php if ($purchase['receive_status'] && !$purchase['return_status']) { ?>
-                <!--											<a href="<?php echo base_url() . 'dashboard/Cpurchase/manage_purorder/return/' . $purchase['pur_order_id']; ?>" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="<?php echo display('return_item') ?>"><i class="fa fa-undo" aria-hidden="true"></i></a>-->
-                                                <?php }
+                                                    <a href="<?php echo base_url() . 'dashboard/Cpurchase/manage_purorder/view1/' . $purchase['pur_order_id']; ?>" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="left" title="<?php echo display('view_details') ?>"><i class="fa fa-eye" aria-hidden="true"></i></a>
+
+                                                    <a href="<?php echo base_url() . 'dashboard/Cpurchase/manage_purorder/view2/' . $purchase['pur_order_id']; ?>" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="left" title="<?php echo display('view_details') ?>"><i class="fa fa-eye" aria-hidden="true"></i></a>
+
+                                                <!--											<a href="<?php echo base_url() . 'dashboard/Cpurchase/manage_purorder/return/' . $purchase['pur_order_id']; ?>" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="left" title="<?php echo display('return_item') ?>"><i class="fa fa-undo" aria-hidden="true"></i></a>-->
+                                                    <?php
+                                                }
                                             }
                                             ?>
                                         </center>

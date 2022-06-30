@@ -83,14 +83,14 @@
                                         class="label label-success-outline m-r-15 p-10"><?php echo display('billing_from') ?></span>
                                     <address class="mt_10">
                                         <strong>
-                                            <?php echo html_escape($company_info[0]['company_name']); ?></strong><br>
+                                        <?php echo html_escape($company_info[0]['company_name']); ?></strong><br>
                                         <?php echo html_escape($company_info[0]['address']); ?><br>
                                         <abbr><?php echo display('mobile') ?>:</abbr>
                                         <?php echo html_escape($company_info[0]['mobile']); ?><br>
                                         <abbr><?php echo display('email') ?>:</abbr>
                                         <?php echo html_escape($company_info[0]['email']); ?><br>
                                         <abbr><?php echo display('website') ?>:</abbr>
-                                        <?php echo html_escape($company_info[0]['website']); ?>
+<?php echo html_escape($company_info[0]['website']); ?>
                                     </address>
                                 </div>
 
@@ -101,7 +101,7 @@
                                         <strong><?php echo html_escape($pur_order_no); ?></strong>
                                     </div>
                                     <div class="m-b-15"><?php echo display('billing_date') ?>:
-                                        <?php echo date('d-m-Y', strtotime($purchase_date)) ?></div>
+<?php echo date('d-m-Y', strtotime($purchase_date)) ?></div>
 
                                 </div>
                             </div>
@@ -144,7 +144,7 @@
                                                     </td>
                                                     <td><?php
                                                         if ($receive_status == '1') {
-                                                            $rc_quantity = $invoice['quantity'] - $invoice['rc_quantity'];
+                                                            $rc_quantity = $invoice['rc_quantity'] - $invoice['rt_quantity'];
                                                         } else {
                                                             $rc_quantity = $invoice['quantity'];
                                                         }
@@ -159,20 +159,18 @@
                                                         ?></td>
                                                     <td><?php
                                                         if ($receive_status == '1') {
-                                                            $pur_total_amount = $invoice['total_amount'] - $invoice['rc_total_amount'];
+                                                            $pur_total_amount = $invoice['rc_total_amount'] - $invoice['rt_total_amount'];
                                                         } else {
                                                             $pur_total_amount = $invoice['total_amount'];
                                                         }
                                                         echo html_escape($pur_total_amount);
                                                         $grand_total += $pur_total_amount;
-                                                        $total_discount_rc = $total_purchase_dis_rc;
-                                                        $total_discount = $total_purchase_dis;
+                                                        $total_discount = $total_purchase_dis_rc;
                                                         $total_vat = $total_purchase_vat;
-                                                        $grand_total2 = $grand_total - ($total_discount - $total_discount_rc) + $total_vat;
+                                                        $grand_total2 = $grand_total - $total_discount + $total_vat;
                                                         ?></td>
                                                 </tr>
-                                                <?php
-                                            }
+                                            <?php }
                                         }
                                         ?>
                                         <tr>
@@ -182,7 +180,7 @@
                                             <td class="grand_total"><strong><?php echo display('total_dis') ?>
                                                     :</strong></td>
                                             <td class="grand_total">
-                                                <?php echo (($position == 0) ? $currency . " " . $total_discount_rc : $total_discount_rc - $total_discount . " " . $currency) ?>
+<?php echo (($position == 0) ? $currency . " " . $total_discount : $total_discount . " " . $currency) ?>
                                             </td>
                                         </tr>
 <!--                                        <tr>
@@ -192,7 +190,7 @@
                                             <td class="grand_total"><strong><?php echo display('vat_rate') ?>
                                                     :</strong></td>
                                             <td class="grand_total">
-                                        <?php echo (($position == 0) ? $currency . " " . $total_vat : $total_vat . " " . $currency) ?>
+<?php echo (($position == 0) ? $currency . " " . $total_vat : $total_vat . " " . $currency) ?>
                                             </td>
                                         </tr>-->
                                         <tr>
@@ -202,7 +200,7 @@
                                             <td class="grand_total"><strong><?php echo display('grand_total') ?>
                                                     :</strong></td>
                                             <td class="grand_total">
-                                                <?php echo (($position == 0) ? $currency . " " . $grand_total2 : $grand_total2 . " " . $currency) ?>
+<?php echo (($position == 0) ? $currency . " " . $grand_total2 : $grand_total2 . " " . $currency) ?>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -212,13 +210,13 @@
                     </div>
 
                     <div class="panel-footer text-left">
-                        <?php if ($this->permission->check_label('manage_sale')->read()->access()) { ?>
+<?php if ($this->permission->check_label('manage_sale')->read()->access()) { ?>
                             <a class="btn btn-danger"
                                href="<?php echo base_url('dashboard/Cpurchase/purchase_order'); ?>"><?php echo display('cancel') ?></a>
-                           <?php } ?>
+<?php } ?>
                         <a class="btn btn-info" href="<?php echo current_url(); ?>"
                            onclick="printPageDiv('printableArea')"><span class="fa fa-print"></span>
-                            <?php echo display('print') ?>
+<?php echo display('print') ?>
                         </a>
                     </div>
                 </div>

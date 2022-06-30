@@ -223,8 +223,8 @@ class Purchases extends CI_Model {
                     'created_at' => date('Y-m-d h:i:s')
                 );
                 $this->db->insert('product_purchase', $data);
-                 $datac4 = array(
-                    'convertion_rate' =>  $this->input->post('conversion', TRUE),
+                $datac4 = array(
+                    'convertion_rate' => $this->input->post('conversion', TRUE),
                 );
                 $this->db->update('currency_info', $datac4, array('currency_id' => $this->input->post('currency_id', TRUE)));
                 //Add Product To Supplier Ledger
@@ -887,6 +887,7 @@ class Purchases extends CI_Model {
                 $vat = $this->input->post('vat', TRUE);
                 $color = $this->input->post('colorv', TRUE);
                 $size = $this->input->post('sizev', TRUE);
+                $cat_id = $this->input->post('category_id', TRUE);
 
                 //start for total discount
                 //إجمالي الخصم على مستوى الفاتورة
@@ -905,9 +906,42 @@ class Purchases extends CI_Model {
                 $total_vat = floatval($this->input->post('total_purchase_vat', TRUE));
                 //إجمالي الفاتورة بدون  VAT
                 $grand_total_without_VAT = floatval($this->input->post('grand_total_price', TRUE) - $total_vat);
-                // توزيع المصاريف على إجمالي الفاتورة لمعرفة نسبة الخصم
+                // توزيع المصاريف على إجمالي الفاتورة لمعرفة نسبة الزيادة
                 $ratio_expence = ($total_expence + $total_vat) / $grand_total_without_VAT;
                 //End for total Expense & VAT
+                //
+                //
+               ///// حساب ضريبة القيمة المضافة على النظارات الشمسية //////
+                //قيمة ضريبة النظارات الشمسية
+                $t_price = $this->input->post('total_price', TRUE);
+                $sunglasses_VAT = floatval($this->input->post('sunglasses_vat', TRUE));
+                //حساب إجمالي تكلفة النظارات الشمسية 
+                $total_sunglasses_price = 0;
+                foreach ($p_id as $key => $value) {
+                    if (!empty($p_id[$key]) && !empty($p_id[$key])) {
+
+                        if ($cat_id[$key] == 'XJIMM9X3ZAWUYXQ') {
+                            $total_price = $t_price[$key];
+                            $total_sunglasses_price = $total_sunglasses_price + $total_price;
+                        }
+                    }
+                }
+                ////////حساب قيمة الضريبة من إجمالي النظارات الشمسية
+                $value_vat_sunglasses = $total_sunglasses_price * ($sunglasses_VAT / 100);
+                ///// توزيع الضريبة على إجمالي النظارات لمعرفة نسبة الزيادة
+                $ratio_sunglasses = $value_vat_sunglasses / $total_sunglasses_price;
+                //
+                //insert sun vat to expense table
+                //
+                if ($sunglasses_VAT > 0) {
+                    $sun_vat = array(
+                        'purchase_id' => $purchase_id,
+                        'expense_title' => 'sunglasses-VAT',
+                        'purchase_expense' => $value_vat_sunglasses,
+                        'payment_method' => 'cash',
+                    );
+                    $this->db->insert('proof_of_purchase_expese', $sun_vat);
+                }
                 //
                 //
                 //Variant id required check
@@ -938,6 +972,7 @@ class Purchases extends CI_Model {
                         $this->db->insert_batch('proof_of_purchase_expese', $purchase_costs);
                     }
                 }
+
 
                 //Add Product To Purchase Table
                 $data = array(
@@ -985,7 +1020,7 @@ class Purchases extends CI_Model {
                 $this->db->insert('supplier_ledger', $ledger);
                 //Product Purchase Details
                 $rate = $this->input->post('product_rate', TRUE);
-                $t_price = $this->input->post('total_price', TRUE);
+
                 $total_price_without_discount = 0;
                 //  for ($i = 0, $n = count($p_id); $i < $n; $i++) {
                 foreach ($p_id as $key => $value) {
@@ -1002,12 +1037,26 @@ class Purchases extends CI_Model {
                         $variant_color = $color[$key];
                         $product_discount = $discount[$key];
                         $total_price_without_discount += ($rate[$key] * $quantity[$key]);
+                        $category_id = $cat_id[$key];
 
+                        if ($category_id == 'XJIMM9X3ZAWUYXQ') {
+                            //start for total sunglasses VAT
+                            //ضرب نسبة الضريبة في إجمالي الصنف بعد المصاريف لمعرفة مقدار الزيادة في  كل صنف
+                            $total_price_sunvat = $ratio_sunglasses * $total_price;
+                            //تحديد إجمالي سعر المنتج بعد الزيادة
+                            $total_price_after_sunvat = $total_price + $total_price_sunvat;
+                            //تحديد سعر المنتج الواحد بعد الزيادة
+                            $rate4 = $total_price_after_sunvat / $product_quantity;
+                            //End for total sunglasses VAT
+                        } else {
+                            $rate4 = $product_rate;
+                            $total_price_after_sunvat = $total_price;
+                        }
                         //start for total discount
                         //ضرب نسبة الخصم في إجمالي الصنف لمعرفة مقدار الخصم من كل صنف
-                        $total_price_dis = $ratio * $total_price;
+                        $total_price_dis = $ratio * $total_price_after_sunvat;
                         //تحديد إجمالي سعر المنتج بعد الخصم
-                        $total_price_after_dis = $total_price - $total_price_dis;
+                        $total_price_after_dis = $total_price_after_sunvat - $total_price_dis;
                         //تحديد سعر المنتج الواحد بعد الخصم
                         $rate2 = $total_price_after_dis / $product_quantity;
                         //End for total discount
@@ -1019,7 +1068,8 @@ class Purchases extends CI_Model {
                         //تحديد سعر المنتج الواحد بعد الزيادة
                         $rate3 = $total_price_after_exp / $product_quantity;
                         //End for total Expense & VAT
-
+                        //
+                        
 
                         $i_vat_rate = $vat_rate[$key];
                         $i_vat = $vat[$key];
@@ -1035,6 +1085,8 @@ class Purchases extends CI_Model {
                             'rate' => $product_rate,
                             'rate_after_discount' => $rate2,
                             'rate_after_exp' => $rate3,
+                            'rate_after_sunvat' => $rate4,
+                            'category_id' => $category_id,
                             'discount' => $product_discount,
                             'vat_rate' => $i_vat_rate,
                             'vat' => $i_vat,
@@ -1047,12 +1099,13 @@ class Purchases extends CI_Model {
 
                         if (!empty($quantity)) {
                             $this->db->insert('product_purchase_details', $data1);
-                            //////////////////////////////////////////////////////////////
+                            ///////////////////////////حساب متوسط سعر الشراء//////////////////
                             $purchaseData = $this->Products->product_purchase_info($product_id);
                             $totalPurchase = 0;
                             $totalPrcsAmnt = 0;
                             if (!empty($purchaseData)) {
                                 foreach ($purchaseData as $k => $v) {
+
                                     $rate_after_exp_up = floatval($purchaseData[$k]['rate_after_exp']);
                                     $quantity_up = floatval($purchaseData[$k]['quantity']);
                                     $newtotal = $rate_after_exp_up * $quantity_up;
@@ -1330,6 +1383,24 @@ class Purchases extends CI_Model {
                     );
                     $this->db->insert('acc_transaction', $credit_purchase_expences);
                 }
+
+                $credit_purchase_sunvat = array(
+                    'fy_id' => $find_active_fiscal_year->id,
+                    'VNo' => 'p-' . $purchase_id,
+                    'Vtype' => 'Purchase',
+                    'VDate' => $date,
+                    'COAID' => 1111,
+                    'Narration' => 'Purchase sunglasses VAT (Cash in box general administration) credit by supplier id: ' . $supplier_head->HeadName . '(' . $supplier_id . ')',
+                    'Debit' => 0,
+                    'Credit' => $value_vat_sunglasses,
+                    'IsPosted' => 1,
+                    'CreateBy' => $receive_by,
+                    'CreateDate' => $createdate,
+                    'store_id' => $store_id,
+                    'IsAppove' => 1
+                );
+                $this->db->insert('acc_transaction', $credit_purchase_sunvat);
+
 
                 $this->db->insert('acc_transaction', $main_warehouse_debit);
                 $this->db->insert('acc_transaction', $suppliercredit);
@@ -2973,7 +3044,7 @@ class Purchases extends CI_Model {
 
     public function get_purchase_order_by_id($pur_order_id) {
 
-        $this->db->select('a.*,b.*,c.product_id,c.product_name,c.product_model,d.supplier_id,d.supplier_name');
+        $this->db->select('a.*,b.*,c.product_id,c.product_name,c.product_model,c.category_id,d.supplier_id,d.supplier_name');
         $this->db->from('purchase_orders a');
         $this->db->join('purchase_order_details b', 'b.pur_order_id =a.pur_order_id');
         $this->db->join('product_information c', 'c.product_id =b.product_id', 'left');
@@ -3076,7 +3147,8 @@ class Purchases extends CI_Model {
             //Add Product To Purchase Table
             $data = array(
                 'invoice_no' => $this->input->post('invoice_no', TRUE),
-                'receive_status' => 1
+                'receive_status' => 1,
+                'total_purchase_dis_rc' => $this->input->post('total_purchase_dis', TRUE)
             );
             $this->db->update('purchase_orders', $data, array('pur_order_id' => $pur_order_id));
             $this->db->delete('purchase_order_receive', array('pur_order_id' => $pur_order_id));

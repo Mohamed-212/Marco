@@ -87,8 +87,8 @@
                                         </select>
                                     </div>
                                     <div class="col-sm-3">
-<!--                                        <a
-                                            href="<?php echo base_url('dashboard/Csupplier'); ?>"><?php echo display('add_supplier') ?></a>-->
+                                        <!--                                        <a
+                                                                                    href="<?php echo base_url('dashboard/Csupplier'); ?>"><?php echo display('add_supplier') ?></a>-->
                                     </div>
                                 </div>
                             </div>
@@ -108,7 +108,7 @@
                             </div>
                         </div>
                         <div class="row">
-                             <div class="col-sm-6" id="-store_hide">
+                            <div class="col-sm-6" id="-store_hide">
                                 <div class="form-group row">
                                     <label for="store_id"
                                            class="col-sm-4 col-form-label"><?php echo display('purchase_to') ?>
@@ -155,7 +155,7 @@
                         </div>
 
                         <div class="row">
-                                  <div class="col-sm-6">
+                            <div class="col-sm-6">
                                 <div class="form-group row">
                                     <label for="currency"
                                            class="col-sm-4 col-form-label"><?php echo display('currency') ?>
@@ -164,21 +164,21 @@
                                     <div class="col-sm-3">
                                         <select name="currency_id" id="currency_id"   onchange="get_conversion_rate()" class="form-control " required="">
                                             <option value=""><?php echo display('select_one') ?></option>
-                                              <?php foreach ($all_currency as $currency) { ?>
+                                            <?php foreach ($all_currency as $currency) { ?>
                                                 <option value="<?php echo $currency['currency_id']; ?>"
                                                         <?php echo (($currency['currency_id'] == $currency_id) ? 'selected' : '') ?>>
                                                     <?php echo html_escape($currency['currency_name']); ?></option>
                                             <?php } ?>
                                         </select>
                                     </div>
-                                      <label for="conversion"
+                                    <label for="conversion"
                                            class="col-sm-2 col-form-label"> <?php echo display('rate') ?>
                                         <i class="text-danger">*</i>
                                     </label>
                                     <div class="col-sm-3">
                                         <input type="number" name="conversion" id="conversion" onchange="get_conversion_rate2()"
-                                                   class="form-control text-right" placeholder="1" min="1"
-                                                  value="<?php echo html_escape($conversion_rate) ?>" required="" />
+                                               class="form-control text-right" placeholder="1" min="1"
+                                               value="<?php echo html_escape($conversion_rate) ?>" required="" />
                                     </div>
                                 </div>
                             </div>
@@ -327,13 +327,14 @@
                                                     <input type="hidden" name="pur_order_detail_id[<?php echo $sl ?>]"
                                                            value="<?php echo html_escape($purchase['pur_order_detail_id']) ?>" />
                                                     <input type="hidden" class="sl" value="<?php echo $sl ?>">
+                                                    <input type="hidden" name="category_id[<?php echo $sl ?>]" id="category_id<?php echo $sl ?>" value="<?php echo html_escape($purchase['category_id']) ?>">
                                                     <input type="hidden" name="colorv[<?php echo $sl ?>]" id="color<?php echo $sl ?>" value="<?php echo html_escape($purchase['variant_color']) ?>">
                                                     <input type="hidden" name="sizev[<?php echo $sl ?>]" id="size<?php echo $sl ?>" value="<?php echo html_escape($purchase['variant_id']) ?>">
                                                 </td>
                                                 <td class="text-center">
 
                                                     <?php if (in_array('color', $vtypes_arr)) { ?>
-                                                    <div hidden="">
+                                                        <div hidden="">
                                                             <select name="color_variant[<?php echo $sl ?>]" id="color_variant_<?php echo $sl ?>"
                                                                     class="form-control color_variant width_100p" disabled="">
                                                                 <option value=""></option>
@@ -412,7 +413,7 @@
                                                 </td>
                                                 <td>
                                                     <input type="number" name="product_rate2[<?php echo $sl ?>]"
-                                                           value="<?php echo html_escape($purchase['rate']/$purchase['conversion_rate']) ?>"
+                                                           value="<?php echo html_escape($purchase['rate'] / $purchase['conversion_rate']) ?>"
                                                            id="price_item2_<?php echo $sl ?>"
                                                            class="price_item2<?php echo $sl ?> text-right form-control"
                                                            onkeyup="calculate_add_purchase(<?php echo $sl ?>);"
@@ -428,7 +429,7 @@
                                                 </td>
                                                 <!-- Discount -->
                                                 <td hidden="">
-                                                     <input type="number" name="discount2[<?php echo $sl ?>]"
+                                                    <input type="number" name="discount2[<?php echo $sl ?>]"
                                                            value="<?php echo html_escape($purchase['discount']) ?>"
                                                            onkeyup="calculate_add_purchase(<?php echo $sl ?>);"
                                                            onchange="calculate_add_purchase(<?php echo $sl ?>);"
@@ -442,7 +443,7 @@
                                                            placeholder="0.00" min="0" />
                                                 </td>
                                                 <td hidden="">
-                                                     <input type="number" name="vat_rate2[<?php echo $sl ?>]"
+                                                    <input type="number" name="vat_rate2[<?php echo $sl ?>]"
                                                            value="<?php echo html_escape($purchase['vat_rate']) ?>"
                                                            onkeyup="calculate_add_purchase(<?php echo $sl ?>);"
                                                            onchange="calculate_add_purchase(<?php echo $sl ?>);"
@@ -456,8 +457,8 @@
                                                            placeholder="0.00" min="0" readonly />
                                                 </td>
                                                 <td hidden="">
-                                                     <input type="number" name="vat2[<?php echo $sl ?>]"
-                                                           value="<?php echo html_escape($purchase['vat']/$purchase['conversion_rate']) ?>"
+                                                    <input type="number" name="vat2[<?php echo $sl ?>]"
+                                                           value="<?php echo html_escape($purchase['vat'] / $purchase['conversion_rate']) ?>"
                                                            id="item_vat2_<?php echo $sl ?>" class="form-control text-right item_vat2"
                                                            placeholder="0.00" min="0" readonly />
                                                     <input type="number" name="vat[<?php echo $sl ?>]"
@@ -466,8 +467,8 @@
                                                            placeholder="0.00" min="0" readonly />
                                                 </td>
                                                 <td class="text-right">
-                                                     <input class="total_price2 text-right form-control"
-                                                           value="<?php echo html_escape($purchase['total_amount']/$purchase['conversion_rate']) ?>" type="text"
+                                                    <input class="total_price2 text-right form-control"
+                                                           value="<?php echo html_escape($purchase['total_amount'] / $purchase['conversion_rate']) ?>" type="text"
                                                            name="total_price2[<?php echo $sl ?>]" id="total_price2_<?php echo $sl ?>"
                                                            readonly="readonly" />
                                                     <input class="total_price text-right form-control"
@@ -492,12 +493,12 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                       
+
                                         <td class="text-right">
                                             <b><?php echo display('sub_total') ?>:</b>
                                         </td>
                                         <td class="text-right">
-                                             <input type="text" id="subTotal2" value="<?php echo html_escape($purchase['sub_total_price']/$purchase['conversion_rate']) ?>"
+                                            <input type="text" id="subTotal2" value="<?php echo html_escape($purchase['sub_total_price'] / $purchase['conversion_rate']) ?>"
                                                    class="text-right form-control" name="sub_total_price2"
                                                    placeholder="0.00" readonly="readonly" />
                                             <input type="text" id="subTotal" value="{sub_total_price}"
@@ -520,7 +521,7 @@
                                         </td>
                                         <td hidden="">
                                             <input type="text" id="total_vat2" class="text-right form-control"
-                                                   value="<?php echo html_escape($purchase['total_purchase_vat']/$purchase['conversion_rate']) ?>" name="total_purchase_vat2"
+                                                   value="<?php echo html_escape($purchase['total_purchase_vat'] / $purchase['conversion_rate']) ?>" name="total_purchase_vat2"
                                                    placeholder="0.00" readonly="readonly" />
                                             <input type="text" id="total_vat" class="text-right form-control"
                                                    value="{total_purchase_vat}" name="total_purchase_vat"
@@ -531,7 +532,7 @@
                                         </td>
                                         <td>
                                             <input type="number" id="total_dis2"
-                                                   value="<?php echo html_escape($purchase_info[0]['total_purchase_dis']/$purchase['conversion_rate']) ?>"
+                                                   value="<?php echo html_escape($purchase_info[0]['total_purchase_dis'] / $purchase['conversion_rate']) ?>"
                                                    class="text-right form-control"  name="total_purchase_dis2"
                                                    onkeyup="calculate_total();"
                                                    onchange="calculate_total();"
@@ -547,14 +548,14 @@
                                             <b><?php echo display('grand_total') ?>:</b>
                                         </td>
                                         <td class="text-right">
-                                             <input type="text" id="grandTotal2" value="<?php echo html_escape($purchase['grand_total_amount']/$purchase['conversion_rate']) ?>"
+                                            <input type="text" id="grandTotal2" value="<?php echo html_escape($purchase['grand_total_amount'] / $purchase['conversion_rate']) ?>"
                                                    class="text-right form-control" name="grand_total_price2" value="0.00"
                                                    readonly="readonly" />
                                             <input type="text" id="grandTotal" value="{grand_total}"
                                                    class="text-right form-control" name="grand_total_price" value="0.00"
                                                    readonly="readonly" />
                                         </td>
-                                        
+
                                     </tr>
 
                                     <tr>
@@ -582,7 +583,7 @@
                                                                    placeholder="<?php echo display('please_Provide_expense_name') ?>" />
                                                         </td>
                                                         <td class="text-left">
-                                                              <input type="text" onkeyup="calculate_add_purchase_cost(1);"
+                                                            <input type="text" onkeyup="calculate_add_purchase_cost(1);"
                                                                    onchange="calculate_add_purchase_cost(1);"
                                                                    id="purchase_expences2_1"
                                                                    class="text-right form-control purchase_expences2"
@@ -610,8 +611,8 @@
                                                                 ?>
                                                             </select>
                                                         </td>
-                                                        <td>
-                                                            <button type="button" class="btn btn-success btn-sm"
+                                                        <td class="text-left">
+                                                            <button type="button" class="btn btn-success btn-sm "
                                                                     onclick="add_new_p_cost_row('addPurchaseCost');">
                                                                 <i class="fa fa-plus"></i>
                                                             </button>
@@ -620,17 +621,28 @@
                                                 </tbody>
                                                 <tfoot>
                                                     <tr>
-                                                        <th class="text-left"></th>
-                                                        <th class="text-left"><?php echo display('total') ?></th>
+
+                                                          <th class="text-left"> </th>
+                                                        <th class="text-left"> </th>
+                                                        <th class="text-right"><?php echo display('total') ?></th>
                                                         <td class="text-left">
-                                                              <input type="text" id="purchase_expences2"
+                                                            <input type="text" id="purchase_expences2"
                                                                    class="text-right form-control" name="purchase_expences2"
                                                                    placeholder="0.00" readonly />
                                                             <input type="text" id="purchase_expences"
                                                                    class="text-right form-control" name="purchase_expences"
                                                                    placeholder="0.00" readonly />
                                                         </td>
-                                                        <td></td>
+                                                       
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="text-center danger">Sunglasses VAT (%)</th>
+                                                       <th class="text-center danger">  <input type="number" id="sunglasses_vat"
+                                                                   class="text-right form-control " name="sunglasses_vat"
+                                                                   placeholder="0.00" value="0" />
+                                                        </th>
+                                                         <th class="text-left"> </th>
+                                                          <th class="text-left"> </th>
                                                     </tr>
                                                 </tfoot>
                                             </table>
