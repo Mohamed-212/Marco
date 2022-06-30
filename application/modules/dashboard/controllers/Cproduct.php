@@ -1590,6 +1590,194 @@ class Cproduct extends MX_Controller {
         }
     }
 
+//    public function product_excel_insert() {
+//        $upload_file = $_FILES["upload_excel_file"]["name"];
+//        $extension = pathinfo($upload_file, PATHINFO_EXTENSION);
+//        if ($extension == 'csv') {
+//            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+//        } elseif ($extension == 'xls') {
+//            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
+//        } else {
+//            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+//        }
+//        $spreadsheet = $reader->load($_FILES["upload_excel_file"]["tmp_name"]);
+//        $sheetdata = $spreadsheet->getActiveSheet()->toArray();
+//        $datacount = count($sheetdata);
+//        if ($datacount > 1) {
+//            for ($i = 1; $i < $datacount; $i++) {
+//
+//                $supplier_id = $sheetdata[$i][0];
+//                $category_id = $sheetdata[$i][1];
+//                $product_name = $sheetdata[$i][2];
+//                $price = $sheetdata[$i][3];
+//                $supplier_price = $sheetdata[$i][4];
+//                $unit = $sheetdata[$i][5];
+//                $product_model = $sheetdata[$i][6];
+//                $product_details = $sheetdata[$i][7];
+//                $image_thumb = $sheetdata[$i][8];
+//                $brand_id = $sheetdata[$i][9];
+//                $variants = $sheetdata[$i][10];
+//                $variant_price = $sheetdata[$i][11];
+//                $type = $sheetdata[$i][12];
+//                $best_sale = $sheetdata[$i][13];
+//                $onsale = $sheetdata[$i][14];
+//                $onsale_price = $sheetdata[$i][15];
+//                $invoice_details = $sheetdata[$i][16];
+//                $image_large_details = $sheetdata[$i][17];
+//                $review = $sheetdata[$i][18];
+//                $description = $sheetdata[$i][19];
+//                $tag = $sheetdata[$i][20];
+//                $specification = $sheetdata[$i][21];
+//                $status = $sheetdata[$i][22];
+//                $arabic_product_name = $sheetdata[$i][23];
+//                $arabic_product_detail = $sheetdata[$i][24];
+//                $arabic_product_description = $sheetdata[$i][25];
+//                $arabic_product_specification = $sheetdata[$i][26];
+//
+//                $image_large = $this->importImg(str_replace(' ', '%20', $image_large_details));
+//                $thumb_image = $this->importThumbImg(str_replace(' ', '%20', $image_thumb));
+//
+//                $excel = array(
+//                    'supplier_id' => $supplier_id,
+//                    'category_id' => $category_id,
+//                    'product_name' => $product_name,
+//                    'price' => $price,
+//                    'supplier_price' => $supplier_price,
+//                    'unit' => $unit,
+//                    'product_model' => $product_model,
+//                    'product_details' => $product_details,
+//                    'image_thumb' => $thumb_image,
+//                    'brand_id' => $brand_id,
+//                    'variants' => $variants,
+//                    'variant_price' => $variant_price,
+//                    'type' => $type,
+//                    'best_sale' => $best_sale,
+//                    'onsale' => $onsale,
+//                    'onsale_price' => $onsale_price,
+//                    'invoice_details' => $invoice_details,
+//                    'image_large_details' => $image_large,
+//                    'review' => $review,
+//                    'description' => $description,
+//                    'tag' => $tag,
+//                    'specification' => $specification,
+//                    'status' => $status,
+//                    'trans_name' => $arabic_product_name,
+//                    'trans_detail' => $arabic_product_detail,
+//                    'trans_description' => $arabic_product_description,
+//                    'trans_specification' => $arabic_product_specification,
+//                );
+//                if (!empty($excel['image_thumb'])) {
+//                    $image_thumb = ((strpos($excel['image_thumb'], 'my-assets/image/product/thumb/') > 0) ? $excel['image_thumb'] : 'my-assets/image/product/thumb/' . $excel['image_thumb']);
+//                } else {
+//                    $image_thumb = base_url('my-assets/image/product.png');
+//                }
+//                if (!empty($excel['image_large_details'])) {
+//                    $image_large_details = ((strpos($excel['image_large_details'], 'my-assets/image/product/') > 0) ? $excel['image_large_details'] : 'my-assets/image/product/' . $excel['image_large_details']);
+//                } else {
+//                    $image_large_details = base_url('my-assets/image/product.png');
+//                }
+//                $product_id = $this->generator(8);
+//                $product_details = array(
+//                    'product_id' => $product_id,
+//                    'supplier_id' => $excel['supplier_id'],
+//                    'category_id' => $excel['category_id'],
+//                    'product_name' => $excel['product_name'],
+//                    'price' => $excel['price'],
+//                    'supplier_price' => $excel['supplier_price'],
+//                    'unit' => $excel['unit'],
+//                    'product_model' => $excel['product_model'],
+//                    'product_details' => $excel['product_details'],
+//                    'image_thumb' => $image_thumb,
+//                    'brand_id' => $excel['brand_id'],
+//                    'variants' => $excel['variants'],
+//                    'variant_price' => (!empty($excel['variant_price']) ? 1 : 0),
+//                    'type' => $excel['type'],
+//                    'best_sale' => $excel['best_sale'],
+//                    'onsale' => $excel['onsale'],
+//                    'onsale_price' => $excel['onsale_price'],
+//                    'invoice_details' => $excel['invoice_details'],
+//                    'image_large_details' => $image_large_details,
+//                    'review' => $excel['review'],
+//                    'description' => $excel['description'],
+//                    'tag' => $excel['tag'],
+//                    'specification' => $excel['specification'],
+//                    'status' => $excel['status']
+//                );
+//                $this->db->insert('product_information', $product_details);
+//                $this->db->select('*');
+//                $this->db->from('product_information');
+//                $this->db->where('status', 1);
+//                $query = $this->db->get();
+//                foreach ($query->result() as $row) {
+//                    $json_product[] = array('label' => $row->product_name . "-(" . $row->product_model . ")", 'value' => $row->product_id);
+//                }
+//                $cache_file = './my-assets/js/admin_js/json/product.json';
+//                $productList = json_encode($json_product);
+//                file_put_contents($cache_file, $productList);
+//
+//                //Product variant prices
+//                if (!empty($excel['variant_price'])) {
+//
+//                    $variant_prices = explode('&', $excel['variant_price']);
+//                    if (is_array($variant_prices)) {
+//
+//                        $vprice_list = [];
+//
+//                        foreach ($variant_prices as $vitem) {
+//
+//                            $vitem_list = explode(',', $vitem);
+//
+//                            if (is_array($vitem_list)) {
+//
+//                                $size_variant = trim($vitem_list[0]);
+//                                $color_variant = trim($vitem_list[1]);
+//
+//                                if (empty($vitem_list[2])) {
+//                                    $color_variant = NULL;
+//                                    $variant_price_amt = trim($vitem_list[1]);
+//                                } else {
+//                                    $variant_price_amt = trim($vitem_list[2]);
+//                                }
+//
+//                                if (!empty($size_variant)) {
+//                                    $vprice_list[] = array(
+//                                        'product_id' => $product_id,
+//                                        'var_size_id' => $size_variant,
+//                                        'var_color_id' => (!empty($color_variant) ? $color_variant : NULL),
+//                                        'price' => $variant_price_amt
+//                                    );
+//                                }
+//                            }
+//                        }
+//
+//                        if (!empty($vprice_list)) {
+//                            $this->db->delete('product_variants', array('product_id' => $product_id));
+//                            $this->db->insert_batch('product_variants', $vprice_list);
+//                        }
+//                    }
+//                }
+//                // Product translation
+//                if (!empty($excel['trans_name'])) {
+//                    $trans_name = $excel['trans_name'];
+//                    $trans_detail = $excel['trans_detail'];
+//                    $trans_description = $excel['trans_description'];
+//                    $trans_specification = $excel['trans_specification'];
+//                    $translation_list = array(
+//                        'language' => 'Arabic',
+//                        'product_id' => $product_id,
+//                        'trans_name' => $trans_name,
+//                        'trans_details' => $trans_detail,
+//                        'trans_description' => $trans_description,
+//                        'trans_specification' => $trans_specification,
+//                    );
+//                    $this->db->insert('product_translation', $translation_list);
+//                }
+//            }
+//            $this->session->set_userdata(array('message' => display('successfully_added')));
+//            redirect('dashboard/Cproduct/manage_product');
+//        }
+//    }
+
     public function product_excel_insert() {
         $upload_file = $_FILES["upload_excel_file"]["name"];
         $extension = pathinfo($upload_file, PATHINFO_EXTENSION);
@@ -1605,105 +1793,85 @@ class Cproduct extends MX_Controller {
         $datacount = count($sheetdata);
         if ($datacount > 1) {
             for ($i = 1; $i < $datacount; $i++) {
-
-                $supplier_id = $sheetdata[$i][0];
-                $category_id = $sheetdata[$i][1];
-                $product_name = $sheetdata[$i][2];
-                $price = $sheetdata[$i][3];
-                $supplier_price = $sheetdata[$i][4];
-                $unit = $sheetdata[$i][5];
-                $product_model = $sheetdata[$i][6];
-                $product_details = $sheetdata[$i][7];
-                $image_thumb = $sheetdata[$i][8];
-                $brand_id = $sheetdata[$i][9];
-                $variants = $sheetdata[$i][10];
-                $variant_price = $sheetdata[$i][11];
-                $type = $sheetdata[$i][12];
-                $best_sale = $sheetdata[$i][13];
-                $onsale = $sheetdata[$i][14];
-                $onsale_price = $sheetdata[$i][15];
-                $invoice_details = $sheetdata[$i][16];
-                $image_large_details = $sheetdata[$i][17];
-                $review = $sheetdata[$i][18];
-                $description = $sheetdata[$i][19];
-                $tag = $sheetdata[$i][20];
-                $specification = $sheetdata[$i][21];
-                $status = $sheetdata[$i][22];
-                $arabic_product_name = $sheetdata[$i][23];
-                $arabic_product_detail = $sheetdata[$i][24];
-                $arabic_product_description = $sheetdata[$i][25];
-                $arabic_product_specification = $sheetdata[$i][26];
-
-                $image_large = $this->importImg(str_replace(' ', '%20', $image_large_details));
-                $thumb_image = $this->importThumbImg(str_replace(' ', '%20', $image_thumb));
+                $price_types_list = [];
+                $filter_list = [];
+                $brand_id = $sheetdata[$i][0];
+                $product_model = $sheetdata[$i][1]. '-' . $sheetdata[$i][2];
+                $category_id = $sheetdata[$i][3];
+                $filter_1 = $sheetdata[$i][4];
+                $filter_2 = $sheetdata[$i][5];
+                $variants = $sheetdata[$i][6]; //size
+                $price = $sheetdata[$i][7];
+                $g_price = $sheetdata[$i][8];
+                $s_price = $sheetdata[$i][9];
+                $product_name = $brand_id . '-' . $product_model;
+                //$product_name .= '-Full'; //for assembly
 
                 $excel = array(
-                    'supplier_id' => $supplier_id,
-                    'category_id' => $category_id,
-                    'product_name' => $product_name,
-                    'price' => $price,
-                    'supplier_price' => $supplier_price,
-                    'unit' => $unit,
-                    'product_model' => $product_model,
-                    'product_details' => $product_details,
-                    'image_thumb' => $thumb_image,
                     'brand_id' => $brand_id,
+                    'product_model' => $product_model,
+                    'category_id' => $category_id,
+                    'price' => $price,
+                    'g_price' => $g_price,
+                    's_price' => $s_price,
+                    'filter_1' => $filter_1,
+                    'filter_2' => $filter_2,
+                    'product_name' => $product_name,
                     'variants' => $variants,
-                    'variant_price' => $variant_price,
-                    'type' => $type,
-                    'best_sale' => $best_sale,
-                    'onsale' => $onsale,
-                    'onsale_price' => $onsale_price,
-                    'invoice_details' => $invoice_details,
-                    'image_large_details' => $image_large,
-                    'review' => $review,
-                    'description' => $description,
-                    'tag' => $tag,
-                    'specification' => $specification,
-                    'status' => $status,
-                    'trans_name' => $arabic_product_name,
-                    'trans_detail' => $arabic_product_detail,
-                    'trans_description' => $arabic_product_description,
-                    'trans_specification' => $arabic_product_specification,
                 );
-                if (!empty($excel['image_thumb'])) {
-                    $image_thumb = ((strpos($excel['image_thumb'], 'my-assets/image/product/thumb/') > 0) ? $excel['image_thumb'] : 'my-assets/image/product/thumb/' . $excel['image_thumb']);
-                } else {
-                    $image_thumb = base_url('my-assets/image/product.png');
-                }
-                if (!empty($excel['image_large_details'])) {
-                    $image_large_details = ((strpos($excel['image_large_details'], 'my-assets/image/product/') > 0) ? $excel['image_large_details'] : 'my-assets/image/product/' . $excel['image_large_details']);
-                } else {
-                    $image_large_details = base_url('my-assets/image/product.png');
-                }
+
                 $product_id = $this->generator(8);
                 $product_details = array(
                     'product_id' => $product_id,
-                    'supplier_id' => $excel['supplier_id'],
-                    'category_id' => $excel['category_id'],
-                    'product_name' => $excel['product_name'],
-                    'price' => $excel['price'],
-                    'supplier_price' => $excel['supplier_price'],
-                    'unit' => $excel['unit'],
-                    'product_model' => $excel['product_model'],
-                    'product_details' => $excel['product_details'],
-                    'image_thumb' => $image_thumb,
                     'brand_id' => $excel['brand_id'],
+                    'product_model' => $excel['product_model'],
+                    'category_id' => $excel['category_id'],
+                    'price' => $excel['price'],
+                    'product_name' => $excel['product_name'],
                     'variants' => $excel['variants'],
-                    'variant_price' => (!empty($excel['variant_price']) ? 1 : 0),
-                    'type' => $excel['type'],
-                    'best_sale' => $excel['best_sale'],
-                    'onsale' => $excel['onsale'],
-                    'onsale_price' => $excel['onsale_price'],
-                    'invoice_details' => $excel['invoice_details'],
-                    'image_large_details' => $image_large_details,
-                    'review' => $excel['review'],
-                    'description' => $excel['description'],
-                    'tag' => $excel['tag'],
-                    'specification' => $excel['specification'],
-                    'status' => $excel['status']
+                    'supplier_price' => 0,
+                    'pricing' => 1,
+                    //'assembly' => 1, //for assembly
                 );
                 $this->db->insert('product_information', $product_details);
+
+                if ($category_id == 'XJIMM9X3ZAWUYXQ') {
+                    $data = array(
+                        't_p_s_id' => $this->auth->generator(15),
+                        'product_id' => $product_id,
+                        'tax_id' => '52C2SKCKGQY6Q9J',
+                        'tax_percentage' => '14',
+                    );
+
+                    $this->db->insert('tax_product_service', $data);
+                }
+
+                $price_types_list[] = array(
+                    'product_id' => $product_id,
+                    'pri_type_id' => 1,
+                    'product_price' => $excel['g_price'],
+                );
+                $price_types_list[] = array(
+                    'product_id' => $product_id,
+                    'pri_type_id' => 2,
+                    'product_price' => $excel['s_price'],
+                );
+                $this->db->insert_batch('pricing_types_product', $price_types_list);
+
+                $filter_list[] = array(
+                    'category_id' => $category_id,
+                    'product_id' => $product_id,
+                    'filter_type_id' => 1,
+                    'filter_item_id' => $filter_1
+                );
+                $filter_list[] = array(
+                    'category_id' => $category_id,
+                    'product_id' => $product_id,
+                    'filter_type_id' => 2,
+                    'filter_item_id' => $filter_2
+                );
+                $this->db->insert_batch('filter_product', $filter_list);
+
                 $this->db->select('*');
                 $this->db->from('product_information');
                 $this->db->where('status', 1);
@@ -1714,64 +1882,6 @@ class Cproduct extends MX_Controller {
                 $cache_file = './my-assets/js/admin_js/json/product.json';
                 $productList = json_encode($json_product);
                 file_put_contents($cache_file, $productList);
-
-                //Product variant prices
-                if (!empty($excel['variant_price'])) {
-
-                    $variant_prices = explode('&', $excel['variant_price']);
-                    if (is_array($variant_prices)) {
-
-                        $vprice_list = [];
-
-                        foreach ($variant_prices as $vitem) {
-
-                            $vitem_list = explode(',', $vitem);
-
-                            if (is_array($vitem_list)) {
-
-                                $size_variant = trim($vitem_list[0]);
-                                $color_variant = trim($vitem_list[1]);
-
-                                if (empty($vitem_list[2])) {
-                                    $color_variant = NULL;
-                                    $variant_price_amt = trim($vitem_list[1]);
-                                } else {
-                                    $variant_price_amt = trim($vitem_list[2]);
-                                }
-
-                                if (!empty($size_variant)) {
-                                    $vprice_list[] = array(
-                                        'product_id' => $product_id,
-                                        'var_size_id' => $size_variant,
-                                        'var_color_id' => (!empty($color_variant) ? $color_variant : NULL),
-                                        'price' => $variant_price_amt
-                                    );
-                                }
-                            }
-                        }
-
-                        if (!empty($vprice_list)) {
-                            $this->db->delete('product_variants', array('product_id' => $product_id));
-                            $this->db->insert_batch('product_variants', $vprice_list);
-                        }
-                    }
-                }
-                // Product translation
-                if (!empty($excel['trans_name'])) {
-                    $trans_name = $excel['trans_name'];
-                    $trans_detail = $excel['trans_detail'];
-                    $trans_description = $excel['trans_description'];
-                    $trans_specification = $excel['trans_specification'];
-                    $translation_list = array(
-                        'language' => 'Arabic',
-                        'product_id' => $product_id,
-                        'trans_name' => $trans_name,
-                        'trans_details' => $trans_detail,
-                        'trans_description' => $trans_description,
-                        'trans_specification' => $trans_specification,
-                    );
-                    $this->db->insert('product_translation', $translation_list);
-                }
             }
             $this->session->set_userdata(array('message' => display('successfully_added')));
             redirect('dashboard/Cproduct/manage_product');
