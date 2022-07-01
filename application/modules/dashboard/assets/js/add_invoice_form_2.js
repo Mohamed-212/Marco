@@ -69,15 +69,23 @@ function addInputField(divName) {
                 count +
                 '" name="product_id[]"/><input type="hidden" class="sl" value="' +
                 count +
-                '"><input type="hidden" class="baseUrl" value="' +
+                '"><input type="hidden" name="colorv[' +
+                count +
+                ']" id="color' +
+                count +
+                '" value=""><input type="hidden" name="sizev[' +
+                count +
+                ']" id="size' +
+                count +
+                '" value=""><input type="hidden" class="baseUrl" value="' +
                 base_url +
                 '" /></td>' +
                 '<td class="text-center"><div class="variant_id_div"> <select name="variant_id[]" id="variant_id_' +
                 count +
-                '" class="form-control variant_id width_100p" required=""><option value=""></option></select></div><div><select name="color_variant[]" id="variant_color_id_' +
+                '" class="form-control variant_id width_100p"disabled="" ><option value=""></option></select></div><div hidden="" ><select name="color_variant[]" id="variant_color_id_' +
                 count +
-                '" class="form-control color_variant width_100p" ><option value=""></option></select></div></td>' +
-                '<td class="text-center"><div><select name="batch_no[]" required id="batch_no_' +
+                '" class="form-control color_variant width_100p"  ><option value=""></option></select></div></td>' +
+                '<td hidden="" class="text-center"><div><select name="batch_no[]" id="batch_no_' +
                 count +
                 '" class="form-control batch_no width_100p"><option value=""></option></select></div></td>' +
                 '<td><input type="text" name="available_quantity[]"  class="form-control text-right available_quantity_' +
@@ -106,7 +114,7 @@ function addInputField(divName) {
                 count +
                 '" class="price_item' +
                 count +
-                ' form-control text-right" required="" min="0" /></td>' +
+                ' form-control text-right" required="" min="0" readonly="readonly" /></td>' +
                 '<td><input type="number" name="discount[]" onkeyup="quantity_calculate(' +
                 count +
                 ');" onchange="quantity_calculate(' +

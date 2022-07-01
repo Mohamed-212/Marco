@@ -464,16 +464,19 @@ function get_assembly_products() {
 }
 
 function calculate_price() {
-    var supplier_price = 0;
-    var sell_price = 0;
-    $("#addassemblypro tbody tr").each(function (index, tr) {
-        var rownumber = index + 1;
-        // alert(rownumber);
-        supplier_price += Number($("#price_item_" + rownumber).val());
-        sell_price += Number($("#product_price_" + rownumber).val());
-    });
-    $("#supplier_price").val(supplier_price);
-    $("#sell_price").val(sell_price);
+    var assembly = $("#assembly").val();
+    if (assembly == 1) {
+        var supplier_price = 0;
+        var sell_price = 0;
+        $("#addassemblypro tbody tr").each(function (index, tr) {
+            var rownumber = index + 1;
+            // alert(rownumber);
+            supplier_price += Number($("#price_item_" + rownumber).val());
+            sell_price += Number($("#product_price_" + rownumber).val());
+        });
+        $("#supplier_price").val(supplier_price);
+        $("#sell_price").val(sell_price);
+    }
 }
 
 function addassemblyprorow() {

@@ -25,6 +25,8 @@ var igst_id			='igst_id_'+cName;
 var variant_id  	='variant_id_'+cName;
 var variant_color   ='variant_color_id_'+cName;
 //var pricing   ='pricing_'+cName;
+ var color = "color" + cName;
+ var size = "size" + cName;
 var discount  		='discount_'+cName;
 
 $( ".productSelection" ).autocomplete(
@@ -69,6 +71,8 @@ $('#'+variant_id).html(obj.variant);
 $('#'+variant_color).html(obj.colorhtml);
 //$('#'+pricing).html(obj.pricinghtml);
 $('#'+discount).val(obj.discount);
+$("#" + size).val(obj.size);
+$("#" + color).val(obj.color);
 
 //This Function Stay on others.js page
 

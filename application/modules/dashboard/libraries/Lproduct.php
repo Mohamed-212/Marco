@@ -148,6 +148,7 @@ class Lproduct {
         $data = array(
             'title' => display('product_edit'),
             'product_id' => $product_detail[0]['product_id'],
+            'assembly' => $product_detail[0]['assembly'],
             'product_name' => $product_detail[0]['product_name'],
             'warrantee' => $product_detail[0]['warrantee'],
             'bar_code' => $product_detail[0]['bar_code'],

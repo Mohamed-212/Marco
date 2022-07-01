@@ -328,6 +328,8 @@ class Invoices extends CI_Model {
                 $variants = $this->input->post('variant_id', TRUE);
                 // $pricing = $this->input->post('pricing', TRUE);
                 $color_variants = $this->input->post('color_variant', TRUE);
+                $color = $this->input->post('colorv', TRUE);
+                $size = $this->input->post('sizev', TRUE);
                 $batch_no = $this->input->post('batch_no', TRUE);
                 $cogs_price = 0;
 
@@ -338,12 +340,14 @@ class Invoices extends CI_Model {
                     $product_id = $p_id[$i];
                     $discount_rate = $discount[$i];
                     $total_price = $total_amount[$i];
-                    $variant_id = $variants[$i];
-                    //   $pricing_id = $pricing[$i];
-                    $variant_color = $color_variants[$i];
+                    //  $variant_id = $variants[$i];
+                    $variant_id = $size[$i];
+                    //$pricing_id = $pricing[$i];
+                    // $variant_color = $color_variants[$i];
+                    $variant_color = $color[$i];
                     $batch = $batch_no[$i];
-                    $supplier_rate = $this->supplier_rate($product_id);
-                    $cogs_price += ($supplier_rate[0]['supplier_price'] * $product_quantity);
+                    $supplier_rate = $this->supplier_rate($product_id);// سعر التكلفة للمنتج الواحد
+                    $cogs_price += ($supplier_rate[0]['supplier_price'] * $product_quantity);// التكلفة للكمية كلها
 
                     $invoice_details = array(
                         'invoice_details_id' => generator(15),
@@ -3036,8 +3040,7 @@ class Invoices extends CI_Model {
                 $this->session->set_userdata(array('error_message' => display('no_active_fiscal_year_found')));
                 redirect(base_url('Admin_dashboard'));
             }
-        }
-        else {
+        } else {
             //Invoice and customer info
             $invoice_id = $this->input->post('invoice_id', TRUE);
             $customer_id = $this->input->post('customer_id', TRUE);
@@ -3811,7 +3814,7 @@ class Invoices extends CI_Model {
         $this->db->where(array('product_id' => $product_id, 'status' => 1));
         $product_information = $this->db->get()->row();
 
-       
+
 
         $html = $colorhtml = "";
         if (!empty($product_information->variants)) {
@@ -3827,6 +3830,7 @@ class Invoices extends CI_Model {
             $html .= '';
             foreach ($variant_list as $varitem) {
                 if ($varitem->variant_type == 'size') {
+                    $size = $varitem->variant_id;
                     $html .= "<option value=" . $varitem->variant_id . ">" . $varitem->variant_name . "</option>";
                 }
             }
@@ -3835,6 +3839,7 @@ class Invoices extends CI_Model {
                 $colorhtml .= "";
                 foreach ($variant_list as $varitem2) {
                     if ($varitem2->variant_type == 'color') {
+                        $color = $varitem2->variant_id;
                         $colorhtml .= "<option value=" . $varitem2->variant_id . ">" . $varitem2->variant_name . "</option>";
                     }
                 }
@@ -3909,6 +3914,8 @@ class Invoices extends CI_Model {
             'variant' => @$html,
             'colorhtml' => @$colorhtml,
             //'pricinghtml' => @$pricinghtml,
+            'size' => $size,
+            'color' => $color,
             'discount' => @$discount,
             'sgst_tax' => (!empty($tax['sgst_tax']) ? $tax['sgst_tax'] : null),
             'cgst_tax' => (!empty($tax['cgst_tax']) ? $tax['cgst_tax'] : null),

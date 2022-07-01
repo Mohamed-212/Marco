@@ -42,6 +42,7 @@ function  quantity_limit(item) {
     if( parseInt(available_quantity) < parseInt(current_quantity)){
         alert('stock not available');
         $("#total_qntt_" + item).val(1);
+        quantity_calculate(item);
         return false;
     }
     for(var i=0; i<html.length; i++){
@@ -57,6 +58,7 @@ function  quantity_limit(item) {
     if( parseInt(available_quantity) < total_qnt){
         alert('stock not available');
         $("#total_qntt_" + item).val(1);
+        quantity_calculate(item);
         return false;
     }
     quantity_calculate(item);

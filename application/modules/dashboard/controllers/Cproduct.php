@@ -568,6 +568,51 @@ class Cproduct extends MX_Controller {
                 'status' => 1
             );
             $result = $this->Products->update_product($data, $product_id);
+//// start update tax for sunglasses by shady azzam
+            if ($this->input->post('category_id', TRUE) == 'XJIMM9X3ZAWUYXQ') {
+                $this->db->select('tax.*,tax_product_service.product_id,tax_percentage');
+                $this->db->from('tax_product_service');
+                $this->db->join('tax', 'tax_product_service.tax_id = tax.tax_id', 'left');
+                $this->db->where('tax_product_service.tax_id', '52C2SKCKGQY6Q9J');
+                $this->db->where('tax_product_service.product_id', $product_id);
+                $tax_information = $this->db->get()->result();
+
+                //New tax calculation for discount
+                if (!empty($tax_information)) {
+                    $data = array(
+                        'tax_percentage' => '14',
+                    );
+                    $this->db->where('tax_id', '52C2SKCKGQY6Q9J');
+                    $this->db->where('product_id', $product_id);
+                    $this->db->update('tax_product_service', $data);
+                } else {
+                    $data = array(
+                        't_p_s_id' => $this->auth->generator(15),
+                        'product_id' => $product_id,
+                        'tax_id' => '52C2SKCKGQY6Q9J',
+                        'tax_percentage' => '14',
+                    );
+
+                    $this->db->insert('tax_product_service', $data);
+                }
+            } else {
+                $this->db->select('tax.*,tax_product_service.product_id,tax_percentage');
+                $this->db->from('tax_product_service');
+                $this->db->join('tax', 'tax_product_service.tax_id = tax.tax_id', 'left');
+                $this->db->where('tax_product_service.tax_id', '52C2SKCKGQY6Q9J');
+                $this->db->where('tax_product_service.product_id', $product_id);
+                $tax_information = $this->db->get()->result();
+
+                //New tax calculation for discount
+                if (!empty($tax_information)) {
+                    $this->db->where('tax_id', '52C2SKCKGQY6Q9J');
+                    $this->db->where('product_id', $product_id);
+                    $this->db->delete('tax_product_service');
+                }
+            }
+//// End update tax for sunglasses by shady azzam
+
+
             //Product variant prices
             if (isset($variant_prices) && !empty($variant_prices)) {
                 $size_variant = $this->input->post('size_variant[]', TRUE);
@@ -1796,7 +1841,7 @@ class Cproduct extends MX_Controller {
                 $price_types_list = [];
                 $filter_list = [];
                 $brand_id = $sheetdata[$i][0];
-                $product_model = $sheetdata[$i][1]. '-' . $sheetdata[$i][2];
+                $product_model = $sheetdata[$i][1] . '-' . $sheetdata[$i][2];
                 $category_id = $sheetdata[$i][3];
                 $filter_1 = $sheetdata[$i][4];
                 $filter_2 = $sheetdata[$i][5];
@@ -1831,7 +1876,7 @@ class Cproduct extends MX_Controller {
                     'variants' => $excel['variants'],
                     'supplier_price' => 0,
                     'pricing' => 1,
-                    //'assembly' => 1, //for assembly
+                        //'assembly' => 1, //for assembly
                 );
                 $this->db->insert('product_information', $product_details);
 

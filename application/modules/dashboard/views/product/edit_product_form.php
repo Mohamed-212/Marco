@@ -122,6 +122,8 @@
                                                            value="<?php echo html_escape($product_name); ?>" required>
                                                     <input type="hidden" name="product_id"
                                                            value="<?php echo html_escape($product_id); ?>" />
+                                                      <input type="hidden" id="assembly" name="assembly"
+                                                           value="<?php echo html_escape($assembly); ?>" />
                                                 </div>
                                             </div>
                                         </div>
