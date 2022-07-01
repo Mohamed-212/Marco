@@ -102,7 +102,7 @@
                                     <!--                                        <input id="myRadioButton_1" type="button"-->
                                     <!--                                               onClick="active_customer('payment_from_1')" id="myRadioButton_1"-->
                                     <!--                                               class="btn btn-success checkbox_account" name="customer_confirm"-->
-                                    <!--                                               checked="checked" value="--><?php //echo display('new_customer')  ?><!--">-->
+                                    <!--                                               checked="checked" value="--><?php //echo display('new_customer')     ?><!--">-->
                                     <!--                                    </div>-->
                                 </div>
                             </div>
@@ -123,11 +123,11 @@
                             <!--                            <div class="col-sm-8" id="payment_from_2">-->
                             <!--                                <div class="form-group row">-->
                             <!--                                    <label for="customer_name_others"-->
-                            <!--                                           class="col-sm-3 col-form-label">--><?php //echo display('customer_name')  ?><!-- <i-->
+                            <!--                                           class="col-sm-3 col-form-label">--><?php //echo display('customer_name')     ?><!-- <i-->
                             <!--                                                class="text-danger">*</i></label>-->
                             <!--                                    <div class="col-sm-6">-->
                             <!--                                        <input autofill="off" type="text" size="100" name="customer_name_others"-->
-                            <!--                                               placeholder='--><?php //echo display('customer_name')  ?><!--'-->
+                            <!--                                               placeholder='--><?php //echo display('customer_name')     ?><!--'-->
                             <!--                                               id="customer_name_others" class="form-control" />-->
                             <!--                                    </div>-->
                             <!---->
@@ -135,23 +135,23 @@
                             <!--                                        <input onClick="active_customer('payment_from_2')" type="button"-->
                             <!--                                               id="myRadioButton_2" class="checkbox_account btn btn-success"-->
                             <!--                                               name="customer_confirm_others"-->
-                            <!--                                               value="--><?php //echo display('old_customer')  ?><!--">-->
+                            <!--                                               value="--><?php //echo display('old_customer')     ?><!--">-->
                             <!--                                    </div>-->
                             <!--                                </div>-->
                             <!--                                <div class="form-group row">-->
                             <!--                                    <label for="customer_name_others_address"-->
-                            <!--                                           class="col-sm-3 col-form-label">--><?php //echo display('mobile')  ?><!-- </label>-->
+                            <!--                                           class="col-sm-3 col-form-label">--><?php //echo display('mobile')     ?><!-- </label>-->
                             <!--                                    <div class="col-sm-6">-->
                             <!--                                        <input type="number" size="100" name="customer_mobile_no" class=" form-control"-->
-                            <!--                                               placeholder='--><?php //echo display('mobile')  ?><!--' id="customer_mobile_no" />-->
+                            <!--                                               placeholder='--><?php //echo display('mobile')     ?><!--' id="customer_mobile_no" />-->
                             <!--                                    </div>-->
                             <!--                                </div>-->
                             <!--                                <div class="form-group row">-->
                             <!--                                    <label for="customer_name_others_address"-->
-                            <!--                                           class="col-sm-3 col-form-label">--><?php //echo display('address')  ?><!-- </label>-->
+                            <!--                                           class="col-sm-3 col-form-label">--><?php //echo display('address')     ?><!-- </label>-->
                             <!--                                    <div class="col-sm-6">-->
                             <!--                                        <input type="text" size="100" name="customer_name_others_address"-->
-                            <!--                                               class=" form-control" placeholder='--><?php //echo display('address')  ?><!--'-->
+                            <!--                                               class=" form-control" placeholder='--><?php //echo display('address')     ?><!--'-->
                             <!--                                               id="customer_name_others_address" />-->
                             <!--                                    </div>-->
                             <!--                                </div>-->
@@ -187,7 +187,7 @@
                             </div>
                             <!--                            <div class="col-sm-6">-->
                             <!--                                <div class="form-group row">-->
-                            <!--                                    <label for="date" class="col-sm-4 col-form-label">--><?php //echo display('date')  ?><!-- <i-->
+                            <!--                                    <label for="date" class="col-sm-4 col-form-label">--><?php //echo display('date')     ?><!-- <i-->
                             <!--                                                class="text-danger">*</i></label>-->
                             <!--                                    <div class="col-sm-8">-->
                             <!--                                        --><?php
@@ -196,7 +196,7 @@
 //                                        
                             ?>
                             <!--                                        <input class="form-control datepicker" type="text" size="50" name="invoice_date"-->
-                            <!--                                               id="date" required value="--><?php //echo html_escape($date);  ?><!--" />-->
+                            <!--                                               id="date" required value="--><?php //echo html_escape($date);     ?><!--" />-->
                             <!--                                    </div>-->
                             <!--                                </div>-->
                             <!--                            </div>-->
@@ -205,11 +205,33 @@
                                     <label for="date" class="col-sm-4 col-form-label"><?php echo display('employee_name') ?> <i
                                             class="text-danger">*</i></label>
                                     <div class="col-sm-8">
-<?php echo form_dropdown('employee_id', $employee, null, 'class="form-control" id="employee_id" required') ?>
+                                        <?php echo form_dropdown('employee_id', $employee, null, 'class="form-control" id="employee_id" required') ?>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label for="currency"
+                                           class="col-sm-4 col-form-label"><?php echo display('pricing') ?>
+                                        <i class="text-danger">*</i>
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <select name="pri_type" id="pri_type"   onchange="get_pri_type_rate()" class="form-control " required="">
+                                            <option value="0">Sell Price</option>
+                                            <?php foreach ($all_pri_type as $pri_type) : ?>
+                                                <option value="<?php echo html_escape($pri_type['pri_type_id']) ?>"><?php echo html_escape($pri_type['pri_type_name']) ?></option>
+                                                <?php
+                                            endforeach;
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="table-responsive mt_10">
                             <table class="table table-bordered table-hover" id="normalinvoice">
                                 <thead>
@@ -340,7 +362,7 @@
                                             }
                                             ?>
                                             <!-- Tax calculate start-->
-<?php if ($tax['cgst_status'] == 1) { ?>
+                                            <?php if ($tax['cgst_status'] == 1) { ?>
                                                 <input type="hidden" id="cgst_1" class="cgst" />
                                                 <input type="hidden" id="total_cgst_1" class="total_cgst" name="cgst[]" />
                                                 <input type="hidden" name="cgst_id[]" id="cgst_id_1">
@@ -358,7 +380,7 @@
                                                 <input type="hidden" id="igst_1" class="igst" />
                                                 <input type="hidden" id="total_igst_1" class="total_igst" name="igst[]" />
                                                 <input type="hidden" name="igst_id[]" id="igst_id_1">
-<?php } ?>
+                                            <?php } ?>
                                             <!-- Tax calculate end -->
 
                                             <!-- Discount calculate start-->
@@ -374,9 +396,9 @@
                                     </tr>
                                 </tbody>
                                 <tfoot>
-<?php if ($tax['cgst_status'] == 1) { ?>
+                                    <?php if ($tax['cgst_status'] == 1) { ?>
                                         <tr>
-                                             
+
                                             <td class="text-right" colspan="8">
                                                 <b><?php echo html_escape($tax['cgst_name']) ?>:</b>
                                             </td>
@@ -385,7 +407,7 @@
                                                        name="total_cgst" placeholder="0.00" readonly="readonly" />
                                             </td>
                                         </tr>
-                                        
+
                                         <?php
                                     }
                                     if ($tax['sgst_status'] == 1) {
@@ -414,21 +436,21 @@
                                                        name="total_igst" placeholder="0.00" readonly="readonly" />
                                             </td>
                                         </tr>
-<?php } ?>
-                                        <tr>
-                                             <td class="text-center" colspan="1">
+                                    <?php } ?>
+                                    <tr>
+                                        <td class="text-center" colspan="1">
                                             <input type="button" id="add-invoice-item"
                                                    class="btn btn-info color4 color5" name="add-invoice-item"
                                                    onClick="addInputField('addinvoiceItem');"
                                                    value="<?php echo display('add_new_item') ?>" />
-                                         </td>
-                                            <td class="text-right" colspan="7">
-                                                <b><?php echo display('quotation') ?>:</b>
-                                            </td>
-                                            <td class="text-right" colspan="2">
-                                                <input type="checkbox" id="is_quotation" onclick="check_quotation();" value="0" class="form-control text-right" name="is_quotation" />
-                                            </td>
-                                        </tr>
+                                        </td>
+                                        <td class="text-right" colspan="7">
+                                            <b><?php echo display('quotation') ?>:</b>
+                                        </td>
+                                        <td class="text-right" colspan="2">
+                                            <input type="checkbox" id="is_quotation" onclick="check_quotation();" value="0" class="form-control text-right" name="is_quotation" />
+                                        </td>
+                                    </tr>
                                     <tr>
 
                                         <td colspan="6" rowspan="4">
@@ -474,13 +496,13 @@
                                                 :</b>
                                             <select name="shipping_method" id="shipping_method" class="form-control">
                                                 <option value=""></option>
-<?php foreach ($shipping_methods as $shipping_method) : ?>
+                                                <?php foreach ($shipping_methods as $shipping_method) : ?>
                                                     <option
                                                         value="<?php echo html_escape($shipping_method['method_id']); ?>"
                                                         data-amount="<?php echo html_escape($shipping_method['charge_amount']); ?>">
-                                                    <?php echo html_escape($shipping_method['method_name']); ?>
+                                                            <?php echo html_escape($shipping_method['method_name']); ?>
                                                     </option>
-<?php endforeach; ?>
+                                                <?php endforeach; ?>
                                             </select>
                                         </td>
                                         <td class="text-right" colspan="2">
@@ -498,7 +520,7 @@
                                     </tr>
                                     <tr>
                                         <td align="center">
-                                            
+
                                             <input type="hidden" name="baseUrl" class="baseUrl"
                                                    value="<?php echo base_url(); ?>" />
 
@@ -536,7 +558,7 @@
                                                 <div class="col-sm-7">
                                                     <div class="form-group row">
                                                         <label for="bank_id" class="col-sm-4 col-form-label">
-<?php echo display('bank_list') ?> :
+                                                            <?php echo display('bank_list') ?> :
                                                         </label>
                                                         <div class="col-sm-8">
                                                             <select class="form-control" name="payment_id"
@@ -548,7 +570,7 @@
                                                                         ?>
                                                                         <option
                                                                             value="<?php echo html_escape($payment_method->HeadCode); ?>">
-                                                                        <?php echo html_escape($payment_method->HeadName); ?>
+                                                                                <?php echo html_escape($payment_method->HeadName); ?>
                                                                         </option>
                                                                         <?php
                                                                     }
@@ -582,7 +604,7 @@
                                                 <div class="col-sm-6">
                                                     <div class="form-group row">
                                                         <label for="bank_id" class="col-sm-4 col-form-label">
-<?php echo display('number_of_month') ?> :
+                                                            <?php echo display('number_of_month') ?> :
                                                         </label>
                                                         <div class="col-sm-8">
                                                             <input class="form-control" onchange="add_month()" type="number"
@@ -625,7 +647,7 @@
                             </table>
                         </div>
                     </div>
-<?php echo form_close() ?>
+                    <?php echo form_close() ?>
                 </div>
             </div>
             <input type="hidden" id="cgst_status" value="<?php echo html_escape($tax['cgst_status']); ?>">

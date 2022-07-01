@@ -78,7 +78,8 @@ $("#" + color).val(obj.color);
 
 stock_by_product_variant_id(cName);
 stock_by_product_variant_color(cName);
-quantity_calculate(cName);
+//quantity_calculate(cName);
+get_pri_type_rate1(cName);
 
 }
 });

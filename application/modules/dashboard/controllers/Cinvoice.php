@@ -1,10 +1,11 @@
-<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+<?php
 
-class Cinvoice extends MX_Controller
-{
+if (!defined('BASEPATH'))
+    exit('No direct script access allowed');
 
-    function __construct()
-    {
+class Cinvoice extends MX_Controller {
+
+    function __construct() {
         parent::__construct();
         $this->auth->check_user_auth();
         $this->load->model(array('dashboard/Invoices'));
@@ -13,13 +14,12 @@ class Cinvoice extends MX_Controller
     }
 
     //Default invoice add from loading
-    public function index()
-    {
+    public function index() {
         $this->new_invoice();
     }
+
     //Add new invoice
-    public function new_invoice()
-    {
+    public function new_invoice() {
         $this->permission->check_label('new_sale')->create()->redirect();
         if (check_module_status('accounting') == 1) {
             $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
@@ -30,24 +30,26 @@ class Cinvoice extends MX_Controller
                     'dashboard/Customers',
                     'dashboard/Shipping_methods'
                 ));
-                $store_list      = $this->Stores->store_list();
-                $variant_list    = $this->Variants->variant_list();
+                $store_list = $this->Stores->store_list();
+                $variant_list = $this->Variants->variant_list();
                 $shipping_methods = $this->Shipping_methods->shipping_method_list();
-                $customer        = $this->Customers->customer_list();
-                $bank_list       = $this->Invoices->bank_list();
-                $payment_info    = $this->Invoices->payment_info();
+                $customer = $this->Customers->customer_list();
+                $bank_list = $this->Invoices->bank_list();
+                $payment_info = $this->Invoices->payment_info();
+                $all_pri_type = $this->Invoices->select_all_pri_type();
                 $data = array(
-                    'title'           => display('new_invoice'),
-                    'store_list'      => $store_list,
-                    'variant_list'    => $variant_list,
-                    'customer'        => $customer[0],
+                    'title' => display('new_invoice'),
+                    'store_list' => $store_list,
+                    'variant_list' => $variant_list,
+                    'customer' => $customer[0],
                     'shipping_methods' => $shipping_methods,
-                    'bank_list'       => $bank_list,
-                    'payment_info'    => $payment_info,
-                    'employee'        => $this->empdropdown(),
+                    'bank_list' => $bank_list,
+                    'payment_info' => $payment_info,
+                    'employee' => $this->empdropdown(),
+                    'all_pri_type' => $all_pri_type,
                 );
                 $data['module'] = "dashboard";
-                $data['page']  = "invoice/add_invoice_form";
+                $data['page'] = "invoice/add_invoice_form";
                 echo Modules::run('template/layout', $data);
             } else {
                 $this->session->set_userdata(array('error_message' => display('no_active_fiscal_year_found')));
@@ -60,68 +62,67 @@ class Cinvoice extends MX_Controller
                 'dashboard/Customers',
                 'dashboard/Shipping_methods'
             ));
-            $store_list       = $this->Stores->store_list();
-            $variant_list     = $this->Variants->variant_list();
+            $store_list = $this->Stores->store_list();
+            $variant_list = $this->Variants->variant_list();
             $shipping_methods = $this->Shipping_methods->shipping_method_list();
-            $customer         = $this->Customers->customer_list();
-            $bank_list        = $this->Invoices->bank_list();
+            $customer = $this->Customers->customer_list();
+            $bank_list = $this->Invoices->bank_list();
             $data = array(
-                'title'           => display('new_invoice'),
-                'store_list'      => $store_list,
-                'variant_list'    => $variant_list,
-                'customer'        => $customer[0],
-                'shipping_methods'=> $shipping_methods,
-                'bank_list'       => $bank_list,
+                'title' => display('new_invoice'),
+                'store_list' => $store_list,
+                'variant_list' => $variant_list,
+                'customer' => $customer[0],
+                'shipping_methods' => $shipping_methods,
+                'bank_list' => $bank_list,
             );
             $data['module'] = "dashboard";
-            $data['page']  = "invoice/add_invoice_form";
+            $data['page'] = "invoice/add_invoice_form";
             echo Modules::run('template/layout', $data);
         }
     }
 
-    public function empdropdown(){
+    public function empdropdown() {
         $this->db->select('*');
         $this->db->from('employee_history');
         $query = $this->db->get();
         $data = $query->result();
 
         $list = array('' => 'Select One...');
-        if (!empty($data) ) {
+        if (!empty($data)) {
             foreach ($data as $value) {
-                $list[$value->id] = $value->first_name." ".$value->last_name;
+                $list[$value->id] = $value->first_name . " " . $value->last_name;
             }
         }
         return $list;
     }
 
-    public function manage_invoice()
-    {
+    public function manage_invoice() {
         $this->permission->check_label('manage_sale')->read()->redirect();
         $filter = array(
-            'invoice_no'    => $this->input->get('invoice_no', TRUE),
-            'customer_id'   => $this->input->get('customer_id', TRUE),
-            'date'          => $this->input->get('date', TRUE),
+            'invoice_no' => $this->input->get('invoice_no', TRUE),
+            'customer_id' => $this->input->get('customer_id', TRUE),
+            'date' => $this->input->get('date', TRUE),
             'invoice_status' => $this->input->get('invoice_status', TRUE)
         );
-        $config["base_url"]   = base_url('dashboard/Cinvoice/manage_invoice');
+        $config["base_url"] = base_url('dashboard/Cinvoice/manage_invoice');
         $config["total_rows"] = $this->Invoices->count_invoice_list($filter);
-        $config["per_page"]   = 20;
+        $config["per_page"] = 20;
         $config["uri_segment"] = 4;
-        $config["num_links"]  = 5;
+        $config["num_links"] = 5;
         /* This Application Must Be Used With BootStrap 3 * */
-        $config['full_tag_open']   = "<ul class='pagination'>";
-        $config['full_tag_close']  = "</ul>";
-        $config['num_tag_open']    = '<li>';
-        $config['num_tag_close']   = '</li>';
-        $config['cur_tag_open']    = "<li class='disabled'><li class='active'><a href='#'>";
-        $config['cur_tag_close']   = "<span class='sr-only'></span></a></li>";
-        $config['next_tag_open']   = "<li>";
-        $config['next_tag_close']  = "</li>";
-        $config['prev_tag_open']   = "<li>";
+        $config['full_tag_open'] = "<ul class='pagination'>";
+        $config['full_tag_close'] = "</ul>";
+        $config['num_tag_open'] = '<li>';
+        $config['num_tag_close'] = '</li>';
+        $config['cur_tag_open'] = "<li class='disabled'><li class='active'><a href='#'>";
+        $config['cur_tag_close'] = "<span class='sr-only'></span></a></li>";
+        $config['next_tag_open'] = "<li>";
+        $config['next_tag_close'] = "</li>";
+        $config['prev_tag_open'] = "<li>";
         $config['prev_tagl_close'] = "</li>";
-        $config['first_tag_open']  = "<li>";
+        $config['first_tag_open'] = "<li>";
         $config['first_tagl_close'] = "</li>";
-        $config['last_tag_open']   = "<li>";
+        $config['last_tag_open'] = "<li>";
         $config['last_tagl_close'] = "</li>";
         /* ends of bootstrap */
         $this->pagination->initialize($config);
@@ -141,29 +142,28 @@ class Cinvoice extends MX_Controller
         $this->load->model(array('dashboard/Soft_settings', 'dashboard/Customers'));
         $currency_details = $this->Soft_settings->retrieve_currency_info();
         $data = array(
-            'title'         => display('manage_invoice'),
+            'title' => display('manage_invoice'),
             'invoices_list' => $invoices_list,
-            'currency'      => $currency_details[0]['currency_icon'],
-            'position'      => $currency_details[0]['currency_position'],
-            'links'         => $links
+            'currency' => $currency_details[0]['currency_icon'],
+            'position' => $currency_details[0]['currency_position'],
+            'links' => $links
         );
 
         $data['module'] = "dashboard";
-        $data['page']   = "invoice/invoice";
+        $data['page'] = "invoice/invoice";
         echo Modules::run('template/layout', $data);
     }
+
     //Insert new invoice
-    public function insert_invoice()
-    {
-        if($this->input->post('due_amount', TRUE) > 0 && $this->input->post('is_installment', TRUE) == 0){
+    public function insert_invoice() {
+        if ($this->input->post('due_amount', TRUE) > 0 && $this->input->post('is_installment', TRUE) == 0) {
             $this->session->set_userdata(array('error_message' => display('choose_installment_if_invoice_not_full_paid')));
             $this->index();
-        }
-        else{
+        } else {
             $this->load->library('form_validation');
             $this->form_validation->set_rules('product_id[]', display('product_id'), 'required');
             $this->form_validation->set_rules('variant_id[]', display('variant'), 'required');
-           // $this->form_validation->set_rules('batch_no[]', display('batch_no'), 'required');
+            // $this->form_validation->set_rules('batch_no[]', display('batch_no'), 'required');
             $this->form_validation->set_rules('employee_id', display('employee_id'), 'required');
             if ($this->form_validation->run() == false) {
                 $this->session->set_userdata(array('error_message' => display('failed_try_again')));
@@ -179,36 +179,36 @@ class Cinvoice extends MX_Controller
             }
         }
     }
-    public function insert_posInvoice()
-    {
+
+    public function insert_posInvoice() {
         $invoice_id = $this->Invoices->pos_invoice_entry();
         $this->session->set_userdata(array('message' => display('successfully_added')));
         redirect('dashboard/Cinvoice/pos_invoice_inserted_data_redirect/' . $invoice_id . '?place=pos');
     }
+
     //Invoice Update Form
-    public function invoice_update_form($invoice_id)
-    {
+    public function invoice_update_form($invoice_id) {
         $this->permission->check_label('manage_sale')->update()->redirect();
         $content = $this->linvoice->invoice_edit_data($invoice_id);
         $this->template_lib->full_admin_html_view($content);
     }
+
     // Invoice Update
-    public function invoice_update()
-    {
+    public function invoice_update() {
         $this->permission->check_label('manage_sale')->update()->redirect();
 
         $invoice_id = $this->Invoices->update_invoice();
         $this->session->set_userdata(array('message' => display('successfully_updated')));
         redirect('dashboard/cinvoice/invoice_inserted_data/' . $invoice_id);
     }
+
     //Retrive right now inserted data to cretae html
-    public function invoice_inserted_data($invoice_id)
-    {
+    public function invoice_inserted_data($invoice_id) {
         $content = $this->linvoice->invoice_html_data($invoice_id);
         $this->template_lib->full_admin_html_view($content);
     }
-    public function invoice_inserted_data_pdf($invoice_id)
-    {
+
+    public function invoice_inserted_data_pdf($invoice_id) {
         $this->load->model('dashboard/Invoices');
         $this->load->model('dashboard/Soft_settings');
         $this->load->library('dashboard/occational');
@@ -216,7 +216,7 @@ class Cinvoice extends MX_Controller
         $invoice_detail = $this->Invoices->retrieve_invoice_html_data($invoice_id);
         $order_no = $this->db->select('b.order as order_no')->from('invoice a')->where('a.order_id', $invoice_detail[0]['order_id'])->join('order b', 'a.order_id = b.order_id', 'left')->get()->result();
         $cardpayments = $this->Invoices->get_invoice_card_payments($invoice_id);
-        $shipping_method  = $this->Shipping_methods->shipping_method_search_item($invoice_detail[0]['shipping_method']);
+        $shipping_method = $this->Shipping_methods->shipping_method_search_item($invoice_detail[0]['shipping_method']);
         $subTotal_quantity = 0;
         $subTotal_cartoon = 0;
         $subTotal_discount = 0;
@@ -234,40 +234,40 @@ class Cinvoice extends MX_Controller
         }
 
         $currency_details = $this->Soft_settings->retrieve_currency_info();
-        $company_info    = $this->Invoices->retrieve_company();
+        $company_info = $this->Invoices->retrieve_company();
 
         $data = array(
-            'title'            => display('invoice_details'),
-            'invoice_id'       => $invoice_detail[0]['invoice_id'],
-            'invoice_no'       => $invoice_detail[0]['invoice'],
-            'customer_name'    => $invoice_detail[0]['customer_name'],
-            'customer_mobile'  => $invoice_detail[0]['customer_mobile'],
-            'customer_email'   => $invoice_detail[0]['customer_email'],
-            'store_id'         => $invoice_detail[0]['store_id'],
-            'vat_no'           => $invoice_detail[0]['vat_no'],
-            'cr_no'            => $invoice_detail[0]['cr_no'],
+            'title' => display('invoice_details'),
+            'invoice_id' => $invoice_detail[0]['invoice_id'],
+            'invoice_no' => $invoice_detail[0]['invoice'],
+            'customer_name' => $invoice_detail[0]['customer_name'],
+            'customer_mobile' => $invoice_detail[0]['customer_mobile'],
+            'customer_email' => $invoice_detail[0]['customer_email'],
+            'store_id' => $invoice_detail[0]['store_id'],
+            'vat_no' => $invoice_detail[0]['vat_no'],
+            'cr_no' => $invoice_detail[0]['cr_no'],
             'customer_address' => $invoice_detail[0]['customer_address_1'],
-            'final_date'       => $invoice_detail[0]['final_date'],
-            'total_amount'     => $invoice_detail[0]['total_amount'],
-            'total_discount'   => $invoice_detail[0]['total_discount'],
+            'final_date' => $invoice_detail[0]['final_date'],
+            'total_amount' => $invoice_detail[0]['total_amount'],
+            'total_discount' => $invoice_detail[0]['total_discount'],
             'invoice_discount' => $invoice_detail[0]['invoice_discount'],
-            'service_charge'   => $invoice_detail[0]['service_charge'],
-            'shipping_charge'  => $invoice_detail[0]['shipping_charge'],
-            'shipping_method'  => @$shipping_method[0]['method_name'],
-            'paid_amount'      => $invoice_detail[0]['paid_amount'],
-            'due_amount'       => $invoice_detail[0]['due_amount'],
-            'invoice_details'  => $invoice_detail[0]['invoice_details'],
+            'service_charge' => $invoice_detail[0]['service_charge'],
+            'shipping_charge' => $invoice_detail[0]['shipping_charge'],
+            'shipping_method' => @$shipping_method[0]['method_name'],
+            'paid_amount' => $invoice_detail[0]['paid_amount'],
+            'due_amount' => $invoice_detail[0]['due_amount'],
+            'invoice_details' => $invoice_detail[0]['invoice_details'],
             'subTotal_quantity' => $subTotal_quantity,
             'invoice_all_data' => $invoice_detail,
-            'order_no'         => $order_no,
-            'company_info'     => $company_info,
-            'currency'         => $currency_details[0]['currency_icon'],
-            'position'         => $currency_details[0]['currency_position'],
+            'order_no' => $order_no,
+            'company_info' => $company_info,
+            'currency' => $currency_details[0]['currency_icon'],
+            'position' => $currency_details[0]['currency_position'],
             'ship_customer_short_address' => $invoice_detail[0]['ship_customer_short_address'],
-            'ship_customer_name'  => $invoice_detail[0]['ship_customer_name'],
+            'ship_customer_name' => $invoice_detail[0]['ship_customer_name'],
             'ship_customer_mobile' => $invoice_detail[0]['ship_customer_mobile'],
             'ship_customer_email' => $invoice_detail[0]['ship_customer_email'],
-            'cardpayments'        => $cardpayments,
+            'cardpayments' => $cardpayments,
         );
         $data['Soft_settings'] = $this->Soft_settings->retrieve_setting_editdata();
         $chapterList = $this->parser->parse('dashboard/invoice/invoice_html_pdf', $data, true);
@@ -275,8 +275,8 @@ class Cinvoice extends MX_Controller
         $this->load->library('pdfgenerator');
         $file_path = $this->pdfgenerator->generate($chapterList);
     }
-    public function invoice_pdf_data($invoice_id)
-    {
+
+    public function invoice_pdf_data($invoice_id) {
         $CI = &get_instance();
         $CI->load->model('dashboard/Invoices');
         $CI->load->model('dashboard/Soft_settings');
@@ -285,7 +285,7 @@ class Cinvoice extends MX_Controller
         $invoice_detail = $CI->Invoices->retrieve_invoice_html_data($invoice_id);
         $order_no = $CI->db->select('b.order as order_no')->from('invoice a')->where('a.order_id', $invoice_detail[0]['order_id'])->join('order b', 'a.order_id = b.order_id', 'left')->get()->result();
         $cardpayments = $CI->Invoices->get_invoice_card_payments($invoice_id);
-        $shipping_method  = $CI->Shipping_methods->shipping_method_search_item($invoice_detail[0]['shipping_method']);
+        $shipping_method = $CI->Shipping_methods->shipping_method_search_item($invoice_detail[0]['shipping_method']);
         $subTotal_quantity = 0;
         $subTotal_cartoon = 0;
         $subTotal_discount = 0;
@@ -302,57 +302,57 @@ class Cinvoice extends MX_Controller
             }
         }
         $currency_details = $CI->Soft_settings->retrieve_currency_info();
-        $company_info    = $CI->Invoices->retrieve_company();
+        $company_info = $CI->Invoices->retrieve_company();
         $data = array(
-            'title'               => display('invoice_details'),
-            'invoice_id'          => $invoice_detail[0]['invoice_id'],
-            'invoice_no'          => $invoice_detail[0]['invoice'],
-            'customer_name'       => $invoice_detail[0]['customer_name'],
-            'customer_mobile'     => $invoice_detail[0]['customer_mobile'],
-            'customer_email'      => $invoice_detail[0]['customer_email'],
-            'store_id'            => $invoice_detail[0]['store_id'],
-            'vat_no'              => $invoice_detail[0]['vat_no'],
-            'cr_no'               => $invoice_detail[0]['cr_no'],
-            'customer_address'    => $invoice_detail[0]['customer_address_1'],
-            'final_date'          => $invoice_detail[0]['final_date'],
-            'total_amount'        => $invoice_detail[0]['total_amount'],
-            'total_discount'      => $invoice_detail[0]['total_discount'],
-            'invoice_discount'    => $invoice_detail[0]['invoice_discount'],
-            'service_charge'      => $invoice_detail[0]['service_charge'],
-            'shipping_charge'     => $invoice_detail[0]['shipping_charge'],
-            'shipping_method'     => @$shipping_method[0]['method_name'],
-            'paid_amount'         => $invoice_detail[0]['paid_amount'],
-            'due_amount'          => $invoice_detail[0]['due_amount'],
-            'invoice_details'     => $invoice_detail[0]['invoice_details'],
-            'subTotal_quantity'   => $subTotal_quantity,
-            'invoice_all_data'    => $invoice_detail,
-            'order_no'            => $order_no,
-            'company_info'        => $company_info,
-            'currency'            => $currency_details[0]['currency_icon'],
-            'position'            => $currency_details[0]['currency_position'],
+            'title' => display('invoice_details'),
+            'invoice_id' => $invoice_detail[0]['invoice_id'],
+            'invoice_no' => $invoice_detail[0]['invoice'],
+            'customer_name' => $invoice_detail[0]['customer_name'],
+            'customer_mobile' => $invoice_detail[0]['customer_mobile'],
+            'customer_email' => $invoice_detail[0]['customer_email'],
+            'store_id' => $invoice_detail[0]['store_id'],
+            'vat_no' => $invoice_detail[0]['vat_no'],
+            'cr_no' => $invoice_detail[0]['cr_no'],
+            'customer_address' => $invoice_detail[0]['customer_address_1'],
+            'final_date' => $invoice_detail[0]['final_date'],
+            'total_amount' => $invoice_detail[0]['total_amount'],
+            'total_discount' => $invoice_detail[0]['total_discount'],
+            'invoice_discount' => $invoice_detail[0]['invoice_discount'],
+            'service_charge' => $invoice_detail[0]['service_charge'],
+            'shipping_charge' => $invoice_detail[0]['shipping_charge'],
+            'shipping_method' => @$shipping_method[0]['method_name'],
+            'paid_amount' => $invoice_detail[0]['paid_amount'],
+            'due_amount' => $invoice_detail[0]['due_amount'],
+            'invoice_details' => $invoice_detail[0]['invoice_details'],
+            'subTotal_quantity' => $subTotal_quantity,
+            'invoice_all_data' => $invoice_detail,
+            'order_no' => $order_no,
+            'company_info' => $company_info,
+            'currency' => $currency_details[0]['currency_icon'],
+            'position' => $currency_details[0]['currency_position'],
             'ship_customer_short_address' => $invoice_detail[0]['ship_customer_short_address'],
-            'ship_customer_name'  => $invoice_detail[0]['ship_customer_name'],
+            'ship_customer_name' => $invoice_detail[0]['ship_customer_name'],
             'ship_customer_mobile' => $invoice_detail[0]['ship_customer_mobile'],
             'ship_customer_email' => $invoice_detail[0]['ship_customer_email'],
-            'cardpayments'        => $cardpayments,
+            'cardpayments' => $cardpayments,
         );
         $data['Soft_settings'] = $CI->Soft_settings->retrieve_setting_editdata();
         $chapterList = $CI->parser->parse('dashboard/invoice/invoice_html', $data, true);
         $this->load->library('pdfgenerator');
         $file_path = $this->pdfgenerator->generate_order($order_id, $chapterList);
     }
+
     //POS invoice page load
-    public function pos_invoice()
-    {
+    public function pos_invoice() {
         $this->permission->check_label('pos_sale')->read()->redirect();
         $content = $this->linvoice->pos_invoice_add_form();
         $this->template_lib->full_admin_html_view($content);
     }
+
     //Insert pos invoice
-    public function insert_pos_invoice()
-    {
-        $product_id  = urldecode($this->input->post('product_id', TRUE)); //barcode
-        $store_id    = $this->input->post('store_id', TRUE);
+    public function insert_pos_invoice() {
+        $product_id = urldecode($this->input->post('product_id', TRUE)); //barcode
+        $store_id = $this->input->post('store_id', TRUE);
         $stok_report = $this->Invoices->stock_report_bydate_pos($product_id);
         if ($stok_report > 0) {
             $product_details = $this->Invoices->get_total_product($product_id);
@@ -408,7 +408,7 @@ class Cinvoice extends MX_Controller
 					</td>
 					<td scope=\"row\">
 					<input type=\"number\" name=\"product_quantity[]\"   onchange=\"quantity_limit('" . $product_id . "')\" onkeyup=\"quantity_calculate('"
-                    . $product_id . "');\" onchange=\"quantity_calculate('" . $product_id . "');\" id=\"total_qntt_" . $product_id . "\" class=\"form-control text-right \" value=\"1\" min=\"1\"/>
+                        . $product_id . "');\" onchange=\"quantity_calculate('" . $product_id . "');\" id=\"total_qntt_" . $product_id . "\" class=\"form-control text-right \" value=\"1\" min=\"1\"/>
 					</td>
 					<td width=\"\">
 					<input class=\"total_price form-control text-right \" type=\"text\" name=\"total_price[]\" id=\"total_price_" . $product_id . "\" value='" . $product_details['price'] . "'  readonly=\"readonly\"/>
@@ -501,31 +501,27 @@ class Cinvoice extends MX_Controller
     }
 
     //Retrive right now inserted data to cretae html
-    public function pos_invoice_inserted_data($invoice_id)
-    {
+    public function pos_invoice_inserted_data($invoice_id) {
         $this->permission->check_label('pos_sale')->read()->redirect();
         $content = $this->linvoice->pos_invoice_html_data($invoice_id);
         $this->template_lib->full_admin_html_view($content);
     }
 
-    public function pos_invoice_inserted_data_redirect($invoice_id)
-    {
+    public function pos_invoice_inserted_data_redirect($invoice_id) {
 
         $this->load->library('dashboard/linvoice');
         $this->linvoice->pos_invoice_html_data_redirect($invoice_id);
     }
 
     // Retrieve product data
-    public function retrieve_product_data()
-    {
+    public function retrieve_product_data() {
         $product_id = $this->input->post('product_id', TRUE);
         $product_info = $this->Invoices->get_total_product($product_id);
         echo json_encode($product_info);
     }
 
     // Invoice Delete
-    public function invoice_delete($invoice_id)
-    {
+    public function invoice_delete($invoice_id) {
         $this->permission->check_label('manage_sale')->delete()->redirect();
 
         $result = $this->Invoices->delete_invoice($invoice_id);
@@ -538,8 +534,7 @@ class Cinvoice extends MX_Controller
     }
 
     //AJAX INVOICE STOCK Check
-    public function product_stock_check($product_id)
-    {
+    public function product_stock_check($product_id) {
 
         $purchase_stocks = $this->Invoices->get_total_purchase_item($product_id);
         $total_purchase = 0;
@@ -561,8 +556,7 @@ class Cinvoice extends MX_Controller
     }
 
     //Search product by product name and category
-    public function search_product()
-    {
+    public function search_product() {
         $product_name = $this->input->post('product_name', TRUE);
         $category_id = $this->input->post('category_id', TRUE);
         $product_search = $this->Invoices->product_search($product_name, $category_id);
@@ -590,8 +584,7 @@ class Cinvoice extends MX_Controller
     }
 
     //Insert new customer
-    public function insert_customer()
-    {
+    public function insert_customer() {
         $customer_id = generator(15);
         //Customer  basic information adding.
         $data = array(
@@ -610,8 +603,8 @@ class Cinvoice extends MX_Controller
             redirect(base_url('dashboard/Cinvoice/pos_invoice'));
         }
     }
-    public function change_stock($invoice_id)
-    {
+
+    public function change_stock($invoice_id) {
         //find previous invoice history and REDUCE the stock
         $invoice_history = $this->db->select('*')->from('invoice_details')->where('invoice_id', $invoice_id)->get()->result_array();
         if (count($invoice_history) > 0) {
@@ -638,8 +631,8 @@ class Cinvoice extends MX_Controller
             }
         }
     }
-    public function change_inv_stock($invoice_id)
-    {
+
+    public function change_inv_stock($invoice_id) {
         //find previous invoice history and REDUCE the stock
         $invoice_history = $this->db->select('*')->from('invoice_details')->where('invoice_id', $invoice_id)->get()->result_array();
         if (count($invoice_history) > 0) {
@@ -666,8 +659,8 @@ class Cinvoice extends MX_Controller
             }
         }
     }
-    public function check_inv_stock($store_id = null, $product_id = null, $variant = null, $variant_color = null)
-    {
+
+    public function check_inv_stock($store_id = null, $product_id = null, $variant = null, $variant_color = null) {
         $this->db->select('stock_id,quantity');
         $this->db->from('invoice_stock_tbl');
         if (!empty($store_id)) {
@@ -686,8 +679,7 @@ class Cinvoice extends MX_Controller
         return $query->row();
     }
 
-    public function check_stock($store_id = null, $product_id = null, $variant = null, $variant_color = null)
-    {
+    public function check_stock($store_id = null, $product_id = null, $variant = null, $variant_color = null) {
         $this->db->select('stock_id,quantity');
         $this->db->from('invoice_stock_tbl');
         if (!empty($store_id)) {
@@ -706,31 +698,30 @@ class Cinvoice extends MX_Controller
         return $query->row();
     }
 
-    public function insert_loyalty_points($customer_id,$points){
-        $piting_status=$this->db->select('*')->from('loyalty_points_settings')->where('id',1)->get()->row();
-        if($piting_status->status==1){
+    public function insert_loyalty_points($customer_id, $points) {
+        $piting_status = $this->db->select('*')->from('loyalty_points_settings')->where('id', 1)->get()->row();
+        if ($piting_status->status == 1) {
             // here will go the point insertion
-            $chq_customer_points=$this->db->select('*')->from('loyalty_points')->where('customer_id',$customer_id)->get()->row();
-            if(!empty($chq_customer_points)){
+            $chq_customer_points = $this->db->select('*')->from('loyalty_points')->where('customer_id', $customer_id)->get()->row();
+            if (!empty($chq_customer_points)) {
                 $points_data = array(
-                    'total_points'  =>($chq_customer_points->total_points+$points),
-                    'current_points'=>($chq_customer_points->current_points+$points)
+                    'total_points' => ($chq_customer_points->total_points + $points),
+                    'current_points' => ($chq_customer_points->current_points + $points)
                 );
-                $this->db->where('customer_id',$customer_id)->update('loyalty_points',$points_data);
-            }else{
+                $this->db->where('customer_id', $customer_id)->update('loyalty_points', $points_data);
+            } else {
                 $points_data = array(
-                    'customer_id'   =>$customer_id,
-                    'total_points'  =>$points,
-                    'current_points'=>$points
+                    'customer_id' => $customer_id,
+                    'total_points' => $points,
+                    'current_points' => $points
                 );
-                $this->db->insert('loyalty_points',$points_data);
+                $this->db->insert('loyalty_points', $points_data);
             }
         }
     }
 
     //Update status
-    public function update_status($invoice_id)
-    {
+    public function update_status($invoice_id) {
         $this->load->model('dashboard/Soft_settings');
         $invoice_status = $this->input->post('invoice_status', TRUE);
         $order_no = $this->input->post('order_no', TRUE);
@@ -746,11 +737,11 @@ class Cinvoice extends MX_Controller
             $this->db->where('a.invoice_id', $invoice_id);
             $invoice_info = $this->db->get()->result_array();
 
-            if(check_module_status('loyalty_points') == 1){
+            if (check_module_status('loyalty_points') == 1) {
                 // here will go the point insertion
-                $points_divisor = $this->db->select('*')->from('loyalty_points_settings')->where('id',1)->get()->row();
-                $points=floor($invoice_info[0]['total_amount']/$points_divisor->amount);
-                $this->insert_loyalty_points($customer_id,$points);
+                $points_divisor = $this->db->select('*')->from('loyalty_points_settings')->where('id', 1)->get()->row();
+                $points = floor($invoice_info[0]['total_amount'] / $points_divisor->amount);
+                $this->insert_loyalty_points($customer_id, $points);
                 // loyalty point insertion end
             }
         };
@@ -773,18 +764,18 @@ class Cinvoice extends MX_Controller
                     $this->db->from('invoice a');
                     $this->db->join('invoice_details b', 'b.invoice_id = a.invoice_id');
                     $this->db->where('a.invoice_id', $invoice_id);
-                    $invoice_info       = $this->db->get()->result_array();
+                    $invoice_info = $this->db->get()->result_array();
                     // change_stock
                     $this->change_inv_stock($invoice_id);
                     // change_stock
-                    $invoice_no         = $invoice_info[0]['invoice'];
-                    $store_id           = $invoice_info[0]['store_id'];
-                    $product_id_array   = array_column($invoice_info, 'product_id');
-                    $variant_id_array   = array_column($invoice_info, 'variant_id');
+                    $invoice_no = $invoice_info[0]['invoice'];
+                    $store_id = $invoice_info[0]['store_id'];
+                    $product_id_array = array_column($invoice_info, 'product_id');
+                    $variant_id_array = array_column($invoice_info, 'variant_id');
                     $variant_color_array = array_column($invoice_info, 'variant_color');
-                    $batch_no_array     = array_column($invoice_info, 'batch_no');
-                    $quantity_array     = array_column($invoice_info, 'quantity');
-                    $customer_id        = $invoice_info[0]['customer_id'];
+                    $batch_no_array = array_column($invoice_info, 'batch_no');
+                    $quantity_array = array_column($invoice_info, 'quantity');
+                    $customer_id = $invoice_info[0]['customer_id'];
 
                     $chq_wastage = $this->db->select('id')->from('wastage_request')->where('invoice_id', $invoice_id)->get();
                     $chq_return = $this->db->select('id')->from('return_request')->where('invoice_id', $invoice_id)->get();
@@ -792,16 +783,16 @@ class Cinvoice extends MX_Controller
 
                         // return_request
                         $data = array(
-                            'order_id'   => $invoice_info[0]['order_id'],
+                            'order_id' => $invoice_info[0]['order_id'],
                             'invoice_id' => $invoice_info[0]['invoice_id'],
                             'customer_id' => $customer_id,
-                            'note'       => $this->input->post('note', true),
-                            'status'     => 0,
+                            'note' => $this->input->post('note', true),
+                            'status' => 0,
                         );
                         $result = $this->db->insert('return_request', $data);
                         //return_request
                         $request_id = $this->db->insert_id();
-                        $cogs    = 0;
+                        $cogs = 0;
                         $price_before_discount = 0;
                         $subtotal_price = 0;
                         // return_request_products
@@ -818,17 +809,17 @@ class Cinvoice extends MX_Controller
                                 $this->db->where('variant_color', $variant_color_array[$key]);
                             }
                             $product_total = $this->db->get()->row();
-                            $subtotal_price       += $product_total->total_price;
-                            $cogs                 += ($product_total->supplier_rate * $quantity_array[$key]);
+                            $subtotal_price += $product_total->total_price;
+                            $cogs += ($product_total->supplier_rate * $quantity_array[$key]);
                             $price_before_discount += ($product_total->rate * $quantity_array[$key]);
 
                             $requested_data = array(
-                                'request_id'   => $request_id,
-                                'product_id'   => $product_id,
-                                'batch_no'     => $batch_no_array[$key],
-                                'variant_id'   => $variant_id_array[$key],
+                                'request_id' => $request_id,
+                                'product_id' => $product_id,
+                                'batch_no' => $batch_no_array[$key],
+                                'variant_id' => $variant_id_array[$key],
                                 'variant_color' => $variant_color_array[$key],
-                                'qty'          => $quantity_array[$key],
+                                'qty' => $quantity_array[$key],
                             );
                             $submit = $this->db->insert('return_request_products', $requested_data);
                         }
@@ -837,112 +828,112 @@ class Cinvoice extends MX_Controller
 
                             //start sales return invoice
                             $customer_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('customer_id', $customer_id)->get()->row();
-                            $store_head   = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('store_id', $store_id)->get()->row();
-                            $createdate   = date('Y-m-d H:i:s');
-                            $receive_by   = $this->session->userdata('user_id');
-                            $date         = date('Y-m-d');
+                            $store_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('store_id', $store_id)->get()->row();
+                            $createdate = date('Y-m-d H:i:s');
+                            $receive_by = $this->session->userdata('user_id');
+                            $date = date('Y-m-d');
 
                             $invoice_info = $this->db->select('total_discount,total_vat,invoice_discount')->from('invoice')->where('invoice_id', $invoice_id)->get()->row();
 
 
                             $total_price_before_discount = $price_before_discount;
-                            $total_vat     = (!empty($invoice_info->total_vat) ? $invoice_info->total_vat : 0);
+                            $total_vat = (!empty($invoice_info->total_vat) ? $invoice_info->total_vat : 0);
                             $total_discount = ((!empty($invoice_info->invoice_discount) ? $invoice_info->invoice_discount : 0) + (!empty($invoice_info->total_discount) ? $invoice_info->total_discount : 0));
                             $total_with_vat = ($total_price_before_discount - $total_discount) + $total_vat;
-                            $cogs          = $cogs;
+                            $cogs = $cogs;
 
                             //1st debit (Sales return for Showroom sales) with total price before discount
                             $store_debit = array(
-                                'fy_id'     => $find_active_fiscal_year->id,
-                                'VNo'       => 'SR-' . $request_id,
-                                'Vtype'     => 'Sales return',
-                                'VDate'     => $date,
-                                'COAID'     => 5121, // account payable game 11
+                                'fy_id' => $find_active_fiscal_year->id,
+                                'VNo' => 'SR-' . $request_id,
+                                'Vtype' => 'Sales return',
+                                'VDate' => $date,
+                                'COAID' => 5121, // account payable game 11
                                 'Narration' => 'Sales return for Showroom sales "total price before discount" debited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
-                                'Debit'     => $total_price_before_discount,
-                                'Credit'    => 0,
-                                'IsPosted'  => 1,
-                                'CreateBy'  => $receive_by,
+                                'Debit' => $total_price_before_discount,
+                                'Credit' => 0,
+                                'IsPosted' => 1,
+                                'CreateBy' => $receive_by,
                                 'CreateDate' => $createdate,
-                                'IsAppove'  => 1
+                                'IsAppove' => 1
                             );
 
                             //2nd debit (vat) with total vat
                             $vat_debit = array(
-                                'fy_id'     => $find_active_fiscal_year->id,
-                                'VNo'       => 'SR-' . $request_id,
-                                'Vtype'     => 'Sales return',
-                                'VDate'     => $date,
-                                'COAID'     => 2114, // account payable game 11
+                                'fy_id' => $find_active_fiscal_year->id,
+                                'VNo' => 'SR-' . $request_id,
+                                'Vtype' => 'Sales return',
+                                'VDate' => $date,
+                                'COAID' => 2114, // account payable game 11
                                 'Narration' => 'Sales return "total vat" debited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
-                                'Debit'     => $total_vat,
-                                'Credit'    => 0,
-                                'IsPosted'  => 1,
-                                'CreateBy'  => $receive_by,
+                                'Debit' => $total_vat,
+                                'Credit' => 0,
+                                'IsPosted' => 1,
+                                'CreateBy' => $receive_by,
                                 'CreateDate' => $createdate,
-                                'IsAppove'  => 1
+                                'IsAppove' => 1
                             );
                             //3rd credit (customer) with grand total amount
                             $customer_credit = array(
-                                'fy_id'     => $find_active_fiscal_year->id,
-                                'VNo'       => 'SR-' . $request_id,
-                                'Vtype'     => 'Sales return',
-                                'VDate'     => $date,
-                                'COAID'     => $customer_head->HeadCode,
+                                'fy_id' => $find_active_fiscal_year->id,
+                                'VNo' => 'SR-' . $request_id,
+                                'Vtype' => 'Sales return',
+                                'VDate' => $date,
+                                'COAID' => $customer_head->HeadCode,
                                 'Narration' => 'Sales return" total with vat" debit by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
-                                'Debit'     => 0,
-                                'Credit'    => $total_with_vat,
-                                'IsPosted'  => 1,
-                                'CreateBy'  => $receive_by,
+                                'Debit' => 0,
+                                'Credit' => $total_with_vat,
+                                'IsPosted' => 1,
+                                'CreateBy' => $receive_by,
                                 'CreateDate' => $createdate,
-                                'IsAppove'  => 1
+                                'IsAppove' => 1
                             );
                             //4th credit (Allowed Discount) with total discount
                             $allowed_discount_credit = array(
-                                'fy_id'     => $find_active_fiscal_year->id,
-                                'VNo'       => 'SR-' . $request_id,
-                                'Vtype'     => 'Sales return',
-                                'VDate'     => $date,
-                                'COAID'     => 4114,
+                                'fy_id' => $find_active_fiscal_year->id,
+                                'VNo' => 'SR-' . $request_id,
+                                'Vtype' => 'Sales return',
+                                'VDate' => $date,
+                                'COAID' => 4114,
                                 'Narration' => 'Sales return "total discount" debit by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
-                                'Debit'     => 0,
-                                'Credit'    => $total_discount,
-                                'IsPosted'  => 1,
-                                'CreateBy'  => $receive_by,
+                                'Debit' => 0,
+                                'Credit' => $total_discount,
+                                'IsPosted' => 1,
+                                'CreateBy' => $receive_by,
                                 'CreateDate' => $createdate,
-                                'IsAppove'  => 1
+                                'IsAppove' => 1
                             );
 
                             //5th cogs debit (Main Warehouse) with COGS amount
                             $store_cogs_Debit = array(
-                                'fy_id'     => $find_active_fiscal_year->id,
-                                'VNo'       => 'SR-' . $request_id,
-                                'Vtype'     => 'Sales return',
-                                'VDate'     => $date,
-                                'COAID'     => 1141,
+                                'fy_id' => $find_active_fiscal_year->id,
+                                'VNo' => 'SR-' . $request_id,
+                                'Vtype' => 'Sales return',
+                                'VDate' => $date,
+                                'COAID' => 1141,
                                 'Narration' => 'Sales return "COGS" debited in Main Warehouse by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
-                                'Debit'     => $cogs,
-                                'Credit'    => 0,
-                                'IsPosted'  => 1,
-                                'CreateBy'  => $receive_by,
-                                'CreateDate'=> $createdate,
-                                'IsAppove'  => 1
+                                'Debit' => $cogs,
+                                'Credit' => 0,
+                                'IsPosted' => 1,
+                                'CreateBy' => $receive_by,
+                                'CreateDate' => $createdate,
+                                'IsAppove' => 1
                             );
 
                             //6th credit Cost of Goods Sold (cogs) with COGS amount
                             $cogs_credit = array(
-                                'fy_id'     => $find_active_fiscal_year->id,
-                                'VNo'       => 'SR-' . $request_id,
-                                'Vtype'     => 'Sales return',
-                                'VDate'     => $date,
-                                'COAID'     => 4111,
+                                'fy_id' => $find_active_fiscal_year->id,
+                                'VNo' => 'SR-' . $request_id,
+                                'Vtype' => 'Sales return',
+                                'VDate' => $date,
+                                'COAID' => 4111,
                                 'Narration' => 'Sales return inventory "COGS" debited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
-                                'Debit'     => 0,
-                                'Credit'    => $cogs,
-                                'IsPosted'  => 1,
-                                'CreateBy'  => $receive_by,
+                                'Debit' => 0,
+                                'Credit' => $cogs,
+                                'IsPosted' => 1,
+                                'CreateBy' => $receive_by,
                                 'CreateDate' => $createdate,
-                                'IsAppove'  => 1
+                                'IsAppove' => 1
                             );
 
                             // debit
@@ -985,7 +976,7 @@ class Cinvoice extends MX_Controller
         if ($invoice_status == 4) {
             // trans status
             $VNo = 'Inv-' . $invoice_id;
-            $transdata  = array('IsAppove' => 1);
+            $transdata = array('IsAppove' => 1);
             $this->db->where('VNo', $VNo);
             $this->db->update('acc_transaction', $transdata);
             // trans status
@@ -999,7 +990,6 @@ class Cinvoice extends MX_Controller
                     $invinfo = $this->woo_model->get_invoice_info_by_id($invoice_id); // get invoice info
                     if (!empty($invinfo) && !empty($invinfo->default_status)) {  // Stock update only for default store
                         $invdetails = $this->woo_model->get_invoice_details_by_id($invoice_id); // invoice details
-
                         //inv details with sync data
                         if (!empty($invdetails)) {
                             $woo_stock = [];
@@ -1008,8 +998,6 @@ class Cinvoice extends MX_Controller
 
                                     $prod_stock = $this->woo_model->get_product_stock($invinfo->store_id, $invitem->product_id, $invitem->variant_id);
                                     if ($invitem->woo_product_type == 'variable') {  //If the product type is variable
-
-
                                         $varinfo = $this->woo_model->get_varsync_by_localvar($invitem->woo_product_id, $invitem->variant_id);
                                         if (!empty($varinfo->woo_variant_id)) {
 
@@ -1101,10 +1089,8 @@ class Cinvoice extends MX_Controller
         }
     }
 
-
     //Email testing for email
-    public function test_input($data)
-    {
+    public function test_input($data) {
         $data = trim($data);
         $data = stripslashes($data);
         $data = htmlspecialchars($data);
@@ -1112,8 +1098,7 @@ class Cinvoice extends MX_Controller
     }
 
     //Search Inovoice Item
-    public function search_inovoice_item()
-    {
+    public function search_inovoice_item() {
 
         $customer_id = $this->input->post('customer_id', TRUE);
         $content = $this->linvoice->search_inovoice_item($customer_id);
@@ -1121,8 +1106,7 @@ class Cinvoice extends MX_Controller
     }
 
     //This function is used to Generate Key
-    public function generator($lenth)
-    {
+    public function generator($lenth) {
         $number = array("1", "2", "3", "4", "5", "6", "7", "8", "9");
 
         for ($i = 0; $i < $lenth; $i++) {
@@ -1138,9 +1122,7 @@ class Cinvoice extends MX_Controller
         return $con;
     }
 
-
-    public function get_pos_product()
-    {
+    public function get_pos_product() {
 
         $per_page = $this->input->post('per_page', TRUE);
         $limit = $this->input->post('limit', TRUE);
@@ -1149,13 +1131,13 @@ class Cinvoice extends MX_Controller
                     a.product_id,a.product_name,a.price,a.image_thumb,a.variants,a.product_model,
                     c.category_name,c.category_id
                 ')
-            ->from('product_information a')
-            ->join('product_category c', 'c.category_id = a.category_id', 'left')
-            ->group_by('a.product_id')
-            ->order_by('a.product_name', 'asc')
-            ->limit($per_page, $limit)
-            ->get()
-            ->result();
+                ->from('product_information a')
+                ->join('product_category c', 'c.category_id = a.category_id', 'left')
+                ->group_by('a.product_id')
+                ->order_by('a.product_name', 'asc')
+                ->limit($per_page, $limit)
+                ->get()
+                ->result();
         $html = '';
 
         foreach ($products as $product) {
@@ -1177,8 +1159,7 @@ class Cinvoice extends MX_Controller
     }
 
     // Pos Payment form
-    public function get_pos_payment_form()
-    {
+    public function get_pos_payment_form() {
         $grandtotal = $this->input->post('grandtotal', TRUE);
         $totalpaid = $this->input->post('totalpaid', TRUE);
         $more = $this->input->post('more', TRUE);
@@ -1188,7 +1169,7 @@ class Cinvoice extends MX_Controller
 
         $html = '';
         $row_id = mt_rand();
-        $payment_info    = $this->Invoices->payment_info();
+        $payment_info = $this->Invoices->payment_info();
         if (empty($more)) {
             $html .= '
             <div class="table-responsive">
@@ -1210,7 +1191,7 @@ class Cinvoice extends MX_Controller
                 $html .= '<option value="' . $payment->HeadCode . '">' . $payment->HeadName . '</option>';
             }
         }
-        $html .=                    '</select>
+        $html .= '</select>
                                 </div>
                             </div>
                         </td>
@@ -1244,8 +1225,8 @@ class Cinvoice extends MX_Controller
         }
         echo $html;
     }
-    public function invoice_text()
-    {
+
+    public function invoice_text() {
         $this->permission->check_label('invoice_text')->create()->redirect();
         $invoice_text_details = $this->db->select('*')->from('invoice_text_table')->get()->result();
         $data = array(
@@ -1256,8 +1237,8 @@ class Cinvoice extends MX_Controller
         $data['page'] = "invoice/invoice_text";
         echo Modules::run('template/layout', $data);
     }
-    public function invoice_text_insert()
-    {
+
+    public function invoice_text_insert() {
         $this->permission->check_label('invoice_text')->update()->redirect();
 
         $invoice_text_details = $this->db->select('*')->from('invoice_text_table')->get()->result();
@@ -1294,8 +1275,7 @@ class Cinvoice extends MX_Controller
         }
     }
 
-    public function order_export_csv()
-    {
+    public function order_export_csv() {
         $this->permission->check_label('order_csv_export')->read()->redirect();
 
         $this->form_validation->set_rules('order_date', display('date'), 'trim|required');
@@ -1315,24 +1295,22 @@ class Cinvoice extends MX_Controller
         $this->template_lib->full_admin_html_view($content);
     }
 
-    public function pad_print_setting()
-    {
+    public function pad_print_setting() {
         $this->permission->check_label('pad_print_setting')->create()->redirect();
         $pad_print_setting = $this->db->select('*')->from('pad_print_setting')->get()->row();
         $data = array(
-            'title'      => display('pad_print_setting'),
+            'title' => display('pad_print_setting'),
             'print_data' => $pad_print_setting,
         );
         $data['module'] = "dashboard";
-        $data['page']   = "invoice/pad_print_setting";
+        $data['page'] = "invoice/pad_print_setting";
         echo Modules::run('template/layout', $data);
     }
 
-    public function pad_print_setting_insert()
-    {
+    public function pad_print_setting_insert() {
         $header = $this->input->post('header', TRUE);
         $footer = $this->input->post('footer', TRUE);
-        $id     = $this->input->post('id', TRUE);
+        $id = $this->input->post('id', TRUE);
 
         if (empty($id)) {
             $data = array(
@@ -1355,23 +1333,22 @@ class Cinvoice extends MX_Controller
             return redirect(base_url('dashboard/Cinvoice/pad_print_setting'));
         }
     }
-    public function captcha_print_setting()
-    {
+
+    public function captcha_print_setting() {
         $this->permission->check_label('captcha_print_setting')->create()->redirect();
         $captcha_print_setting = $this->db->select('*')->from('captcha_print_setting')->get()->row();
         $data = array(
-            'title'      => display('captcha_print_setting'),
+            'title' => display('captcha_print_setting'),
             'print_data' => $captcha_print_setting,
         );
         $data['module'] = "dashboard";
-        $data['page']   = "invoice/captcha_print_setting";
+        $data['page'] = "invoice/captcha_print_setting";
         echo Modules::run('template/layout', $data);
     }
 
-    public function captcha_print_setting_insert()
-    {
+    public function captcha_print_setting_insert() {
         $header = $this->input->post('header', TRUE);
-        $id     = $this->input->post('id', TRUE);
+        $id = $this->input->post('id', TRUE);
 
         if (empty($id)) {
             $data = array(
@@ -1393,8 +1370,7 @@ class Cinvoice extends MX_Controller
         }
     }
 
-    public function convert_number($number)
-    {
+    public function convert_number($number) {
         if ($number < 0) {
             $number = - ($number);
         }
@@ -1416,7 +1392,7 @@ class Cinvoice extends MX_Controller
         /* Ones */
         $res = "";
         if ($Gn) {
-            $res .= $this->convert_number($Gn) .  "Million";
+            $res .= $this->convert_number($Gn) . "Million";
         }
         if ($kn) {
             $res .= (empty($res) ? "" : " ") . $this->convert_number($kn) . " Thousand";
@@ -1445,28 +1421,27 @@ class Cinvoice extends MX_Controller
         return $res;
     }
 
-    public function pad_invoice($invoice_id)
-    {
+    public function pad_invoice($invoice_id) {
         $this->load->model('dashboard/Soft_settings');
         $this->load->library('dashboard/occational');
         $invoice_detail = $this->Invoices->retrieve_invoice_html_data($invoice_id);
         $taxfield = $this->db->select('*')
-            ->from('tax')
-            ->where('status', 1)
-            ->get()
-            ->result_array();
+                ->from('tax')
+                ->where('status', 1)
+                ->get()
+                ->result_array();
         $txregname = '';
         foreach ($taxfield as $txrgname) {
-            $regname    = $txrgname['tax_name'] . ', ';
+            $regname = $txrgname['tax_name'] . ', ';
             $txregname .= $regname;
         }
         $subTotal_quantity = 0;
-        $subTotal_cartoon  = 0;
+        $subTotal_cartoon = 0;
         $subTotal_discount = 0;
-        $subTotal_ammount  = 0;
-        $descript          = 0;
-        $isserial          = 0;
-        $isunit            = 0;
+        $subTotal_ammount = 0;
+        $descript = 0;
+        $isserial = 0;
+        $isunit = 0;
         if (!empty($invoice_detail)) {
             foreach ($invoice_detail as $k => $v) {
                 $invoice_detail[$k]['final_date'] = $this->occational->dateConvert($invoice_detail[$k]['date']);
@@ -1488,46 +1463,56 @@ class Cinvoice extends MX_Controller
                 }
             }
         }
-        $totalbal        = $invoice_detail[0]['total_amount'];
+        $totalbal = $invoice_detail[0]['total_amount'];
         $amount_inword = $this->convert_number($totalbal);
-        $user_id         = $invoice_detail[0]['user_id'];
-        $users           = $this->Invoices->user_invoice_data($user_id);
+        $user_id = $invoice_detail[0]['user_id'];
+        $users = $this->Invoices->user_invoice_data($user_id);
         $currency_details = $this->Soft_settings->retrieve_currency_info();
-        $company_info    = $this->Invoices->retrieve_company();
+        $company_info = $this->Invoices->retrieve_company();
         $data = array(
-            'title'            => display('pad_print'),
-            'invoice_id'       => $invoice_detail[0]['invoice_id'],
-            'invoice_no'       => $invoice_detail[0]['invoice'],
-            'customer_name'    => $invoice_detail[0]['customer_name'],
+            'title' => display('pad_print'),
+            'invoice_id' => $invoice_detail[0]['invoice_id'],
+            'invoice_no' => $invoice_detail[0]['invoice'],
+            'customer_name' => $invoice_detail[0]['customer_name'],
             'customer_address' => $invoice_detail[0]['customer_short_address'],
-            'customer_mobile'  => $invoice_detail[0]['customer_mobile'],
-            'customer_email'   => $invoice_detail[0]['customer_email'],
-            'final_date'       => $invoice_detail[0]['final_date'],
-            'print_setting'    => $this->Invoices->pad_print_settingdata(),
-            'invoice_details'  => $invoice_detail[0]['invoice_details'],
-            'total_amount'     => number_format($totalbal, 2, '.', ','),
+            'customer_mobile' => $invoice_detail[0]['customer_mobile'],
+            'customer_email' => $invoice_detail[0]['customer_email'],
+            'final_date' => $invoice_detail[0]['final_date'],
+            'print_setting' => $this->Invoices->pad_print_settingdata(),
+            'invoice_details' => $invoice_detail[0]['invoice_details'],
+            'total_amount' => number_format($totalbal, 2, '.', ','),
             'subTotal_cartoon' => $subTotal_cartoon,
             'subTotal_quantity' => $subTotal_quantity,
             'invoice_discount' => number_format($invoice_detail[0]['invoice_discount'], 2, '.', ','),
-            'total_discount'   => number_format($invoice_detail[0]['total_discount'], 2, '.', ','),
-            'total_vat'        => number_format($invoice_detail[0]['total_vat'], 2, '.', ','),
+            'total_discount' => number_format($invoice_detail[0]['total_discount'], 2, '.', ','),
+            'total_vat' => number_format($invoice_detail[0]['total_vat'], 2, '.', ','),
             'subTotal_ammount' => number_format($subTotal_ammount, 2, '.', ','),
-            'paid_amount'      => number_format($invoice_detail[0]['paid_amount'], 2, '.', ','),
-            'due_amount'       => number_format($invoice_detail[0]['due_amount'], 2, '.', ','),
-            'shipping_cost'    => number_format($invoice_detail[0]['shipping_charge'], 2, '.', ','),
+            'paid_amount' => number_format($invoice_detail[0]['paid_amount'], 2, '.', ','),
+            'due_amount' => number_format($invoice_detail[0]['due_amount'], 2, '.', ','),
+            'shipping_cost' => number_format($invoice_detail[0]['shipping_charge'], 2, '.', ','),
             'invoice_all_data' => $invoice_detail,
-            'am_inword'        => $amount_inword,
-            'is_discount'      => $invoice_detail[0]['total_discount'] - $invoice_detail[0]['invoice_discount'],
-            'users_name'       => @$users->first_name . ' ' . @$users->last_name,
-            'tax_regno'        => $txregname,
-            'is_desc'          => $descript,
-            'is_unit'          => $isunit,
-            'company_info'     => $company_info,
-            'currency'         => $currency_details[0]['currency_icon'],
-            'position'         => $currency_details[0]['currency_position'],
+            'am_inword' => $amount_inword,
+            'is_discount' => $invoice_detail[0]['total_discount'] - $invoice_detail[0]['invoice_discount'],
+            'users_name' => @$users->first_name . ' ' . @$users->last_name,
+            'tax_regno' => $txregname,
+            'is_desc' => $descript,
+            'is_unit' => $isunit,
+            'company_info' => $company_info,
+            'currency' => $currency_details[0]['currency_icon'],
+            'position' => $currency_details[0]['currency_position'],
         );
 
         $content = $this->parser->parse('dashboard/invoice/pad_invoice_html', $data, true);
         $this->template_lib->full_admin_html_view($content);
     }
+
+    // get_pri_type_rate
+    public function get_pri_type_rate() {
+        $product_id = urldecode($this->input->post('product_id', TRUE));
+        $pri_type_id = urldecode($this->input->post('pri_type_id', TRUE));
+        $rate = $this->Invoices->get_pri_type_rate($product_id, $pri_type_id);
+        $result[1] = $rate; //stock
+        echo json_encode($result);
+    }
+
 }

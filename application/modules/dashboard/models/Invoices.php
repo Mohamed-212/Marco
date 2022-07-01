@@ -10,6 +10,17 @@ class Invoices extends CI_Model {
         $this->load->model('dashboard/Customers');
     }
 
+    //Select All pricing_types
+    public function select_all_pri_type() {
+        $query = $this->db->select('*')
+                ->from('pricing_types')
+                ->get();
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        }
+        return false;
+    }
+
     //Count invoice
     public function count_invoice() {
         return $this->db->count_all("invoice");
@@ -346,8 +357,8 @@ class Invoices extends CI_Model {
                     // $variant_color = $color_variants[$i];
                     $variant_color = $color[$i];
                     $batch = $batch_no[$i];
-                    $supplier_rate = $this->supplier_rate($product_id);// سعر التكلفة للمنتج الواحد
-                    $cogs_price += ($supplier_rate[0]['supplier_price'] * $product_quantity);// التكلفة للكمية كلها
+                    $supplier_rate = $this->supplier_rate($product_id); // سعر التكلفة للمنتج الواحد
+                    $cogs_price += ($supplier_rate[0]['supplier_price'] * $product_quantity); // التكلفة للكمية كلها
 
                     $invoice_details = array(
                         'invoice_details_id' => generator(15),
@@ -4124,6 +4135,40 @@ class Invoices extends CI_Model {
 
     public function pad_print_settingdata() {
         return $this->db->select('*')->from('pad_print_setting')->where('id', 1)->get()->row();
+    }
+
+    public function get_pri_type_rate($product_id, $pri_type_id) {
+        if ($pri_type_id == 0) {
+            $this->db->select("price,onsale,onsale_price");
+            $this->db->from('product_information');
+            $this->db->where('product_id', $product_id);
+            $rate = $this->db->get()->row();
+            if (!empty($rate->onsale) && !empty($rate->onsale_price)) {
+                return $rate->onsale_price;
+            } else {
+                return $rate->price;
+            }
+        } else {
+            $this->db->select("pricing,price,onsale,onsale_price");
+            $this->db->from('product_information');
+            $this->db->where('product_id', $product_id);
+            $check = $this->db->get()->row();
+            if (!empty($check->onsale) && !empty($check->onsale_price)) {
+                return $check->onsale_price;
+            } else {
+                if ($check->pricing == 0) {
+                    return $check->price;
+                } else {
+                    $this->db->select("product_price");
+                    $this->db->from('pricing_types_product');
+                    $this->db->where('product_id', $product_id);
+                    $this->db->where('pri_type_id', $pri_type_id);
+                    $rate2 = $this->db->get()->row();
+
+                    return $rate2->product_price;
+                }
+            }
+        }
     }
 
 }
