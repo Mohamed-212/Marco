@@ -166,6 +166,7 @@ function stock_by_product_variant_id(sl) {
     var store_id = $("#store_id").val();
     var variant_id = $("#variant_id_" + sl).val();
     var variant_color = $("#variant_color_id_" + sl).val();
+    var assembly = $("#assembly" + sl).val();
 
     if (store_id == 0) {
         alert(display("please_select_store"));
@@ -182,6 +183,7 @@ function stock_by_product_variant_id(sl) {
             variant_id: variant_id,
             store_id: store_id,
             variant_color: variant_color,
+            assembly:assembly,
         },
         success: function (result) {
             var res = JSON.parse(result);
@@ -215,7 +217,7 @@ function stock_by_product_variant_id(sl) {
                             } else {
                                 $("#avl_qntt_" + sl).val("0");
                                 $("#total_qntt_" + sl).val("0");
-                                
+
                                 alert(display("product_is_not_available_in_this_store"));
                                 return false;
                             }
@@ -224,7 +226,7 @@ function stock_by_product_variant_id(sl) {
                 });
             } else {
                 $("#avl_qntt_" + sl).val("0");
-                 $("#total_qntt_" + sl).val("0");
+                $("#total_qntt_" + sl).val("0");
                 alert(display("product_is_not_available_in_this_store"));
                 return false;
             }
@@ -274,6 +276,7 @@ function stock_by_product_variant_color(sl) {
     var store_id = $("#store_id").val();
     var variant_id = $("#variant_id_" + sl).val();
     var variant_color = $("#variant_color_id_" + sl).val();
+    var assembly = $("#assembly" + sl).val();
 
     if (store_id == 0) {
         alert(display("please_select_store"));
@@ -290,6 +293,7 @@ function stock_by_product_variant_color(sl) {
             variant_id: variant_id,
             store_id: store_id,
             variant_color: variant_color,
+            assembly: assembly,
         },
         success: function (result) {
             var res = JSON.parse(result);
@@ -302,7 +306,7 @@ function stock_by_product_variant_color(sl) {
                 $("#batch_no_" + sl).html(res[4]);
             } else {
                 $("#avl_qntt_" + sl).val("0");
-                 $("#total_qntt_" + sl).val("0");
+                $("#total_qntt_" + sl).val("0");
                 alert(display("product_is_not_available_in_this_store"));
                 return false;
             }

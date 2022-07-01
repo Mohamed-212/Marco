@@ -341,6 +341,7 @@ class Invoices extends CI_Model {
                 $color_variants = $this->input->post('color_variant', TRUE);
                 $color = $this->input->post('colorv', TRUE);
                 $size = $this->input->post('sizev', TRUE);
+                $assembly = $this->input->post('assembly', TRUE);
                 $batch_no = $this->input->post('batch_no', TRUE);
                 $cogs_price = 0;
 

@@ -307,7 +307,16 @@ class Cpurchase extends MX_Controller {
         $store_id = urldecode($this->input->post('store_id', TRUE));
         $variant_id = urldecode($this->input->post('variant_id', TRUE));
         $variant_color = urldecode($this->input->post('variant_color', TRUE));
-        $stock = $this->Purchases->check_variant_wise_stock($product_id, $store_id, $variant_id, $variant_color);
+        if ($this->input->post('assembly', TRUE)==null) {
+           $assembly = 0;
+        } else {
+             $assembly = urldecode($this->input->post('assembly', TRUE));
+        }
+        if ($assembly == 1) {
+            $stock = $this->Purchases->check_variant_wise_stock2($product_id, $store_id, $variant_id, $variant_color);
+        } else {
+            $stock = $this->Purchases->check_variant_wise_stock($product_id, $store_id, $variant_id, $variant_color);
+        }
         if ($stock > 0) {
             $result[0] = "yes";
             $price = $this->Purchases->check_variant_wise_price($product_id, $variant_id, $variant_color);
@@ -824,7 +833,7 @@ class Cpurchase extends MX_Controller {
             $data['module'] = "dashboard";
             $data['page'] = 'purchase/pur_order_print_2';
             $this->parser->parse('template/layout', $data);
-        }  else if ($param == 'view1') {
+        } else if ($param == 'view1') {
             $purchase_detail = $this->Purchases->get_po_shortinfo_by_id($pur_order_id);
             $po_details = $this->Purchases->get_purchase_order_details($pur_order_id);
             $all_supplier = $this->Suppliers->supplier_list();
@@ -863,7 +872,7 @@ class Cpurchase extends MX_Controller {
             $data['module'] = "dashboard";
             $data['page'] = 'purchase/pur_order_print_1';
             $this->parser->parse('template/layout', $data);
-        }else {
+        } else {
             $purchase_detail = $this->Purchases->get_po_shortinfo_by_id($pur_order_id);
             $po_details = $this->Purchases->get_purchase_order_details($pur_order_id);
             $all_supplier = $this->Suppliers->supplier_list();
@@ -893,7 +902,7 @@ class Cpurchase extends MX_Controller {
                 'position' => $currency_details[0]['currency_position'],
                 'Soft_settings' => $Soft_settings,
                 'total_purchase_dis' => $purchase_detail[0]['total_purchase_dis'],
-                 'total_purchase_dis_rc' => $purchase_detail[0]['total_purchase_dis_rc'],
+                'total_purchase_dis_rc' => $purchase_detail[0]['total_purchase_dis_rc'],
                 'total_purchase_vat' => $purchase_detail[0]['total_purchase_vat']
             );
 

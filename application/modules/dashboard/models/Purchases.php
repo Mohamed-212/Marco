@@ -2795,6 +2795,35 @@ class Purchases extends CI_Model {
         return $stock;
     }
 
+    public function check_variant_wise_stock2($product_id, $store_id, $variant_id, $variant_color = false) {
+
+        $this->db->select("parent_product_id,child_product_id");
+        $this->db->from('assembly_products');
+        $this->db->where('parent_product_id', $product_id);
+        $query = $this->db->get();
+        $product_list = $query->result();
+        $stock = 1000000000;
+        if (!empty($product_list)) {
+            foreach ($product_list as $product) {
+                $this->db->select("SUM(quantity) as totalPurchaseQnty");
+                $this->db->from('purchase_stock_tbl');
+                $this->db->where('product_id', $product->child_product_id);
+                $purchase = $this->db->get()->row();
+
+                $this->db->select("SUM(quantity) as totalSalesQnty");
+                $this->db->from('invoice_stock_tbl');
+                $this->db->where('product_id', $product->child_product_id);
+                $sales = $this->db->get()->row();
+                $stock1 = $purchase->totalPurchaseQnty - $sales->totalSalesQnty;
+                if ($stock1 < $stock) {
+                    $stock = $stock1;
+                }
+            }
+        }
+
+        return $stock;
+    }
+
     public function check_batch_no_wise_stock($product_id, $store_id, $variant_id, $variant_color = false, $batch_no) {
         $this->db->select("SUM(quantity) as totalPurchaseQnty");
         $this->db->from('product_purchase_details');
