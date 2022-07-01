@@ -69,7 +69,11 @@ function addInputField(divName) {
                 count +
                 '" name="product_id[]"/><input type="hidden" class="sl" value="' +
                 count +
-                '"><input type="hidden" name="colorv[' +
+                '"><input type="hidden" name="assembly[' +
+                count +
+                ']" id="assembly' +
+                count +
+                '" value=""><input type="hidden" name="colorv[' +
                 count +
                 ']" id="color' +
                 count +
@@ -79,7 +83,11 @@ function addInputField(divName) {
                 count +
                 '" value=""><input type="hidden" class="baseUrl" value="' +
                 base_url +
-                '" /></td>' +
+                '" /> <div id="viewassembly' +
+                count +
+                '" class="text-center hidden"><a  style="color: blue" href="" data-toggle="modal" data-target="#viewprom" onclick="viewpro(' +
+                count +
+                ')">view products</a></div></td>' +
                 '<td class="text-center"><div class="variant_id_div"> <select name="variant_id[]" id="variant_id_' +
                 count +
                 '" class="form-control variant_id width_100p"disabled="" ><option value=""></option></select></div><div hidden="" ><select name="color_variant[]" id="variant_color_id_' +
@@ -105,7 +113,7 @@ function addInputField(divName) {
                 count +
                 ');" id="total_qntt_' +
                 count +
-                '" class="form-control text-right" value="1" min="1" required="" /></td>' +
+                '" class="form-control text-right" value="0" min="0" required="" /></td>' +
                 '<td><input type="number" name="product_rate[]" onkeyup="quantity_calculate(' +
                 count +
                 ');" onchange="quantity_calculate(' +
@@ -205,7 +213,9 @@ function stock_by_product_variant_id(sl) {
                             if (res[0] == "yes") {
                                 $("#avl_qntt_" + sl).val(res[1]);
                             } else {
-                                $("#avl_qntt_" + sl).val("");
+                                $("#avl_qntt_" + sl).val("0");
+                                $("#total_qntt_" + sl).val("0");
+                                
                                 alert(display("product_is_not_available_in_this_store"));
                                 return false;
                             }
@@ -213,7 +223,8 @@ function stock_by_product_variant_id(sl) {
                     });
                 });
             } else {
-                $("#avl_qntt_" + sl).val("");
+                $("#avl_qntt_" + sl).val("0");
+                 $("#total_qntt_" + sl).val("0");
                 alert(display("product_is_not_available_in_this_store"));
                 return false;
             }
@@ -290,7 +301,8 @@ function stock_by_product_variant_color(sl) {
                         .change();
                 $("#batch_no_" + sl).html(res[4]);
             } else {
-                $("#avl_qntt_" + sl).val("");
+                $("#avl_qntt_" + sl).val("0");
+                 $("#total_qntt_" + sl).val("0");
                 alert(display("product_is_not_available_in_this_store"));
                 return false;
             }

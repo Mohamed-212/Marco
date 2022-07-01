@@ -102,7 +102,7 @@
                                     <!--                                        <input id="myRadioButton_1" type="button"-->
                                     <!--                                               onClick="active_customer('payment_from_1')" id="myRadioButton_1"-->
                                     <!--                                               class="btn btn-success checkbox_account" name="customer_confirm"-->
-                                    <!--                                               checked="checked" value="--><?php //echo display('new_customer')     ?><!--">-->
+                                    <!--                                               checked="checked" value="--><?php //echo display('new_customer')        ?><!--">-->
                                     <!--                                    </div>-->
                                 </div>
                             </div>
@@ -123,11 +123,11 @@
                             <!--                            <div class="col-sm-8" id="payment_from_2">-->
                             <!--                                <div class="form-group row">-->
                             <!--                                    <label for="customer_name_others"-->
-                            <!--                                           class="col-sm-3 col-form-label">--><?php //echo display('customer_name')     ?><!-- <i-->
+                            <!--                                           class="col-sm-3 col-form-label">--><?php //echo display('customer_name')        ?><!-- <i-->
                             <!--                                                class="text-danger">*</i></label>-->
                             <!--                                    <div class="col-sm-6">-->
                             <!--                                        <input autofill="off" type="text" size="100" name="customer_name_others"-->
-                            <!--                                               placeholder='--><?php //echo display('customer_name')     ?><!--'-->
+                            <!--                                               placeholder='--><?php //echo display('customer_name')        ?><!--'-->
                             <!--                                               id="customer_name_others" class="form-control" />-->
                             <!--                                    </div>-->
                             <!---->
@@ -135,23 +135,23 @@
                             <!--                                        <input onClick="active_customer('payment_from_2')" type="button"-->
                             <!--                                               id="myRadioButton_2" class="checkbox_account btn btn-success"-->
                             <!--                                               name="customer_confirm_others"-->
-                            <!--                                               value="--><?php //echo display('old_customer')     ?><!--">-->
+                            <!--                                               value="--><?php //echo display('old_customer')        ?><!--">-->
                             <!--                                    </div>-->
                             <!--                                </div>-->
                             <!--                                <div class="form-group row">-->
                             <!--                                    <label for="customer_name_others_address"-->
-                            <!--                                           class="col-sm-3 col-form-label">--><?php //echo display('mobile')     ?><!-- </label>-->
+                            <!--                                           class="col-sm-3 col-form-label">--><?php //echo display('mobile')        ?><!-- </label>-->
                             <!--                                    <div class="col-sm-6">-->
                             <!--                                        <input type="number" size="100" name="customer_mobile_no" class=" form-control"-->
-                            <!--                                               placeholder='--><?php //echo display('mobile')     ?><!--' id="customer_mobile_no" />-->
+                            <!--                                               placeholder='--><?php //echo display('mobile')        ?><!--' id="customer_mobile_no" />-->
                             <!--                                    </div>-->
                             <!--                                </div>-->
                             <!--                                <div class="form-group row">-->
                             <!--                                    <label for="customer_name_others_address"-->
-                            <!--                                           class="col-sm-3 col-form-label">--><?php //echo display('address')     ?><!-- </label>-->
+                            <!--                                           class="col-sm-3 col-form-label">--><?php //echo display('address')        ?><!-- </label>-->
                             <!--                                    <div class="col-sm-6">-->
                             <!--                                        <input type="text" size="100" name="customer_name_others_address"-->
-                            <!--                                               class=" form-control" placeholder='--><?php //echo display('address')     ?><!--'-->
+                            <!--                                               class=" form-control" placeholder='--><?php //echo display('address')        ?><!--'-->
                             <!--                                               id="customer_name_others_address" />-->
                             <!--                                    </div>-->
                             <!--                                </div>-->
@@ -187,7 +187,7 @@
                             </div>
                             <!--                            <div class="col-sm-6">-->
                             <!--                                <div class="form-group row">-->
-                            <!--                                    <label for="date" class="col-sm-4 col-form-label">--><?php //echo display('date')     ?><!-- <i-->
+                            <!--                                    <label for="date" class="col-sm-4 col-form-label">--><?php //echo display('date')        ?><!-- <i-->
                             <!--                                                class="text-danger">*</i></label>-->
                             <!--                                    <div class="col-sm-8">-->
                             <!--                                        --><?php
@@ -196,7 +196,7 @@
 //                                        
                             ?>
                             <!--                                        <input class="form-control datepicker" type="text" size="50" name="invoice_date"-->
-                            <!--                                               id="date" required value="--><?php //echo html_escape($date);     ?><!--" />-->
+                            <!--                                               id="date" required value="--><?php //echo html_escape($date);        ?><!--" />-->
                             <!--                                    </div>-->
                             <!--                                </div>-->
                             <!--                            </div>-->
@@ -267,9 +267,14 @@
                                                    name="product_id[]" />
 
                                             <input type="hidden" class="sl" value="1">
+                                            <input type="hidden" name="assembly[1]" id="assembly1" value="">
                                             <input type="hidden" name="colorv[1]" id="color1" value="">
                                             <input type="hidden" name="sizev[1]" id="size1" value="">
                                             <input type="hidden" class="baseUrl" value="<?php echo base_url(); ?>" />
+                                            
+                                            <div id="viewassembly1" class="text-center hidden">
+                                                <a  style="color: blue" href="" data-toggle="modal" data-target="#viewprom" onclick="viewpro(1)">view products  </a>
+                                            </div>
                                         </td>
                                         <td class="text-center">
                                             <div hidden="">
@@ -314,7 +319,7 @@
                                         <td>
                                             <input type="number" name="product_quantity[]"
                                                    onkeyup="quantity_calculate(1);" onchange="quantity_limit(1);"
-                                                   id="total_qntt_1" class="form-control text-right" value="1" min="1"
+                                                   id="total_qntt_1" class="form-control text-right" value="0" min="0"
                                                    required="" />
                                         </td>
                                         <td>
@@ -650,6 +655,21 @@
                     <?php echo form_close() ?>
                 </div>
             </div>
+            <!-- view -->
+<div class="modal fade modal-warning" id="viewprom" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h3 class="modal-title"><?php echo display('product_information') ?></h3>
+            </div>
+            <div class="modal-body"><div id="viewpros" class="card-block">
+                </div></div>
+
+        </div>
+    </div>
+</div>
             <input type="hidden" id="cgst_status" value="<?php echo html_escape($tax['cgst_status']); ?>">
             <input type="hidden" id="sgst_status" value="<?php echo html_escape($tax['sgst_status']); ?>">
             <input type="hidden" id="igst_status" value="<?php echo html_escape($tax['igst_status']); ?>">

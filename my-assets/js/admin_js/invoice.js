@@ -44,7 +44,7 @@ function  quantity_limit(item) {
     let available_quantity = $("#avl_qntt_" + item).val();
     if (parseInt(available_quantity) < parseInt(current_quantity)) {
         alert('stock not available');
-        $("#total_qntt_" + item).val(1);
+        $("#total_qntt_" + item).val(0);
         quantity_calculate(item);
         return false;
     }
@@ -60,7 +60,7 @@ function  quantity_limit(item) {
     }
     if (parseInt(available_quantity) < total_qnt) {
         alert('stock not available');
-        $("#total_qntt_" + item).val(1);
+        $("#total_qntt_" + item).val(0);
         quantity_calculate(item);
         return false;
     }
@@ -475,4 +475,20 @@ function get_pri_type_rate1(sl) {
         },
     });
     quantity_calculate(sl);
+}
+
+function viewpro(row) {
+    var proid = $('.product_id_' + row).val();
+    var dataString = 'csrf_test_name=' + csrf_test_name + '&proid=' + proid;
+    $.ajax({
+        url: base_url + 'dashboard/Cproduct/viewpro',
+        type: "POST",
+        data: dataString,
+        cache: false,
+        success: function (data) {
+            var obj = JSON.parse(data);
+            $('#viewpros').html(obj);
+        }
+    });
+
 }
