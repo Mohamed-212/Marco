@@ -11,6 +11,15 @@ function bank_info_show(payment_type) {
     }
 }
 
+// select all
+function select_all(){
+    if($('#all_pro').prop('checked') == true){
+        $('.check_pro_id').prop('checked', true);
+    }else{
+        $('.check_pro_id').prop('checked', false);
+    }
+}
+
 // search product by model
 function product_per_model(){
     var supplier_id = $("#supplier_id").val();
@@ -54,7 +63,7 @@ function product_per_model(){
     });
 }
 
-//
+// add selected product to table
 function add_products_model(){
     var ids = [];
     var names = [];
@@ -106,11 +115,12 @@ function add_products_model(){
     $("#model_no").val('');
     $("#model_no_text").html('');
     $("#modelModal").modal('hide');
+    $('#all_pro').prop('checked', false)
 
     $("#addPurchaseItem").scrollTop( $('#addPurchaseItem').height() );
 }
 
-//Product purchase or list
+// Product purchase or list
 function product_pur_or_list(sl) {
     var supplier_id = $("#supplier_id").val();
     var currency_id = $("#currency_id").val();

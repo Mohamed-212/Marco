@@ -4,6 +4,147 @@ var count = 2;
 var limits = 500;
 var csrf_test_name = $("#CSRF_TOKEN").val();
 
+// select all
+function select_all(){
+    if($('#all_pro').prop('checked') == true){
+        $('.check_pro_id').prop('checked', true);
+    }else{
+        $('.check_pro_id').prop('checked', false);
+    }
+}
+
+// search product by model
+function product_per_model(){
+    var supplier_id = $("#supplier_id").val();
+    var currency_id = $("#currency_id").val();
+    var model_no = $("#model_no").val();
+    var base_url = $('.baseUrl').val();
+
+    //Supplier id existing check
+    if (supplier_id == 0) {
+        alert(display("please_select_supplier"));
+        return false;
+    }
+
+    if (currency_id == 0) {
+        alert("Please Select Currency");
+        return false;
+    }
+    $.ajax({
+        url: base_url + "dashboard/Cinvoice/product_search_by_model",
+        method: "post",
+        dataType: "json",
+        data: {
+            csrf_test_name: csrf_test_name,
+            term: model_no,
+        },
+        success: function (data) {
+            $.each(data, function(k, v) {
+                $("#model_no_text").append('<tr>' +
+                    '<td class="text-center">' +
+                    '<input type="checkbox" class="check_pro_id" value="'+v.value+'">' +
+                    '<input type="hidden" class="check_pro_id" value="'+v.label+'">' +
+                    '</td>' +
+                    '<td class="text-center">'+v.label+'</td>' +
+                    '</tr>');
+            });
+            if(data.length > 0){
+                $("#modelModal").modal('show');
+            }else{
+                alert("No Item Found");
+            }
+        },
+    });
+}
+
+// add selected product to table
+function add_products_model(){
+    var ids = [];
+    var names = [];
+    $('.check_pro_id:checkbox:checked').each(function(index, value) {
+        ids.push(value.value);
+        names.push($(this).next().val());
+    });
+    $.each(ids, function(k, v) {
+        var base_url = $('.baseUrl').val();
+        var current_count = count-1;
+        if($("#product_name_"+(count-1)).next().val()){
+            current_count = count;
+            addInputField('addinvoiceItem');
+        }
+        $("#product_name_"+current_count).next().val(v);
+        $("#product_name_"+current_count).val(names[k]);
+        var sl = current_count;
+        var id = v;
+        var dataString = "csrf_test_name=" + csrf_test_name + "&product_id=" + id;
+        var qnttClass = 'ctnqntt' + current_count;
+        var priceClass = 'price_item' + current_count;
+        var total_tax_price = 'total_tax_' + current_count;
+        var available_quantity = 'available_quantity_' + current_count;
+        var unit = 'unit_' + current_count;
+        var cgst = 'cgst_' + current_count;
+        var sgst = 'sgst_' + current_count;
+        var igst = 'igst_' + current_count;
+        var variant = 'variant_' + current_count;
+        var cgst_id = 'cgst_id_' + current_count;
+        var sgst_id = 'sgst_id_' + current_count;
+        var igst_id = 'igst_id_' + current_count;
+        var variant_id = 'variant_id_' + current_count;
+        var variant_color = 'variant_color_id_' + current_count;
+//var pricing   ='pricing_'+current_count;
+        var color = 'color' + current_count;
+        var size = 'size' + current_count;
+        var assembly = 'assembly' + current_count;
+        var viewassembly = "viewassembly" + current_count;
+        var discount = 'discount_' + current_count;
+        $.ajax({
+            type: "POST",
+            url: base_url + "dashboard/Cinvoice/retrieve_product_data",
+            data: dataString,
+            cache: false,
+            success: function (data) {
+                var obj = jQuery.parseJSON(data);
+                $('.' + qnttClass).val(obj.cartoon_quantity);
+                $('.' + priceClass).val(obj.price);
+                $('.' + total_tax_price).val(obj.tax);
+                $('.' + unit).val(obj.unit);
+                $('#' + cgst).val(obj.cgst_tax);
+                $('#' + sgst).val(obj.sgst_tax);
+                $('#' + igst).val(obj.igst_tax);
+                $('#' + variant).val(obj.variant_id);
+                $('#' + cgst_id).val(obj.cgst_id);
+                $('#' + sgst_id).val(obj.sgst_id);
+                $('#' + igst_id).val(obj.igst_id);
+                $('#' + variant_id).html(obj.variant);
+                $('#' + variant_color).html(obj.colorhtml);
+//$('#'+pricing).html(obj.pricinghtml);
+                $('#' + discount).val(obj.discount);
+                $("#" + size).val(obj.size);
+                $("#" + color).val(obj.color);
+                $("#" + assembly).val(obj.assembly);
+                var assemplyvalue = obj.assembly;
+//This Function Stay on others.js page
+                stock_by_product_variant_id(current_count);
+                stock_by_product_variant_color(current_count);
+//quantity_calculate(current_count);
+                if (assemplyvalue == 1) {
+                    $("#" + viewassembly).removeClass("hidden");
+                } else {
+                    $("#" + viewassembly).addClass("hidden");
+                }
+                get_pri_type_rate1(current_count);
+            },
+        });
+    });
+
+    $("#model_no").val('');
+    $("#model_no_text").html('');
+    $("#modelModal").modal('hide');
+    $('#all_pro').prop('checked', false)
+
+    $("#addPurchaseItem").scrollTop( $('#addPurchaseItem').height() );
+}
+
 //Add Invoice Field
 function addInputField(divName) {
     if (count == limits) {
@@ -149,8 +290,6 @@ function addInputField(divName) {
         });
     }
 }
-
-
 
 //Select stock by product and variant id
 function stock_by_product_variant_id(sl) {

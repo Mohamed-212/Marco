@@ -203,9 +203,7 @@
                                                             <table class="table table-bordered table-hover" id="purchaseTable">
                                                                 <thead>
                                                                 <tr>
-                                                                    <th class="text-center">
-<!--                                                                        <input type="checkbox" id="all_pro" onclick="select_all();"> -->
-                                                                    </th>
+                                                                    <th class="text-center"><input type="checkbox" id="all_pro" onclick="select_all();"></th>
                                                                     <th class="text-center"><?php echo display('item_information') ?> </th>
                                                                 </tr>
                                                                 </thead>

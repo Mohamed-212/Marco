@@ -520,6 +520,19 @@ class Cinvoice extends MX_Controller {
         echo json_encode($product_info);
     }
 
+    //purchase search by model
+    public function product_search_by_model(){
+        $model = $this->input->post('term', TRUE);
+        $query = $this->db->query("SELECT * FROM `product_information` WHERE (`product_model` LIKE '%" . $model . "%')");
+        $product_info = $query->result_array();
+        $json_product = [];
+        foreach ($product_info as $value) {
+            //$json_product[] = array('label' => $value['product_name'] . '-(' . $value['product_model'] . ')', 'value' => $value['product_id']);
+            $json_product[] = array('label' => $value['product_name'], 'value' => $value['product_id']);
+        }
+        echo json_encode($json_product);
+    }
+
     // Invoice Delete
     public function invoice_delete($invoice_id) {
         $this->permission->check_label('manage_sale')->delete()->redirect();
