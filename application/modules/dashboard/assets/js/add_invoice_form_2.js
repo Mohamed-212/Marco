@@ -69,17 +69,11 @@ function addInputField(divName) {
                 count +
                 '" name="product_id[]"/><input type="hidden" class="sl" value="' +
                 count +
-                '"><input type="hidden" name="assembly[' +
+                '"><input type="hidden" name="assembly[]" id="assembly' +
                 count +
-                ']" id="assembly' +
+                '" value=""><input type="hidden" name="colorv[]" id="color' +
                 count +
-                '" value=""><input type="hidden" name="colorv[' +
-                count +
-                ']" id="color' +
-                count +
-                '" value=""><input type="hidden" name="sizev[' +
-                count +
-                ']" id="size' +
+                '" value=""><input type="hidden" name="sizev[]" id="size' +
                 count +
                 '" value=""><input type="hidden" class="baseUrl" value="' +
                 base_url +
