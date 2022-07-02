@@ -267,9 +267,9 @@
                                                    name="product_id[]" />
 
                                             <input type="hidden" class="sl" value="1">
-                                            <input type="hidden" name="assembly[1]" id="assembly1" value="">
-                                            <input type="hidden" name="colorv[1]" id="color1" value="">
-                                            <input type="hidden" name="sizev[1]" id="size1" value="">
+                                            <input type="hidden" name="assembly[]" id="assembly1" value="">
+                                            <input type="hidden" name="colorv[]" id="color1" value="">
+                                            <input type="hidden" name="sizev[]" id="size1" value="">
                                             <input type="hidden" class="baseUrl" value="<?php echo base_url(); ?>" />
                                             
                                             <div id="viewassembly1" class="text-center hidden">

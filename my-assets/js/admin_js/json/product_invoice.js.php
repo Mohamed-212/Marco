@@ -25,9 +25,9 @@ var igst_id			='igst_id_'+cName;
 var variant_id  	='variant_id_'+cName;
 var variant_color   ='variant_color_id_'+cName;
 //var pricing   ='pricing_'+cName;
-var color = "color" + cName;
-var size = "size" + cName;
-var assembly = "assembly" + cName;
+var color = 'color'+cName;
+var size = 'size'+cName;
+var assembly = 'assembly' + cName;
 var viewassembly= "viewassembly" + cName;
 var discount='discount_'+cName;
 
@@ -84,7 +84,7 @@ stock_by_product_variant_id(cName);
 stock_by_product_variant_color(cName);
 //quantity_calculate(cName);
 if(assemplyvalue==1){
- $("#"+viewassembly).removeClass("hidden");
+$("#"+viewassembly).removeClass("hidden");
 }
 else{
 $("#"+viewassembly).addClass("hidden");

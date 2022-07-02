@@ -347,101 +347,250 @@ class Invoices extends CI_Model {
 
                 //Invoice details for invoice
                 for ($i = 0, $n = count($quantity); $i < $n; $i++) {
-                    $product_quantity = $quantity[$i];
-                    $product_rate = $rate[$i];
-                    $product_id = $p_id[$i];
-                    $discount_rate = $discount[$i];
-                    $total_price = $total_amount[$i];
-                    //  $variant_id = $variants[$i];
-                    $variant_id = $size[$i];
-                    //$pricing_id = $pricing[$i];
-                    // $variant_color = $color_variants[$i];
-                    $variant_color = $color[$i];
-                    $batch = $batch_no[$i];
-                    $supplier_rate = $this->supplier_rate($product_id); // سعر التكلفة للمنتج الواحد
-                    $cogs_price += ($supplier_rate[0]['supplier_price'] * $product_quantity); // التكلفة للكمية كلها
+                    $product_assembly = $assembly[$i];
 
-                    $invoice_details = array(
-                        'invoice_details_id' => generator(15),
-                        'invoice_id' => $invoice_id,
-                        'product_id' => $product_id,
-                        'variant_id' => $variant_id,
-                        //  'pricing_id' => $pricing_id,
-                        'variant_color' => $variant_color,
-                        'batch_no' => $batch,
-                        'store_id' => $this->input->post('store_id', TRUE),
-                        'quantity' => $product_quantity,
-                        'rate' => $product_rate,
-                        'supplier_rate' => $supplier_rate[0]['supplier_price'],
-                        'total_price' => $total_price,
-                        'discount' => $discount_rate,
-                        'status' => 1
-                    );
+                    if ($product_assembly == 1) {
+                        $product_quantity = $quantity[$i];
+                        $product_rate = $rate[$i];
+                        $product_id = $p_id[$i];
+                        $discount_rate = $discount[$i];
+                        $total_price = $total_amount[$i];
+                        //  $variant_id = $variants[$i];
+                        $variant_id = $size[$i];
+                        //$pricing_id = $pricing[$i];
+                        // $variant_color = $color_variants[$i];
+                        $variant_color = $color[$i];
+                        $batch = $batch_no[$i];
+                        $supplier_rate = $this->supplier_rate($product_id); // سعر التكلفة للمنتج الواحد
+                        $cogs_price += ($supplier_rate[0]['supplier_price'] * $product_quantity); // التكلفة للكمية كلها
+                        $invoice_details = array(
+                            'invoice_details_id' => generator(15),
+                            'invoice_id' => $invoice_id,
+                            'product_id' => $product_id,
+                            'variant_id' => $variant_id,
+                            //  'pricing_id' => $pricing_id,
+                            'variant_color' => $variant_color,
+                            'batch_no' => $batch,
+                            'store_id' => $this->input->post('store_id', TRUE),
+                            'quantity' => $product_quantity,
+                            'rate' => $product_rate,
+                            'supplier_rate' => $supplier_rate[0]['supplier_price'],
+                            'total_price' => $total_price,
+                            'discount' => $discount_rate,
+                            'status' => 1
+                        );
 
-                    if (!empty($quantity)) {
-                        $this->db->select('*');
-                        $this->db->from('invoice_details');
-                        $this->db->where('invoice_id', $invoice_id);
-                        $this->db->where('product_id', $product_id);
-                        $this->db->where('variant_id', $variant_id);
-                        if (!empty($variant_color)) {
-                            $this->db->where('variant_color', $variant_color);
-                        }
-                        $query = $this->db->get();
-                        $result = $query->num_rows();
-                        if ($result > 0) {
-                            $this->db->set('quantity', 'quantity+' . $product_quantity, FALSE);
-                            $this->db->set('total_price', 'total_price+' . $total_price, FALSE);
+                        if (!empty($quantity)) {
+                            $this->db->select('*');
+                            $this->db->from('invoice_details');
                             $this->db->where('invoice_id', $invoice_id);
                             $this->db->where('product_id', $product_id);
                             $this->db->where('variant_id', $variant_id);
                             if (!empty($variant_color)) {
                                 $this->db->where('variant_color', $variant_color);
                             }
-                            $this->db->update('invoice_details');
-                        } else {
-                            $this->db->insert('invoice_details', $invoice_details);
-                        }
-
-                        // stock 
-                        $store_id = $this->input->post('store_id', TRUE);
-                        $check_stock = $this->check_stock($store_id, $product_id, $variant_id, $variant_color);
-                        if (empty($check_stock)) {
-                            // insert
-                            $stock = array(
-                                'store_id' => $store_id,
-                                'product_id' => $product_id,
-                                'variant_id' => $variant_id,
-                                'variant_color' => (!empty($variant_color) ? $variant_color : NULL),
-                                'quantity' => $product_quantity,
-                                'warehouse_id' => '',
-                            );
-                            $this->db->insert('invoice_stock_tbl', $stock);
-                            // insert
-                        } else {
-                            //update
-                            $stock = array(
-                                'quantity' => $check_stock->quantity + $product_quantity
-                            );
-                            if (!empty($store_id)) {
-                                $this->db->where('store_id', $store_id);
-                            }
-                            if (!empty($product_id)) {
+                            $query = $this->db->get();
+                            $result = $query->num_rows();
+                            if ($result > 0) {
+                                $this->db->set('quantity', 'quantity+' . $product_quantity, FALSE);
+                                $this->db->set('total_price', 'total_price+' . $total_price, FALSE);
+                                $this->db->where('invoice_id', $invoice_id);
                                 $this->db->where('product_id', $product_id);
-                            }
-                            if (!empty($variant_id)) {
                                 $this->db->where('variant_id', $variant_id);
+                                if (!empty($variant_color)) {
+                                    $this->db->where('variant_color', $variant_color);
+                                }
+                                $this->db->update('invoice_details');
+                            } else {
+                                $this->db->insert('invoice_details', $invoice_details);
                             }
+                        }
+                        //////////////////////////////////////////////////////////////////////
+                        $this->db->select('*');
+                        $this->db->from('assembly_products');
+                        $this->db->where('parent_product_id', $product_id);
+                        $this->db->join('product_information', 'product_information.product_id = assembly_products.child_product_id');
+                        $query = $this->db->get();
+                        $product_list = $query->result();
+                        ///////////////////////////////////////////////////////////////////////////
+                        if (!empty($product_list)) {
+                            foreach ($product_list as $product) {
+//                                $invoice_details = array(
+//                                    'invoice_details_id' => generator(15),
+//                                    'invoice_id' => $invoice_id,
+//                                    'product_id' => $product->child_product_id,
+//                                    'variant_id' => $variant_id,
+//                                    //  'pricing_id' => $pricing_id,
+//                                    'variant_color' => $variant_color,
+//                                    'batch_no' => $batch,
+//                                    'store_id' => $this->input->post('store_id', TRUE),
+//                                    'quantity' => $product_quantity,
+//                                    'rate' => 0,
+//                                    'supplier_rate' => $product->supplier_price,
+//                                    'total_price' => 0,
+//                                    'discount' => 0,
+//                                    'status' => 1
+//                                );
+                                if (!empty($quantity)) {
+//                                    $this->db->select('*');
+//                                    $this->db->from('invoice_details');
+//                                    $this->db->where('invoice_id', $invoice_id);
+//                                    $this->db->where('product_id', $product->child_product_id);
+//                                    $this->db->where('variant_id', $variant_id);
+//                                    if (!empty($variant_color)) {
+//                                        $this->db->where('variant_color', $variant_color);
+//                                    }
+//                                    $query = $this->db->get();
+//                                    $result = $query->num_rows();
+//                                    if ($result > 0) {
+//                                        $this->db->set('quantity', 'quantity+' . $product_quantity, FALSE);
+//                                        $this->db->set('total_price', 'total_price+' . $total_price, FALSE);
+//                                        $this->db->where('invoice_id', $invoice_id);
+//                                        $this->db->where('product_id', $product->child_product_id);
+//                                        $this->db->where('variant_id', $variant_id);
+//                                        if (!empty($variant_color)) {
+//                                            $this->db->where('variant_color', $variant_color);
+//                                        }
+//                                        $this->db->update('invoice_details');
+//                                    } else {
+//                                        $this->db->insert('invoice_details', $invoice_details);
+//                                    }
+
+                                    // stock 
+                                    $store_id = $this->input->post('store_id', TRUE);
+                                    $check_stock = $this->check_stock($store_id, $product->child_product_id, $variant_id, $variant_color);
+                                    if (empty($check_stock)) {
+                                        // insert
+                                        $stock = array(
+                                            'store_id' => $store_id,
+                                            'product_id' => $product->child_product_id,
+                                            'variant_id' => $variant_id,
+                                            'variant_color' => (!empty($variant_color) ? $variant_color : NULL),
+                                            'quantity' => $product_quantity,
+                                            'warehouse_id' => '',
+                                        );
+                                        $this->db->insert('invoice_stock_tbl', $stock);
+                                        // insert
+                                    } else {
+                                        //update
+                                        $stock = array(
+                                            'quantity' => $check_stock->quantity + $product_quantity
+                                        );
+                                        if (!empty($store_id)) {
+                                            $this->db->where('store_id', $store_id);
+                                        }
+                                        if (!empty($product->child_product_id)) {
+                                            $this->db->where('product_id', $product->child_product_id);
+                                        }
+                                        if (!empty($variant_id)) {
+                                            $this->db->where('variant_id', $variant_id);
+                                        }
+                                        if (!empty($variant_color)) {
+                                            $this->db->where('variant_color', $variant_color);
+                                        }
+                                        $this->db->update('invoice_stock_tbl', $stock);
+                                        //update
+                                    }
+                                    // stock
+                                }
+                            }
+                        }
+                    } else {
+                        $product_quantity = $quantity[$i];
+                        $product_rate = $rate[$i];
+                        $product_id = $p_id[$i];
+                        $discount_rate = $discount[$i];
+                        $total_price = $total_amount[$i];
+                        //  $variant_id = $variants[$i];
+                        $variant_id = $size[$i];
+                        //$pricing_id = $pricing[$i];
+                        // $variant_color = $color_variants[$i];
+                        $variant_color = $color[$i];
+                        $batch = $batch_no[$i];
+                        $supplier_rate = $this->supplier_rate($product_id); // سعر التكلفة للمنتج الواحد
+                        $cogs_price += ($supplier_rate[0]['supplier_price'] * $product_quantity); // التكلفة للكمية كلها
+
+                        $invoice_details = array(
+                            'invoice_details_id' => generator(15),
+                            'invoice_id' => $invoice_id,
+                            'product_id' => $product_id,
+                            'variant_id' => $variant_id,
+                            //  'pricing_id' => $pricing_id,
+                            'variant_color' => $variant_color,
+                            'batch_no' => $batch,
+                            'store_id' => $this->input->post('store_id', TRUE),
+                            'quantity' => $product_quantity,
+                            'rate' => $product_rate,
+                            'supplier_rate' => $supplier_rate[0]['supplier_price'],
+                            'total_price' => $total_price,
+                            'discount' => $discount_rate,
+                            'status' => 1
+                        );
+
+                        if (!empty($quantity)) {
+                            $this->db->select('*');
+                            $this->db->from('invoice_details');
+                            $this->db->where('invoice_id', $invoice_id);
+                            $this->db->where('product_id', $product_id);
+                            $this->db->where('variant_id', $variant_id);
                             if (!empty($variant_color)) {
                                 $this->db->where('variant_color', $variant_color);
                             }
-                            $this->db->update('invoice_stock_tbl', $stock);
-                            //update
+                            $query = $this->db->get();
+                            $result = $query->num_rows();
+                            if ($result > 0) {
+                                $this->db->set('quantity', 'quantity+' . $product_quantity, FALSE);
+                                $this->db->set('total_price', 'total_price+' . $total_price, FALSE);
+                                $this->db->where('invoice_id', $invoice_id);
+                                $this->db->where('product_id', $product_id);
+                                $this->db->where('variant_id', $variant_id);
+                                if (!empty($variant_color)) {
+                                    $this->db->where('variant_color', $variant_color);
+                                }
+                                $this->db->update('invoice_details');
+                            } else {
+                                $this->db->insert('invoice_details', $invoice_details);
+                            }
+
+                            // stock 
+                            $store_id = $this->input->post('store_id', TRUE);
+                            $check_stock = $this->check_stock($store_id, $product_id, $variant_id, $variant_color);
+                            if (empty($check_stock)) {
+                                // insert
+                                $stock = array(
+                                    'store_id' => $store_id,
+                                    'product_id' => $product_id,
+                                    'variant_id' => $variant_id,
+                                    'variant_color' => (!empty($variant_color) ? $variant_color : NULL),
+                                    'quantity' => $product_quantity,
+                                    'warehouse_id' => '',
+                                );
+                                $this->db->insert('invoice_stock_tbl', $stock);
+                                // insert
+                            } else {
+                                //update
+                                $stock = array(
+                                    'quantity' => $check_stock->quantity + $product_quantity
+                                );
+                                if (!empty($store_id)) {
+                                    $this->db->where('store_id', $store_id);
+                                }
+                                if (!empty($product_id)) {
+                                    $this->db->where('product_id', $product_id);
+                                }
+                                if (!empty($variant_id)) {
+                                    $this->db->where('variant_id', $variant_id);
+                                }
+                                if (!empty($variant_color)) {
+                                    $this->db->where('variant_color', $variant_color);
+                                }
+                                $this->db->update('invoice_stock_tbl', $stock);
+                                //update
+                            }
+                            // stock
                         }
-                        // stock
                     }
                 }
-
 
                 // SALES/INVOICE TRANSECTIONS ENTRY
                 $customer_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('customer_id', $customer_id)->get()->row();
