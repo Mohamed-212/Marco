@@ -21,7 +21,8 @@ class Cstock_opening extends MX_Controller
         $product_info = $this->Stock_opening_model->product_search_item($product_name);
         $json_product = [];
         foreach ($product_info as $value) {
-            $json_product[] = array('label' => $value['product_name'] . '-(' . $value['product_model'] . ')', 'value' => $value['product_id']);
+            //$json_product[] = array('label' => $value['product_name'] . '-(' . $value['product_model'] . ')', 'value' => $value['product_id']);
+            $json_product[] = array('label' => $value['product_name'], 'value' => $value['product_id']);
         }
         echo json_encode($json_product);
     }

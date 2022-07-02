@@ -11,6 +11,105 @@ function bank_info_show(payment_type) {
     }
 }
 
+// search product by model
+function product_per_model(){
+    var supplier_id = $("#supplier_id").val();
+    var currency_id = $("#currency_id").val();
+    var model_no = $("#model_no").val();
+
+    //Supplier id existing check
+    if (supplier_id == 0) {
+        alert(display("please_select_supplier"));
+        return false;
+    }
+
+    if (currency_id == 0) {
+        alert("Please Select Currency");
+        return false;
+    }
+    $.ajax({
+        url: base_url + "dashboard/Cpurchase/product_search_by_model",
+        method: "post",
+        dataType: "json",
+        data: {
+            csrf_test_name: csrf_test_name,
+            term: model_no,
+        },
+        success: function (data) {
+            $.each(data, function(k, v) {
+                $("#model_no_text").append('<tr>' +
+                    '<td class="text-center">' +
+                        '<input type="checkbox" class="check_pro_id" value="'+v.value+'">' +
+                        '<input type="hidden" class="check_pro_id" value="'+v.label+'">' +
+                    '</td>' +
+                    '<td class="text-center">'+v.label+'</td>' +
+                    '</tr>');
+            });
+            if(data.length > 0){
+                $("#modelModal").modal('show');
+            }else{
+                alert("No Item Found");
+            }
+        },
+    });
+}
+
+//
+function add_products_model(){
+    var ids = [];
+    var names = [];
+    $('.check_pro_id:checkbox:checked').each(function(index, value) {
+        ids.push(value.value);
+        names.push($(this).next().val());
+    });
+    $.each(ids, function(k, v) {
+        var current_count = count-1;
+        if($("#product_name_"+(count-1)).next().val()){
+            current_count = count;
+            addPurchaseOrderField('addPurchaseItem');
+        }
+        $("#product_name_"+current_count).next().val(v);
+        $("#product_name_"+current_count).val(names[k]);
+        var sl = current_count;
+        var id = v;
+        var dataString = "csrf_test_name=" + csrf_test_name + "&product_id=" + id;
+        var avl_qntt = "avl_qntt_" + sl;
+        var price_item = "price_item_" + sl;
+        var price_item2 = "price_item2_" + sl;
+        var variant_id = "variant_id_" + sl;
+        var color_variant = "color_variant_" + sl;
+        var color = "color" + sl;
+        var size = "size" + sl;
+        var cat_id = "category_id" + sl;
+        $.ajax({
+            type: "POST",
+            url: base_url + "dashboard/Cstore/retrieve_product_data",
+            data: dataString,
+            cache: false,
+            success: function (data) {
+                var obj = JSON.parse(data);
+                // $("#" + price_item).val(obj.supplier_price);
+                $("#" + price_item).val(0);
+                $("#" + price_item2).val(0);
+                $("#" + avl_qntt).val(obj.total_product);
+                $("#" + variant_id).html(obj.variant);
+                $("#" + color_variant)
+                    .empty()
+                    .append(obj.variant_color);
+                $("#" + size).val(obj.size);
+                $("#" + color).val(obj.color);
+                $("#" + cat_id).val(obj.category_id);
+            },
+        });
+    });
+
+    $("#model_no").val('');
+    $("#model_no_text").html('');
+    $("#modelModal").modal('hide');
+
+    $("#addPurchaseItem").scrollTop( $('#addPurchaseItem').height() );
+}
+
 //Product purchase or list
 function product_pur_or_list(sl) {
     var supplier_id = $("#supplier_id").val();

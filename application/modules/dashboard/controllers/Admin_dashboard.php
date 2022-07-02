@@ -124,7 +124,8 @@ class Admin_dashboard extends MX_Controller
         $product_name     = $this->input->post('product_name',TRUE);
         $retrive_products = $this->Products->retrive_products($product_name);
         foreach ($retrive_products as $value) {
-            $json_product[] = array('label' => $value['product_name'] . '-(' . $value['product_model'] . ')', 'value' => $value['product_id']);
+            //$json_product[] = array('label' => $value['product_name'] . '-(' . $value['product_model'] . ')', 'value' => $value['product_id']);
+            $json_product[] = array('label' => $value['product_name'], 'value' => $value['product_id']);
         }
         echo json_encode($json_product);
     }

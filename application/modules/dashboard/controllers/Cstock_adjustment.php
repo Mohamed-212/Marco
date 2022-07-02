@@ -24,7 +24,8 @@ class Cstock_adjustment extends MX_Controller
         $product_info = $this->Stores->product_search_item($store_id, $product_name);
         $json_product = [];
         foreach ($product_info as $value) {
-            $json_product[] = array('label' => $value['product_name'] . '-(' . $value['product_model'] . ')', 'value' => $value['product_id']);
+            //$json_product[] = array('label' => $value['product_name'] . '-(' . $value['product_model'] . ')', 'value' => $value['product_id']);
+            $json_product[] = array('label' => $value['product_name'], 'value' => $value['product_id']);
         }
         echo json_encode($json_product);
     }
