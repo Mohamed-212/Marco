@@ -875,7 +875,8 @@ class Invoices extends CI_Model {
                         $cgst_tax = $cgst[$i];
                         $cgst_tax_id = $cgst_id[$i];
                         $product_id = $p_id[$i];
-                        $variant_id = $variants[$i];
+                        $variant_id =  $size[$i];
+                        
                         $cgst_details = array(
                             'tax_col_de_id' => generator(15),
                             'invoice_id' => $invoice_id,
@@ -914,7 +915,7 @@ class Invoices extends CI_Model {
                         $sgst_tax = $sgst[$i];
                         $sgst_tax_id = $sgst_id[$i];
                         $product_id = $p_id[$i];
-                        $variant_id = $variants[$i];
+                        $variant_id = $size[$i];
                         $sgst_summary = array(
                             'tax_col_de_id' => generator(15),
                             'invoice_id' => $invoice_id,
@@ -951,7 +952,7 @@ class Invoices extends CI_Model {
                         $igst_tax = $igst[$i];
                         $igst_tax_id = $igst_id[$i];
                         $product_id = $p_id[$i];
-                        $variant_id = $variants[$i];
+                        $variant_id = $size[$i];
                         $igst_summary = array(
                             'tax_col_de_id' => generator(15),
                             'invoice_id' => $invoice_id,
