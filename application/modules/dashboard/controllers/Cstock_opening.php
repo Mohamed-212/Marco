@@ -108,13 +108,13 @@ class Cstock_opening extends MX_Controller
                 $grand_total_price = $this->input->post('grand_total_price', TRUE);
 
                 //Variant id required check
-                $result = array();
-                foreach ($p_id as $k => $v) {
-                    if (empty($variant_id[$k])) {
-                        $this->session->set_userdata(array('error_message' => display('variant_is_required')));
-                        redirect('dashboard/cstock_opening/add_stock_opening');
-                    }
-                }
+//                $result = array();
+//                foreach ($p_id as $k => $v) {
+//                    if (empty($variant_id[$k])) {
+//                        $this->session->set_userdata(array('error_message' => display('variant_is_required')));
+//                        redirect('dashboard/cstock_opening/add_stock_opening');
+//                    }
+//                }
 
                 //Stock opening Details
                 $cogs_price = 0;
@@ -140,6 +140,13 @@ class Cstock_opening extends MX_Controller
                         'status'        => 3
                     );
                     if (!empty($quantity)) {
+                        //update supplier price
+                        $supplier_price = array(
+                            'supplier_price' => $rate,
+                        );
+                        $this->db->where('product_id', $product_id);
+                        $this->db->update('product_information', $supplier_price);
+
                         $this->db->insert('transfer', $store);
                         // stock 
                         $check_stock = $this->Stock_opening_model->check_stock($store_id, $product_id, $variant, $variant_color);

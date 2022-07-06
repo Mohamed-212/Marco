@@ -2634,8 +2634,20 @@ class Purchases extends CI_Model {
             }
         }
 
+        $purchase = $this->db->select("SUM(quantity) as totalPurchaseQnty")
+            ->from('product_purchase_details')
+            ->where('product_id', $product_id)
+            ->get()
+            ->row();
+        $sales = $this->db->select("SUM(quantity) as totalSalesQnty")
+            ->from('invoice_stock_tbl')
+            ->where('product_id', $product_id)
+            ->get()
+            ->row();
+        $stock = $purchase->totalPurchaseQnty - $sales->totalSalesQnty;
 
         $data2 = array(
+            'total_product' => @$stock,
             'product_id' => $product_information->product_id,
             'supplier_price' => $product_information->supplier_price,
             'variant' => $html,

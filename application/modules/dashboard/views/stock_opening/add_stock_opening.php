@@ -156,7 +156,8 @@
                                         <td class="text-center">
                                             <div class="variant_id_div">
                                                 <select name="variant_id[]" id="variant_id_1"
-                                                    class="form-control variant_id width_100p" required="">
+                                                    class="form-control variant_id width_100p" readonly="" required="">
+                                                    <option value=""></option>
                                                     <?php foreach ($variant_list as $variant) : ?>
                                                     <option value="<?php echo html_escape($variant['variant_id']) ?>">
                                                         <?php echo html_escape($variant['variant_name']) ?>
@@ -164,12 +165,12 @@
                                                     <?php endforeach; ?>
                                                 </select>
                                             </div>
-                                            <div id="color_variant_area_1">
-                                                <select name="color_variant[]" id="color_variant_1"
-                                                    class="form-control color_variant width_100p">
-                                                    <option value=""></option>
-                                                </select>
-                                            </div>
+<!--                                            <div id="color_variant_area_1">-->
+<!--                                                <select name="color_variant[]" id="color_variant_1"-->
+<!--                                                    class="form-control color_variant width_100p">-->
+<!--                                                    <option value=""></option>-->
+<!--                                                </select>-->
+<!--                                            </div>-->
                                         </td>
                                         <td class="text-right">
                                             <input type="text" name="batch_no[]" required id="batch_no_1"
