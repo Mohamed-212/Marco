@@ -289,6 +289,9 @@ class Cpurchase_return extends MX_Controller {
                                 //reduce from product_purchase
                                 //////////////////////////////////////////////////////////////
                                 $this->load->model('Wearhouses');
+                                $this->db->where('product_id', $product_id);
+                                $this->db->from('product_information');
+                                $product = $this->db->get()->result_array();
                                 $purchaseData = $this->Products->product_purchase_info($product);
                                 $totalPurchase = 0;
                                 $totalPrcsAmnt = 0;
@@ -301,6 +304,8 @@ class Cpurchase_return extends MX_Controller {
                                         $totalPurchase = ($totalPurchase + $purchaseData[$k]['quantity']);
                                     }
                                     if ($totalPurchase > 0) {
+                                        $totalPrcsAmnt += ($product[0]['open_quantity'] * $product[0]['open_rate']);
+                                        $totalPurchase += $product[0]['open_quantity'];
                                         $newrate = $totalPrcsAmnt / $totalPurchase;
                                         $supplier_price = array(
                                             'supplier_price' => $newrate,

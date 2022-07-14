@@ -353,6 +353,9 @@ class Purchases extends CI_Model {
                         if (!empty($quantity)) {
                             $this->db->insert('product_purchase_details', $data1);
                             //////////////////////////////////////////////////////////////
+                            $this->db->where('product_id', $product_id);
+                            $this->db->from('product_information');
+                            $product = $this->db->get()->result_array();
                             $purchaseData = $this->Products->product_purchase_info($product_id);
                             $totalPurchase = 0;
                             $totalPrcsAmnt = 0;
@@ -365,6 +368,8 @@ class Purchases extends CI_Model {
                                     $totalPurchase = ($totalPurchase + $purchaseData[$k]['quantity']);
                                 }
                             }
+                            $totalPrcsAmnt += ($product[0]['open_quantity'] * $product[0]['open_rate']);
+                            $totalPurchase += $product[0]['open_quantity'];
                             $newrate = $totalPrcsAmnt / $totalPurchase;
                             $supplier_price = array(
                                 'supplier_price' => $newrate,
@@ -1164,6 +1169,9 @@ class Purchases extends CI_Model {
                         if (!empty($quantity)) {
                             $this->db->insert('product_purchase_details', $data1);
                             ///////////////////////////حساب متوسط سعر الشراء//////////////////
+                            $this->db->where('product_id', $product_id);
+                            $this->db->from('product_information');
+                            $product = $this->db->get()->result_array();
                             $purchaseData = $this->Products->product_purchase_info($product_id);
                             $totalPurchase = 0;
                             $totalPrcsAmnt = 0;
@@ -1177,6 +1185,8 @@ class Purchases extends CI_Model {
                                     $totalPurchase = ($totalPurchase + $purchaseData[$k]['quantity']);
                                 }
                             }
+                            $totalPrcsAmnt += ($product[0]['open_quantity'] * $product[0]['open_rate']);
+                            $totalPurchase += $product[0]['open_quantity'];
                             $newrate = $totalPrcsAmnt / $totalPurchase;
                             $supplier_price = array(
                                 'supplier_price' => $newrate,

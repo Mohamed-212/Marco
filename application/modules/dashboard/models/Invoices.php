@@ -4088,6 +4088,7 @@ class Invoices extends CI_Model {
             'unit' => @$product_information->unit_short_name,
             'assembly' => @$product_information->assembly,
         );
+
         return $data2;
     }
 

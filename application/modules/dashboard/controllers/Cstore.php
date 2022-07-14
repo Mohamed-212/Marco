@@ -554,7 +554,24 @@ class Cstore extends MX_Controller
     public function retrieve_product_data()
     {
         $product_id = $this->input->post('product_id', TRUE);
+        $store_id = $this->input->post('store_id', TRUE);
         $product_info = $this->Purchases->get_total_product($product_id);
+
+        $this->db->select("SUM(quantity) as totalPurchaseQnty");
+        $this->db->from('purchase_stock_tbl');
+        $this->db->where('product_id', $product_id);
+        $this->db->where('store_id', $store_id);
+        $purchase = $this->db->get()->row();
+        // dd($this->db->last_query());
+
+        $this->db->select("SUM(quantity) as totalSalesQnty");
+        $this->db->from('invoice_stock_tbl');
+        $this->db->where('product_id', $product_id);
+        $this->db->where('store_id', $store_id);
+        $sales = $this->db->get()->row();
+
+        $product_info['total_product'] = $purchase->totalPurchaseQnty - $sales->totalSalesQnty;
+
         echo json_encode($product_info);
     }
 }

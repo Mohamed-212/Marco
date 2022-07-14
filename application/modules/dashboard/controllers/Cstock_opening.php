@@ -12,6 +12,7 @@ class Cstock_opening extends MX_Controller
             'dashboard/Stock_opening_model',
             'dashboard/Soft_settings',
             'template/Template_model',
+            'dashboard/Products',
         ));
         $this->load->library('dashboard/occational');
     }
@@ -140,10 +141,32 @@ class Cstock_opening extends MX_Controller
                         'status'        => 3
                     );
                     if (!empty($quantity)) {
+
+                        $this->db->where('product_id', $product_id);
+                        $this->db->from('product_information');
+                        $product = $this->db->get()->result_array();
                         //update supplier price
+                        $purchaseData = $this->Products->product_purchase_info($product_id);
+                        $totalPurchase = 0;
+                        $totalPrcsAmnt = 0;
+                        if (!empty($purchaseData)) {
+                            foreach ($purchaseData as $k => $v) {
+                                $rate_after_exp_up = floatval($purchaseData[$k]['rate_after_exp']);
+                                $quantity_up = floatval($purchaseData[$k]['quantity']);
+                                $newtotal = $rate_after_exp_up * $quantity_up;
+                                $totalPrcsAmnt = ($totalPrcsAmnt + $newtotal);
+                                $totalPurchase = ($totalPurchase + $purchaseData[$k]['quantity']);
+                            }
+                        }
+                        $totalPrcsAmnt += ($product_quantity * $product_rate);
+                        $totalPurchase += $product_quantity;
+                        $newrate = $totalPrcsAmnt / $totalPurchase;
                         $supplier_price = array(
-                            'supplier_price' => $rate,
+                            'supplier_price' => $newrate,
+                            'open_quantity' => $product[0]['open_quantity'] + $product_quantity,
+                            'open_rate' => $product_rate,
                         );
+
                         $this->db->where('product_id', $product_id);
                         $this->db->update('product_information', $supplier_price);
 
@@ -165,7 +188,7 @@ class Cstock_opening extends MX_Controller
                         } else {
                             //update
                             $stock = array(
-                                'quantity' => $check_stock->quantity + $product_quantity
+                                'quantity' => $check_stock->quantity + $product_quantity,
                             );
                             if (!empty($store_id)) {
                                 $this->db->where('store_id', $store_id);
@@ -197,8 +220,10 @@ class Cstock_opening extends MX_Controller
                     'VNo'       => $voucher_no,
                     'Vtype'     => 'Inventory-Openning',
                     'VDate'     => $date,
-                    'COAID'     => $store_head->HeadCode, //Main Warehouse
-                    'Narration' => 'Inventory-Openning total price debited at ' . $store_head->HeadName,
+                    'COAID' => 1141, //Main Warehouse
+                    'Narration' => 'Inventory-Openning total price debited at Main warehouse',
+//                    'COAID'     => $store_head->HeadCode, //Main Warehouse
+//                    'Narration' => 'Inventory-Openning total price debited at ' . $store_head->HeadName,
                     'Debit'     => $grand_total_price,
                     'Credit'    => 0, //purchase price asbe
                     'IsPosted'  => 1,
@@ -232,7 +257,8 @@ class Cstock_opening extends MX_Controller
                 $this->session->set_userdata(array('error_message' => display('no_active_fiscal_year_found')));
                 redirect('dashboard/Admin_dashboard');
             }
-        } else {
+        }
+        else {
             //insert stock opening
             $voucher_no        = $this->input->post('voucher_no', TRUE);
             $voucher_date      = $this->input->post('voucher_date', TRUE);

@@ -5,7 +5,7 @@ class Stock_opening_model extends CI_Model {
 		parent::__construct();
 	}
 	public function product_search_item($product_name){
-		$query = $this->db->query("SELECT * FROM `product_information` WHERE (`product_name` LIKE '%".$product_name."%' ESCAPE '!' OR `product_model` LIKE '%".$product_name."%')");
+		$query = $this->db->query("SELECT * FROM `product_information` WHERE `assembly` = '0' AND (`product_name` LIKE '%".$product_name."%' ESCAPE '!' OR `product_model` LIKE '%".$product_name."%')");
 		return $query->result_array();
 	}
 	public function check_stock($store_id=null,$product_id=null,$variant=null,$variant_color=null)
