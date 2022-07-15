@@ -236,7 +236,7 @@
                                         <th><?php echo display('product_name') ?></th>
                                         <th><?php echo display('variant') ?></th>
                                         <th><?php echo display('unit') ?></th>
-                                        <th><?php echo display('batch_no') ?></th>
+<!--                                        <th>--><?php //echo display('batch_no') ?><!--</th>-->
                                         <th><?php echo display('quantity') ?></th>
                                         <?php
                                         if ($isTaxed == 1) {
@@ -290,7 +290,7 @@
                                                     ?>
                                                 </td>
                                                 <td><?php echo html_escape($invoice['unit_short_name']); ?></td>
-                                                <td><?php echo html_escape($invoice['batch_no']); ?></td>
+<!--                                                <td>--><?php //echo html_escape($invoice['batch_no']); ?><!--</td>-->
                                                 <td><?php echo html_escape($invoice['quantity']); ?></td>
                                                 <td><?php echo(($position == 0) ? $currency . " " . $invoice['rate'] : $invoice['rate'] . " " . $currency) ?>
                                                 </td>

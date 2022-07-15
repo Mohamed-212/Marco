@@ -148,7 +148,7 @@ $Soft_settings = $CI->Soft_settings->retrieve_setting_editdata();
                                             <th><?php echo display('product_name') ?></th>
                                             <th><?php echo display('variant') ?></th>
                                             <th><?php echo display('unit') ?></th>
-                                            <th><?php echo display('batch_no') ?></th>
+<!--                                            <th>--><?php //echo display('batch_no') ?><!--</th>-->
                                             <th><?php echo display('quantity') ?></th>
                                             <th><?php echo display('unit_price_before_VAT') ?></th>
                                             <th><?php echo display('discount') ?></th>
@@ -173,7 +173,7 @@ $Soft_settings = $CI->Soft_settings->retrieve_setting_editdata();
                                             <td><?php echo html_escape($quotation['variant_name']) ?>
                                                 <?php echo html_escape($quotation['variant_color']) ?></td>
                                             <td><?php echo html_escape($quotation['unit_short_name']) ?></td>
-                                            <td><?php echo html_escape($quotation['batch_no']) ?></td>
+<!--                                            <td>--><?php //echo html_escape($quotation['batch_no']) ?><!--</td>-->
                                             <td><?php echo html_escape($quotation['quantity']) ?></td>
                                             <td><?php echo (($position == 0) ? $currency . " " . $quotation['rate'] : $quotation['rate'] . " " . $currency) ?>
                                             </td>

@@ -218,13 +218,14 @@ class Quotations extends CI_Model
 			'expire_date'		=> $expire_date,
 			'total_amount'		=> $this->input->post('grand_total_price', TRUE),
 			'quotation'			=> 'Quot-' . $this->number_generator(),
-			'details'			=> $this->input->post('details', FALSE),
+			'details'			=> $this->input->post('details', true),
 			'total_discount' 	=> $this->input->post('total_discount', TRUE),
 			'quotation_discount' => (!empty($invoice_discount) ? $invoice_discount : 0) + (!empty($total_discount) ? $total_discount : 0),
 			'service_charge'	=> $this->input->post('service_charge', TRUE),
 			'user_id'			=> $this->session->userdata('user_id'),
 			'store_id'			=> $this->input->post('store_id', TRUE),
 			'is_quotation'		=> ($this->input->post('is_quotation', True))?$this->input->post('is_quotation', True):0,
+            'employee_id' => $this->input->post('employee_id', true),
 			'status'			=> 1
 		);
 		$this->db->insert('quotation', $data);
@@ -235,6 +236,8 @@ class Quotations extends CI_Model
 		$discount 	   = $this->input->post('discount', TRUE);
 		$variants 	   = $this->input->post('variant_id', TRUE);
 		$color_variants = $this->input->post('color_variant', TRUE);
+        $color = $this->input->post('colorv', TRUE);
+        $size = $this->input->post('sizev', TRUE);
 		//Entry for Quotation Details
 		for ($i = 0, $n = count($quantity); $i < $n; $i++) {
 			$product_quantity = $quantity[$i];
@@ -243,8 +246,10 @@ class Quotations extends CI_Model
 			$batch_no         = $batch[$i];
 			$discount_rate 	  = $discount[$i];
 			$total_price      = $total_amount[$i];
-			$variant_id		  = $variants[$i];
-			$color_variant	  = (!empty($color_variants) ? @$color_variants[$i] : null);
+//			$variant_id		  = $variants[$i];
+//			$color_variant	  = (!empty($color_variants) ? @$color_variants[$i] : null);
+            $variant_id = $size[$i];
+            $color_variant = $color[$i];
 			$supplier_rate 	  = $this->supplier_rate($product_id);
 
 			$quotation_details = array(
@@ -262,7 +267,6 @@ class Quotations extends CI_Model
 				'discount'            => $discount_rate,
 				'status'			  => 1
 			);
-
 			if (!empty($quantity)) {
 				$this->db->select('*');
 				$this->db->from('quotation_details');
@@ -522,7 +526,7 @@ class Quotations extends CI_Model
 				'total_amount'		=>	$this->input->post('grand_total_price', TRUE),
 				'quotation'			=>	$this->input->post('quotation', TRUE),
 				'total_discount' 	=> 	$this->input->post('total_discount', TRUE),
-				'details' 			=> 	$this->input->post('details', FALSE),
+				'details' 			=> 	$this->input->post('details', TRUE),
 				'quotation_discount' => (!empty($quotation_discount) ? $quotation_discount : 0),
 				'service_charge'	=> 	$this->input->post('service_charge', TRUE),
 				'user_id'			=>	$this->session->userdata('user_id'),
@@ -530,6 +534,8 @@ class Quotations extends CI_Model
 				'paid_amount'		=>	$this->input->post('paid_amount', TRUE),
 				'due_amount'		=>	$this->input->post('due_amount', TRUE),
 				'status'			=>	$this->input->post('status', TRUE),
+                'is_quotation'		=> ($this->input->post('is_quotation', True))?$this->input->post('is_quotation', True):0,
+                'employee_id' => $this->input->post('employee_id', true),
 			);
 
 			$this->db->update('quotation', $data, array('quotation_id' => $quotation_id));
@@ -544,6 +550,8 @@ class Quotations extends CI_Model
 		$discount 		= $this->input->post('discount', TRUE);
 		$variants 		= $this->input->post('variant_id', TRUE);
 		$color_variants = $this->input->post('color_variant', TRUE);
+        $color = $this->input->post('colorv', TRUE);
+        $size = $this->input->post('sizev', TRUE);
 		$quotation_d_id = $this->input->post('quotation_details_id', TRUE);
 		$quantity 		= $this->input->post('product_quantity', TRUE);
 
@@ -562,8 +570,10 @@ class Quotations extends CI_Model
 				$product_id 	  = $p_id[$i];
 				$discount_rate 	  = $discount[$i];
 				$total_price 	  = $total_amount[$i];
-				$variant_id 	  = $variants[$i];
-				$variant_color 	  = (!empty($color_variants[$i]) ? $color_variants[$i] : NULL);
+                //$variant_id		  = $variants[$i];
+                //$variant_color	  = (!empty($color_variants) ? @$color_variants[$i] : null);
+                $variant_id = $size[$i];
+                $variant_color = $color[$i];
 				$supplier_rate    = $this->supplier_rate($product_id);
 
 				$quotation_details = array(

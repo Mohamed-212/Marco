@@ -22,10 +22,37 @@ class Cquotation extends MX_Controller {
 		if(check_module_status('accounting') == 1){
             $find_active_fiscal_year=$this->db->select('*')->from('acc_fiscal_year')->where('status',1)->get()->row();
             if (!empty($find_active_fiscal_year)) {
-				$CI =& get_instance();
-				$CI->load->library('dashboard/Lquotation');
-				$content = $CI->lquotation->quotation_add_form();
-				$this->template_lib->full_admin_html_view($content);
+//				$CI =& get_instance();
+//				$CI->load->library('dashboard/Lquotation');
+//				$content = $CI->lquotation->quotation_add_form();
+//				$this->template_lib->full_admin_html_view($content);
+                $this->load->model(array(
+                    'dashboard/Stores',
+                    'dashboard/Invoices',
+                    'dashboard/Variants',
+                    'dashboard/Customers',
+                    'dashboard/Shipping_methods'
+                ));
+                $store_list = $this->Stores->store_list();
+                $variant_list = $this->Variants->variant_list();
+                $shipping_methods = $this->Shipping_methods->shipping_method_list();
+                $customer = $this->Customers->customer_list();
+                $bank_list = $this->Invoices->bank_list();
+                $payment_info = $this->Invoices->payment_info();
+                $all_pri_type = $this->Invoices->select_all_pri_type();
+                $data = array(
+                    'title' => display('new_quotation'),
+                    'store_list' => $store_list,
+                    'variant_list' => $variant_list,
+                    'customer' => $customer[0],
+                    'bank_list' => $bank_list,
+                    'payment_info' => $payment_info,
+                    'employee' => $this->empdropdown(),
+                    'all_pri_type' => $all_pri_type,
+                );
+                $data['module'] = "dashboard";
+                $data['page'] = "quotation/add_quotation_form";
+                echo Modules::run('template/layout', $data);
 			}else{
 				$this->session->set_userdata(array('error_message'=>display('no_active_fiscal_year_found')));
                 redirect(base_url('Admin_dashboard'));
@@ -37,20 +64,44 @@ class Cquotation extends MX_Controller {
 			$this->template_lib->full_admin_html_view($content);
 		}
 	}
+
+    public function empdropdown() {
+        $this->db->select('*');
+        $this->db->from('employee_history');
+        $query = $this->db->get();
+        $data = $query->result();
+
+        $list = array('' => 'Select One...');
+        if (!empty($data)) {
+            foreach ($data as $value) {
+                $list[$value->id] = $value->first_name . " " . $value->last_name;
+            }
+        }
+        return $list;
+    }
+
 	//Insert product and upload
 	public function insert_quotation()
 	{
-
-		$quotation_id = $this->Quotations->quotation_entry();
-		$this->session->set_userdata(array('message'=>display('successfully_added')));
-		//$this->quotation_inserted_data($quotation_id);
-		$this->quotation_details_data($quotation_id);
-
-		if(isset($_POST['add-quotation'])){
-			redirect(base_url('dashboard/Cquotation'));
-		}elseif(isset($_POST['add-quotation-another'])){
-			redirect(base_url('dashboard/Cquotation/new_quotation'));
-		}
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('product_id[]', display('product_id'), 'required');
+        // $this->form_validation->set_rules('variant_id[]', display('variant'), 'required');
+        // $this->form_validation->set_rules('batch_no[]', display('batch_no'), 'required');
+        $this->form_validation->set_rules('employee_id', display('employee_id'), 'required');
+        if ($this->form_validation->run() == false) {
+            $this->session->set_userdata(array('error_message' => display('failed_try_again')));
+            $this->index();
+        } else {
+            $quotation_id = $this->Quotations->quotation_entry();
+            $this->session->set_userdata(array('message'=>display('successfully_added')));
+            //$this->quotation_inserted_data($quotation_id);
+            $this->quotation_details_data($quotation_id);
+            if(isset($_POST['add-quotation'])){
+                redirect(base_url('dashboard/Cquotation'));
+            }elseif(isset($_POST['add-quotation-another'])){
+                redirect(base_url('dashboard/Cquotation/new_quotation'));
+            }
+        }
 	}
 	//Search Inovoice Item
 	public function search_inovoice_item()
