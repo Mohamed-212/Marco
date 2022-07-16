@@ -1193,7 +1193,8 @@ class Quotations extends CI_Model
 				$this->session->set_userdata(array('error_message' => display('no_active_fiscal_year_found')));
 				redirect(base_url('Admin_dashboard'));
 			}
-		} else {
+		}
+		else {
 			//Invoice id
 			$invoice_id = $this->auth->generator(15);
 			$result = $this->db->select('*')

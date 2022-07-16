@@ -131,9 +131,34 @@ class Cquotation extends MX_Controller {
 	// Quotation Update
 	public function quotation_update()
 	{
-		$quotation_id = $this->Quotations->update_quotation();
-		$this->session->set_userdata(array('message'=>display('successfully_updated')));
-		redirect('dashboard/Cquotation/quotation_details_data/'.$quotation_id);
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('product_id[]', display('product_id'), 'required');
+        // $this->form_validation->set_rules('variant_id[]', display('variant'), 'required');
+        // $this->form_validation->set_rules('batch_no[]', display('batch_no'), 'required');
+        $this->form_validation->set_rules('employee_id', display('employee_id'), 'required');
+        if ($this->form_validation->run() == false) {
+            $this->session->set_userdata(array('error_message' => display('failed_try_again')));
+            $this->index();
+        } else {
+            if(check_module_status('accounting') == 1){
+                $find_active_fiscal_year=$this->db->select('*')->from('acc_fiscal_year')->where('status',1)->get()->row();
+                if (!empty($find_active_fiscal_year)) {
+                    $quotation_id = $this->Quotations->quot_paid_data($quotation_id);
+                    $this->session->set_userdata(array('message'=>display('successfully_added')));
+                    redirect('dashboard/Cquotation');
+                }else{
+                    $this->session->set_userdata(array('error_message'=>display('no_active_fiscal_year_found')));
+                    redirect(base_url('Admin_dashboard'));
+                }
+            }else{
+                $quotation_id = $this->Quotations->quot_paid_data($quotation_id);
+                $this->session->set_userdata(array('message'=>display('successfully_added')));
+                redirect('dashboard/Cquotation');
+            }
+        }
+//		$quotation_id = $this->Quotations->update_quotation();
+//		$this->session->set_userdata(array('message'=>display('successfully_updated')));
+//		redirect('dashboard/Cquotation/quotation_details_data/'.$quotation_id);
 	}
 	// Quotation paid data
 	public function quot_paid_data($quotation_id){
@@ -141,7 +166,7 @@ class Cquotation extends MX_Controller {
 		if(check_module_status('accounting') == 1){
             $find_active_fiscal_year=$this->db->select('*')->from('acc_fiscal_year')->where('status',1)->get()->row();
             if (!empty($find_active_fiscal_year)) {
-				$quotation_id = $this->Quotations->quot_paid_data($quotation_id);
+                    $quotation_id = $this->Quotations->quot_paid_data($quotation_id);
 				$this->session->set_userdata(array('message'=>display('successfully_added')));
 				redirect('dashboard/Cquotation');
 			}else{

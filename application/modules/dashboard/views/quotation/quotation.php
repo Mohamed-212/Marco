@@ -122,7 +122,7 @@
                                             <center>
                                                 <?php echo form_open() ?>
                                                 <?php if ($quotation['status'] == 1) { ?>
-                                                <a href="<?php echo base_url() . 'dashboard/Cquotation/quot_paid_data/' . $quotation['quotation_id']; ?>"
+                                                <a href="<?php echo base_url() . 'dashboard/Cquotation/quotation_update_form/' . $quotation['quotation_id']; ?>"
                                                     class="btn btn-warning btn-sm" data-toggle="tooltip"
                                                     data-placement="left" title="<?php echo display('invoice') ?>">
                                                     <i class="fa fa-arrow-right" aria-hidden="true"></i>
@@ -142,11 +142,11 @@
                                                 </a>
 
                                                 <?php if ($quotation['status'] == 1) { ?>
-                                                <a href="<?php echo base_url() . 'dashboard/Cquotation/quotation_update_form/' . $quotation['quotation_id']; ?>"
-                                                    class="btn btn-info btn-sm" data-toggle="tooltip"
-                                                    data-placement="left" title="<?php echo display('update') ?>">
-                                                    <i class="fa fa-pencil" aria-hidden="true"></i>
-                                                </a>
+<!--                                                <a href="--><?php //echo base_url() . 'dashboard/Cquotation/quotation_update_form/' . $quotation['quotation_id']; ?><!--"-->
+<!--                                                    class="btn btn-info btn-sm" data-toggle="tooltip"-->
+<!--                                                    data-placement="left" title="--><?php //echo display('update') ?><!--">-->
+<!--                                                    <i class="fa fa-pencil" aria-hidden="true"></i>-->
+<!--                                                </a>-->
                                                 <a href="<?php echo base_url('dashboard/Cquotation/quotation_delete/' . $quotation['quotation_id']) ?>"
                                                     class="btn btn-danger btn-sm"
                                                     onclick="return confirm('<?php echo display('are_you_sure_want_to_delete') ?>');"

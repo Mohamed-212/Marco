@@ -63,17 +63,33 @@ class Lquotation {
         $CI->Quotations->quotation_entry($data);
 		return true;
 	}
+
+    public function employee_list()
+    {
+        $CI =& get_instance();
+        $CI->db->select('*');
+        $CI->db->from('employee_history');
+        $query = $CI->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        }
+        return false;
+    }
+
 	//quotation Edit Data
 	public function quotation_edit_data($quotation_id)
 	{
 		$CI =& get_instance();
 		$CI->load->model('dashboard/Quotations');
 		$CI->load->model('dashboard/Stores');
+		$CI->load->model('dashboard/Invoices');
 		$quotation_detail = $CI->Quotations->retrieve_quotation_editdata($quotation_id);
-		$store_id 		  = $quotation_detail[0]['store_id'];
 		$store_list 	  = $CI->Stores->store_list();
-		$store_list_selected = $CI->Stores->store_list_selected($store_id);
 		$terminal_list    = $CI->Quotations->terminal_list();
+        $employee_list = $this->employee_list();
+        $all_pri_type = $CI->Invoices->select_all_pri_type();
+        $bank_list = $CI->Invoices->bank_list();
+        $payment_info = $CI->Invoices->payment_info();
 
 		$i=0;
 		foreach($quotation_detail as $k=>$v){$i++;
@@ -84,6 +100,7 @@ class Lquotation {
 			'title'				=> 	display('quotation_update'),
 			'quotation_id'		=>	$quotation_detail[0]['quotation_id'],
 			'customer_id'		=>	$quotation_detail[0]['customer_id'],
+			'employee_id'		=>	$quotation_detail[0]['employee_id'],
 			'store_id'			=>	$quotation_detail[0]['store_id'],
 			'customer_name'		=>	$quotation_detail[0]['customer_name'],
 			'date'				=>	$quotation_detail[0]['date'],
@@ -99,9 +116,12 @@ class Lquotation {
 			'status'			=>	$quotation_detail[0]['status'],
 			'is_quotation'		=>	$quotation_detail[0]['is_quotation'],
 			'quotation_all_data'=>	$quotation_detail,
+			'employee_list'		=>	$employee_list,
 			'store_list'		=>	$store_list,
-			'store_list_selected'=>	$store_list_selected,
 			'terminal_list'     =>	$terminal_list,
+			'all_pri_type'     =>	$all_pri_type,
+			'bank_list'        =>	$bank_list,
+			'payment_info'     =>	$payment_info,
 			);
 		$chapterList = $CI->parser->parse('dashboard/quotation/edit_quotation_form',$data,true);
 		return $chapterList;

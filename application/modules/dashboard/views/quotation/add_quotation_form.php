@@ -310,7 +310,7 @@
                                     <!--                                        <th class="text-center" width="130"><?php echo display('batch_no') ?> <i
                                                 class="text-danger">*</i></th>-->
                                     <th class="text-center"><?php echo display('available_quantity') ?></th>
-                                    <th class="text-center"><?php echo display('unit') ?></th>
+<!--                                    <th class="text-center">--><?php //echo display('unit') ?><!--</th>-->
                                     <th class="text-center"><?php echo display('quantity') ?> <i
                                                 class="text-danger">*</i></th>
                                     <th class="text-center"><?php echo display('rate') ?> <i
@@ -379,10 +379,10 @@
                                                class="form-control text-right available_quantity_1" id="avl_qntt_1"
                                                placeholder="0" readonly=""/>
                                     </td>
-                                    <td>
-                                        <input type="text" id="" class="form-control text-right unit_1"
-                                               placeholder="None" readonly=""/>
-                                    </td>
+<!--                                    <td>-->
+<!--                                        <input type="text" id="" class="form-control text-right unit_1"-->
+<!--                                               placeholder="None" readonly=""/>-->
+<!--                                    </td>-->
                                     <td>
                                         <input type="number" name="product_quantity[]"
                                                onkeyup="quantity_calculate(1);" onchange="quantity_limit(1);"
@@ -472,7 +472,7 @@
                                 <?php if ($tax['cgst_status'] == 1) { ?>
                                     <tr>
 
-                                        <td class="text-right" colspan="8">
+                                        <td class="text-right" colspan="6">
                                             <b><?php echo html_escape($tax['cgst_name']) ?>:</b>
                                         </td>
                                         <td class="text-right" colspan="2">
@@ -486,7 +486,7 @@
                                 if ($tax['sgst_status'] == 1) {
                                     ?>
                                     <tr>
-                                        <td class="text-right" colspan="8">
+                                        <td class="text-right" colspan="6">
                                             <b><?php echo html_escape($tax['sgst_name']) ?>
                                                 :</b>
                                         </td>
@@ -500,7 +500,7 @@
                                 if ($tax['igst_status'] == 1) {
                                     ?>
                                     <tr>
-                                        <td class="text-right" colspan="8">
+                                        <td class="text-right" colspan="6">
                                             <b><?php echo html_escape($tax['igst_name']) ?>
                                                 :</b>
                                         </td>
@@ -511,7 +511,7 @@
                                     </tr>
                                 <?php } ?>
                                 <tr>
-                                    <td class="text-right" colspan="8">
+                                    <td class="text-right" colspan="6">
                                         <b><?php echo display('quotation') ?>:</b>
                                     </td>
                                     <td class="text-right" colspan="2">
@@ -521,7 +521,7 @@
                                 </tr>
                                 <tr>
 
-                                    <td colspan="6" rowspan="4">
+                                    <td colspan="4" rowspan="4">
                                         <label for="details"
                                                class=""><?php echo display('details') ?></label>
                                         <textarea class="form-control" name="details" id="details"

@@ -1,8 +1,16 @@
 "use strict";
-// Counts and limit for invoice
+
 var count = 2;
 var limits = 500;
 var csrf_test_name = $("#CSRF_TOKEN").val();
+
+// Counts and limit for invoice
+$(document).ready(function () {
+    var rowCount = $('table #addinvoiceItem tr').length;
+    if(rowCount > 0){
+        count = rowCount + 1;
+    }
+});
 
 // select all
 function select_all(){
@@ -236,9 +244,9 @@ function addInputField(divName) {
                 '" id="avl_qntt_' +
                 count +
                 '" placeholder="0" readonly="1" /></td>' +
-                '<td><input type="text" id="" class="form-control text-right unit_' +
-                count +
-                '" placeholder="None" readonly="" /></td>' +
+                // '<td><input type="text" id="" class="form-control text-right unit_' +
+                // count +
+                // '" placeholder="None" readonly="" /></td>' +
                 '<td><input type="number" onchange="quantity_limit(' +
                 count +
                 ')" name="product_quantity[]" ' +
@@ -305,7 +313,6 @@ function stock_by_product_variant_id(sl) {
         alert(display("please_select_store"));
         return false;
     }
-
     $.ajax({
         type: "post",
         async: false,

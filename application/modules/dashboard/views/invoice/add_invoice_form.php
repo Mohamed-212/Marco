@@ -25,8 +25,8 @@
             </ol>
         </div>
     </section>
-
     <section class="content">
+
         <!-- Alert Message -->
         <?php
         $message = $this->session->userdata('message');
@@ -69,7 +69,6 @@
                 </div>
             </div>
         </div>
-
         <!--Add Invoice -->
         <div class="row">
             <div class="col-sm-12">
@@ -81,6 +80,7 @@
                     </div>
                     <?php echo form_open_multipart('dashboard/Cinvoice/insert_invoice', array('class' => 'form-vertical', 'id' => 'validate', 'name' => 'insert_invoice')) ?>
                     <div class="panel-body">
+
                         <div class="row">
                             <div class="col-sm-6" id="payment_from_1">
                                 <div class="form-group row">
@@ -220,7 +220,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group row">
@@ -298,6 +297,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="table-responsive mt_10">
                             <table class="table table-bordered table-hover" id="normalinvoice">
                                 <thead>
@@ -310,7 +310,7 @@
                                     <!--                                        <th class="text-center" width="130"><?php echo display('batch_no') ?> <i
                                                 class="text-danger">*</i></th>-->
                                     <th class="text-center"><?php echo display('available_quantity') ?></th>
-                                    <th class="text-center"><?php echo display('unit') ?></th>
+<!--                                    <th class="text-center">--><?php //echo display('unit') ?><!--</th>-->
                                     <th class="text-center"><?php echo display('quantity') ?> <i
                                                 class="text-danger">*</i></th>
                                     <th class="text-center"><?php echo display('rate') ?> <i
@@ -379,10 +379,10 @@
                                                class="form-control text-right available_quantity_1" id="avl_qntt_1"
                                                placeholder="0" readonly=""/>
                                     </td>
-                                    <td>
-                                        <input type="text" id="" class="form-control text-right unit_1"
-                                               placeholder="None" readonly=""/>
-                                    </td>
+<!--                                    <td>-->
+<!--                                        <input type="text" id="" class="form-control text-right unit_1"-->
+<!--                                               placeholder="None" readonly=""/>-->
+<!--                                    </td>-->
                                     <td>
                                         <input type="number" name="product_quantity[]"
                                                onkeyup="quantity_calculate(1);" onchange="quantity_limit(1);"
@@ -472,7 +472,7 @@
                                 <?php if ($tax['cgst_status'] == 1) { ?>
                                     <tr>
 
-                                        <td class="text-right" colspan="8">
+                                        <td class="text-right" colspan="6">
                                             <b><?php echo html_escape($tax['cgst_name']) ?>:</b>
                                         </td>
                                         <td class="text-right" colspan="2">
@@ -517,7 +517,7 @@
                                                onClick="addInputField('addinvoiceItem');"
                                                value="<?php echo display('add_new_item') ?>"/>
                                     </td>
-                                    <td class="text-right" colspan="7">
+                                    <td class="text-right" colspan="5">
                                         <b><?php echo display('quotation') ?>:</b>
                                     </td>
                                     <td class="text-right" colspan="2">
@@ -527,7 +527,7 @@
                                 </tr>
                                 <tr>
 
-                                    <td colspan="6" rowspan="4">
+                                    <td colspan="4" rowspan="4">
                                         <label for="invoice_details"
                                                class=""><?php echo display('invoice_details') ?></label>
                                         <textarea class="form-control" name="invoice_details" id="invoice_details"
@@ -585,7 +585,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td colspan="8" class="text-right"><b><?php echo display('grand_total') ?> :</b>
+                                    <td colspan="6" class="text-right"><b><?php echo display('grand_total') ?> :</b>
                                     </td>
                                     <td class="text-right" colspan="2">
                                         <input type="text" id="grandTotal" class="form-control text-right"
@@ -594,10 +594,8 @@
                                 </tr>
                                 <tr>
                                     <td align="center">
-
                                         <input type="hidden" name="baseUrl" class="baseUrl"
                                                value="<?php echo base_url(); ?>"/>
-
                                         <input class="btn btn-warning" id="full"
                                                value="<?php echo display('full_paid') ?>"
                                                tabindex="15" onclick="full_paid();" type="button">
@@ -606,7 +604,7 @@
                                                value="<?php echo display('installment') ?>"
                                                tabindex="15" onclick="installment();" type="button">
                                     </td>
-                                    <td class="text-right" colspan="7"><b><?php echo display('paid_ammount') ?>
+                                    <td class="text-right" colspan="5"><b><?php echo display('paid_ammount') ?>
                                             :</b></td>
                                     <td class="text-right" colspan="2">
                                         <input type="text" id="paidAmount" onkeyup="invoice_paidamount();"
@@ -622,7 +620,7 @@
                                                name="add-invoice" onclick="submit_form();"
                                                value="<?php echo display('submit') ?>"/>
                                     </td>
-                                    <td class="text-right" colspan="7"><b><?php echo display('due') ?>:</b></td>
+                                    <td class="text-right" colspan="5"><b><?php echo display('due') ?>:</b></td>
                                     <td class="text-right" colspan="2">
                                         <input type="text" id="dueAmmount" class="form-control text-right"
                                                name="due_amount" placeholder="0.00" readonly="readonly"/>

@@ -40,7 +40,7 @@ function addInputField(divName) {
                 '<td class="text-center"><div><select name="pricing[]" id="pricing_' + count + '" class="form-control pricing width_100p"><option value=""></option></select></div></td>' +
                 '<td class="text-center"><div><select name="batch_no[]" id="batch_no_' + count + '" class="form-control batch_no width_100p"><option value=""></option></select></div></td>' +
                 '<td><input type="text" name="available_quantity[]"  class="form-control text-right available_quantity_' + count + '" id="avl_qntt_' + count + '" placeholder="0" readonly="1" /></td>' +
-                '<td><input type="text" id="" class="form-control text-right unit_' + count + '" placeholder="None" readonly="" /></td>' +
+                // '<td><input type="text" id="" class="form-control text-right unit_' + count + '" placeholder="None" readonly="" /></td>' +
                 '<td><input type="number" name="product_quantity[]" onkeyup="quantity_calculate(' + count + ');" onchange="quantity_calculate(' + count + ');" id="total_qntt_' + count + '" class="form-control text-right" value="1" min="1" required="" /></td>' +
                 '<td><input type="number" name="product_rate[]" onkeyup="quantity_calculate(' + count + ');" onchange="quantity_calculate(' + count + ');" placeholder="0.00" id="price_item_' + count + '" class="price_item' + count + ' form-control text-right" required="" min="0" /></td>' +
                 '<td><input type="number" name="discount[]" onkeyup="quantity_calculate(' + count + ');" onchange="quantity_calculate(' + count + ');" id="discount_' + count + '" class="form-control text-right" placeholder="0.00" min="0" /></td>' +
