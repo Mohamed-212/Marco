@@ -17,7 +17,7 @@
                         <?php $prodlink = base_url('/product_details/' . remove_space($product->product_name) . '/' . $product->product_id) ?>
                         <a class="entry-thumb d-block position-relative bg-white border mr-3" href="<?php echo $prodlink; ?>">
 
-                            <?php if (@getimagesize($product->image_thumb) === false) { ?>
+                            <?php if (!$product->image_thumb || @getimagesize($product->image_thumb) === false) { ?>
                                 <img src="<?php echo base_url() . '/my-assets/image/no-image.jpg' ?>" alt="image" width="64">
                             <?php } else { ?>
                                 <img  src="<?php echo base_url() . $product->image_thumb ?>" alt="image" width="64">
@@ -82,7 +82,7 @@
                     <div class="media mb-3">
                         <?php $prodlink = base_url('/product_details/' . remove_space($product->product_name) . '/' . $product->product_id) ?>
                         <a class="entry-thumb d-block position-relative bg-white border mr-3" href="<?php echo $prodlink; ?>">
-                            <?php if (@getimagesize($product->image_thumb) === false) { ?>
+                            <?php if (!$product->image_thumb || @getimagesize($product->image_thumb) === false) { ?>
                                 <img src="<?php echo base_url() . '/my-assets/image/no-image.jpg' ?>" alt="image" width="64">
                             <?php } else { ?>
                                 <img  src="<?php echo base_url() . $product->image_thumb ?>" alt="image" width="64">
@@ -141,7 +141,7 @@
                     <?php $prodlink = base_url('/product_details/' . remove_space($product->product_name) . '/' . $product->product_id) ?>
                     <div class="media mb-3">
                         <a class="entry-thumb d-block position-relative bg-white border mr-3" href="<?php echo $prodlink; ?>">
-                            <?php if (@getimagesize($product->image_thumb) === false) { ?>
+                            <?php if (!$product->image_thumb || @getimagesize($product->image_thumb) === false) { ?>
                                 <img src="<?php echo base_url() . '/my-assets/image/no-image.jpg' ?>" width="64" alt="image">
                             <?php } else { ?>
                                 <img width="64" src="<?php echo base_url() . $product->image_thumb ?>" alt="image">

@@ -842,6 +842,7 @@ class Home extends MX_Controller
             //Customer existing check
             $email = $this->input->post('customer_email',TRUE);
             $customer_existing_check = $this->Homes->check_customer($email);
+
             if ($customer_existing_check) {
                 if (1 == $diff_ship_adrs) {
                     $customer_id    =$customer_existing_check->customer_id;
@@ -881,7 +882,7 @@ class Home extends MX_Controller
                     );
                     // Shipping information entry for existing customer
                     $this->Homes->shipping_entry($shipping);
-                } else { 
+                } else {
                     //if billing and shipping address are same
                     $customer_id=$customer_existing_check->customer_id;
 
@@ -1030,6 +1031,7 @@ class Home extends MX_Controller
             }
             //Cash on delivery
             if ($payment_method == 1) {
+
                 //Order entry
                 $return_order_id = $this->Homes->order_entry($customer_id, $order_id);
                 if ($coupon_amnt > 0) {

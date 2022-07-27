@@ -60,6 +60,9 @@ class Invoices extends CI_Model {
         if (!empty($filter['customer_id'])) {
             $this->db->where('a.customer_id', $filter['customer_id']);
         }
+        if (!empty($filter['employee_id'])) {
+            $this->db->where('a.employee_id', $filter['employee_id']);
+        }
         if (!empty($filter['date'])) {
             $this->db->where("STR_TO_DATE(a.date, '%m-%d-%Y')=DATE('" . $filter['date'] . "')");
         }

@@ -998,7 +998,10 @@ class Purchases extends CI_Model {
                 ////////حساب قيمة الضريبة من إجمالي النظارات الشمسية
                 $value_vat_sunglasses = $total_sunglasses_price * ($sunglasses_VAT / 100);
                 ///// توزيع الضريبة على إجمالي النظارات لمعرفة نسبة الزيادة
-                $ratio_sunglasses = $value_vat_sunglasses / $total_sunglasses_price;
+                $ratio_sunglasses = 0;
+                if($total_sunglasses_price > 0){
+                    $ratio_sunglasses = $value_vat_sunglasses / $total_sunglasses_price;
+                }
                 //
                 //insert sun vat to expense table
                 //

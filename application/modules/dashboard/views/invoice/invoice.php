@@ -75,9 +75,9 @@
                         </div>
                         <div class="col-sm-3">
                             <div class="form-group row">
-                                <label for="customer_name" class="control-label"><?php echo display('customer_name') ?>
-                                    <i class="text-danger">*</i></label>
-
+<!--                                <label for="customer_name" class="control-label">--><?php //echo display('customer_name') ?>
+<!--                                    <i class="text-danger">*</i></label>-->
+                                <label for="customer_name" class="control-label"><?php echo display('customer_name') ?></label>
                                 <input type="text" size="100"
                                     value="<?php echo html_escape(@$_GET['customer_name']); ?>" name="customer_name"
                                     class="customerSelection form-control"
@@ -121,6 +121,13 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="control-label"><?php echo display('employee_name') ?>:</label>
+                                <?php echo form_dropdown('employee_id', $employees, set_value('employee_id', @$_GET['employee_id']), 'class="form-control" id="employee_id"') ?>
+                            </div>
+                        </div>
+
                         <div class="col-sm-3">
                             <div class="form-group">
                                 <button type="submit" class="btn btn-primary"><?php echo display('search') ?></button>

@@ -100,6 +100,7 @@ class Cinvoice extends MX_Controller {
         $this->permission->check_label('manage_sale')->read()->redirect();
         $filter = array(
             'invoice_no' => $this->input->get('invoice_no', TRUE),
+            'employee_id' => $this->input->get('employee_id', TRUE),
             'customer_id' => $this->input->get('customer_id', TRUE),
             'date' => $this->input->get('date', TRUE),
             'invoice_status' => $this->input->get('invoice_status', TRUE)
@@ -144,6 +145,7 @@ class Cinvoice extends MX_Controller {
         $data = array(
             'title' => display('manage_invoice'),
             'invoices_list' => $invoices_list,
+            'employees' => $this->empdropdown(),
             'currency' => $currency_details[0]['currency_icon'],
             'position' => $currency_details[0]['currency_position'],
             'links' => $links

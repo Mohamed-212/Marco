@@ -713,8 +713,8 @@ class Cproduct extends MX_Controller {
             $dataInfo2 = [];
             $this->load->library('upload');
             $files = $_FILES;
-            print_r($files);
-            echo $_FILES['imageUpload']['name'];
+            //print_r($files);
+            //echo $_FILES['imageUpload']['name'];
             $cpt = count($_FILES['imageUpload']['name']);
 
             $m = 0;
@@ -1635,6 +1635,22 @@ class Cproduct extends MX_Controller {
         }
     }
 
+    //This function is used to Generate Key
+    public function generator_voucher($lenth)
+    {
+        $number = array("6", "2", "9", "4", "5", "1", "8", "7", "3", "0");
+        for ($i = 0; $i < $lenth; $i++) {
+            $rand_value = rand(0, 8);
+            $rand_number = $number["$rand_value"];
+            if (empty($con)) {
+                $con = $rand_number;
+            } else {
+                $con = "$con" . "$rand_number";
+            }
+        }
+        return $con;
+    }
+
 //    public function product_excel_insert() {
 //        $upload_file = $_FILES["upload_excel_file"]["name"];
 //        $extension = pathinfo($upload_file, PATHINFO_EXTENSION);
@@ -1838,10 +1854,11 @@ class Cproduct extends MX_Controller {
         $datacount = count($sheetdata);
         if ($datacount > 1) {
             for ($i = 1; $i < $datacount; $i++) {
+
                 $price_types_list = [];
                 $filter_list = [];
                 $brand_id = $sheetdata[$i][0];
-                $product_model = $sheetdata[$i][1] . '-' . $sheetdata[$i][2];
+                $product_model = $sheetdata[$i][1] . ' - ' . $sheetdata[$i][2];
                 $category_id = $sheetdata[$i][3];
                 $filter_1 = $sheetdata[$i][4];
                 $filter_2 = $sheetdata[$i][5];
@@ -1849,8 +1866,16 @@ class Cproduct extends MX_Controller {
                 $price = $sheetdata[$i][7];
                 $g_price = $sheetdata[$i][8];
                 $s_price = $sheetdata[$i][9];
-                $product_name = $brand_id . '-' . $product_model;
-                //$product_name .= '-Full'; //for assembly
+                $open_quantity = $sheetdata[$i][10];
+                $open_rate = $sheetdata[$i][11];
+                $store_id = "SDMQ4TIBSH6LAJ1";
+                //GET BRAND NAME
+                $this->db->select('brand_name');
+                $this->db->from('brand');
+                $this->db->where('brand_id', $brand_id);
+                $query = $this->db->get();
+                $product_name = $query->result_array()[0]['brand_name'] . ' - ' . $product_model;
+                //$product_name .= ' - Full'; //for assembly
 
                 $excel = array(
                     'brand_id' => $brand_id,
@@ -1879,7 +1904,152 @@ class Cproduct extends MX_Controller {
                         //'assembly' => 1, //for assembly
                 );
                 $this->db->insert('product_information', $product_details);
-
+                //opening balance
+//                if($open_quantity > 0 && $open_rate > 0){
+//                    $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
+//                    if (!empty($find_active_fiscal_year)) {
+//                        //insert stock opening
+//                        $voucher_no        = 'StockOP-' . $this->generator_voucher(7);
+//                        $voucher_date      = date('Y-m-d H:i:s');;
+//
+//                        //Stock opening Details
+//                        $cogs_price = 0;
+//                        for ($i = 0, $n = count($p_id); $i < $n; $i++) {
+//                            $product_quantity = $quantity[$i];
+//                            $product_rate     = $rate[$i];
+//                            $product_id       = $p_id[$i];
+//                            $batch_no         = $batch[$i];
+//                            $expiry_date      = $expiry[$i];
+//                            $total_price      = $t_price[$i];
+//                            $variant          = $variant_id[$i];
+//                            $variant_color    = $color_variant[$i];
+//                            $cogs_price       += ($product_rate * $product_quantity);
+//                            $store = array(
+//                                'transfer_id'   => $this->auth->generator(15),
+//                                'voucher_no'    => $voucher_no,
+//                                'store_id'      => $store_id,
+//                                'product_id'    => $product_id,
+//                                'variant_id'    => $variants,
+//                                'variant_color' => NULL,
+//                                'date_time'     => $voucher_date,
+//                                'quantity'      => $open_quantity,
+//                                'status'        => 3
+//                            );
+//                            if (!empty($quantity)) {
+//
+//                                $this->db->where('product_id', $product_id);
+//                                $this->db->from('product_information');
+//                                $product = $this->db->get()->result_array();
+//                                //update supplier price
+//                                $purchaseData = $this->Products->product_purchase_info($product_id);
+//                                $totalPurchase = 0;
+//                                $totalPrcsAmnt = 0;
+//                                if (!empty($purchaseData)) {
+//                                    foreach ($purchaseData as $k => $v) {
+//                                        $rate_after_exp_up = floatval($purchaseData[$k]['rate_after_exp']);
+//                                        $quantity_up = floatval($purchaseData[$k]['quantity']);
+//                                        $newtotal = $rate_after_exp_up * $quantity_up;
+//                                        $totalPrcsAmnt = ($totalPrcsAmnt + $newtotal);
+//                                        $totalPurchase = ($totalPurchase + $purchaseData[$k]['quantity']);
+//                                    }
+//                                }
+//                                $totalPrcsAmnt += ($product_quantity * $product_rate);
+//                                $totalPurchase += $product_quantity;
+//                                $newrate = $totalPrcsAmnt / $totalPurchase;
+//                                $supplier_price = array(
+//                                    'supplier_price' => $newrate,
+//                                    'open_quantity' => $product[0]['open_quantity'] + $product_quantity,
+//                                    'open_rate' => $product_rate,
+//                                );
+//
+//                                $this->db->where('product_id', $product_id);
+//                                $this->db->update('product_information', $supplier_price);
+//
+//                                $this->db->insert('transfer', $store);
+//                                // stock
+//                                $check_stock = $this->Stock_opening_model->check_stock($store_id, $product_id, $variant, $variant_color);
+//                                if (empty($check_stock)) {
+//                                    // insert
+//                                    $stock = array(
+//                                        'store_id'     => $store_id,
+//                                        'product_id'   => $product_id,
+//                                        'variant_id'   => $variant,
+//                                        'variant_color' => (!empty($variant_color) ? $variant_color : NULL),
+//                                        'quantity'     => $product_quantity,
+//                                        'warehouse_id' => '',
+//                                    );
+//                                    $this->db->insert('purchase_stock_tbl', $stock);
+//                                    // insert
+//                                } else {
+//                                    //update
+//                                    $stock = array(
+//                                        'quantity' => $check_stock->quantity + $product_quantity,
+//                                    );
+//                                    if (!empty($store_id)) {
+//                                        $this->db->where('store_id', $store_id);
+//                                    }
+//                                    if (!empty($product_id)) {
+//                                        $this->db->where('product_id', $product_id);
+//                                    }
+//                                    if (!empty($variant)) {
+//                                        $this->db->where('variant_id', $variant);
+//                                    }
+//                                    if (!empty($variant_color)) {
+//                                        $this->db->where('variant_color', $variant_color);
+//                                    }
+//                                    $this->db->update('purchase_stock_tbl', $stock);
+//                                    //update
+//                                }
+//                                // stock
+//                            }
+//                        }
+//
+//                        $this->load->model('accounting/account_model');
+//                        $store_head   = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('store_id', $store_id)->get()->row();
+//                        $createdate   = date('Y-m-d H:i:s');
+//                        $receive_by   = $this->session->userdata('user_id');
+//                        $date         = $createdate;
+//                        //1st Inventory-Openning total price debit
+//                        $store_debit = array(
+//                            'fy_id'     => $find_active_fiscal_year->id,
+//                            'VNo'       => $voucher_no,
+//                            'Vtype'     => 'Inventory-Openning',
+//                            'VDate'     => $date,
+//                            'COAID' => 1141, //Main Warehouse
+//                            'Narration' => 'Inventory-Openning total price debited at Main warehouse',
+////                    'COAID'     => $store_head->HeadCode, //Main Warehouse
+////                    'Narration' => 'Inventory-Openning total price debited at ' . $store_head->HeadName,
+//                            'Debit'     => $grand_total_price,
+//                            'Credit'    => 0, //purchase price asbe
+//                            'IsPosted'  => 1,
+//                            'CreateBy'  => $receive_by,
+//                            'CreateDate' => $createdate,
+//                            'store_id'  => $store_id,
+//                            'IsAppove'  => 1
+//                        );
+//
+//                        //2nd Inventory-Openning COGS Credit
+//                        $COGSCredit = array(
+//                            'fy_id'     => $find_active_fiscal_year->id,
+//                            'VNo'       => $voucher_no,
+//                            'Vtype'     => 'Inventory-Openning',
+//                            'VDate'     => $date,
+//                            'COAID'     => 4111,
+//                            'Narration' => 'Inventory-Openning total price credited at COGS',
+//                            'Debit'     => 0,
+//                            'Credit'    => $cogs_price,
+//                            'IsPosted'  => 1,
+//                            'CreateBy'  => $receive_by,
+//                            'CreateDate' => $createdate,
+//                            'store_id'  => $store_id,
+//                            'IsAppove'  => 1
+//                        );
+//                        $this->db->insert('acc_transaction', $store_debit);
+//                        $this->db->insert('acc_transaction', $COGSCredit);
+//                        $this->session->set_userdata(array('message' => display('successfully_added')));
+//                        redirect('dashboard/cstock_opening/add_stock_opening');
+//                    }
+//                }
                 if ($category_id == 'XJIMM9X3ZAWUYXQ') {
                     $data = array(
                         't_p_s_id' => $this->auth->generator(15),
@@ -1902,13 +2072,14 @@ class Cproduct extends MX_Controller {
                     'product_price' => $excel['s_price'],
                 );
                 $this->db->insert_batch('pricing_types_product', $price_types_list);
-
+                //GENDER
                 $filter_list[] = array(
                     'category_id' => $category_id,
                     'product_id' => $product_id,
                     'filter_type_id' => 1,
                     'filter_item_id' => $filter_1
                 );
+                //MATERIAL
                 $filter_list[] = array(
                     'category_id' => $category_id,
                     'product_id' => $product_id,
